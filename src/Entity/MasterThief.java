@@ -1,6 +1,7 @@
 package Entity;
 
 import HeistMuseum.Constants;
+import World.ConcentrationSite;
 import World.ControlCollectionSite;
 import genclass.GenericIO;
 
@@ -24,14 +25,21 @@ public class MasterThief extends Thread {
 
     @Override
     public void run() {
-        ControlCollectionSite ctrcol = ControlCollectionSite.getInstance();
         int opt; // 1 - end of operations, 2 - begin assault, 3 - take a rest
+        ControlCollectionSite ctrcol = ControlCollectionSite.getInstance();
+        ConcentrationSite conc = ConcentrationSite.getInstance();
         
         startOperations();
-        while ((opt = ctrcol.appraiseSit())!= 1){
-            switch(opt){
+        while ((opt = ctrcol.appraiseSit()) != 1) {
+            switch (opt) {
                 case 2:
-                    // do something
+                    GenericIO.writelnString("prepareAssaultParty");
+                    // grupo (1) e sala
+                    // ctrcol.prepareAssaultParty1(); 
+                    conc.prepareAssaultParty2();
+                    // assgrp = ctrcol.prepareAssaultParty3(); // pseudocodigo
+                    // assgrp.sendAssaultParty(); pseudocodigo
+
                     break;
                 case 3:
                     // do something
@@ -46,7 +54,7 @@ public class MasterThief extends Thread {
 
     public void startOperations() {
         setStateMaster(Constants.DECIDING_WHAT_TO_DO);
-        GenericIO.writelnString("Estado: DECIDING_WHAT_TO_DO");
+        GenericIO.writelnString("\nEstado: DECIDING_WHAT_TO_DO");
         // regista para o repositorio
     }
 

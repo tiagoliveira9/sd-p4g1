@@ -19,7 +19,7 @@ public class ConcentrationSite {
 
     private static ConcentrationSite instance;
     private final Lock l;
-    private final Condition something;
+    private final Condition prepare;
     private final Set<Thief> thiefLine;
 
     /**
@@ -41,12 +41,11 @@ public class ConcentrationSite {
      */
     private ConcentrationSite() {
         l = new ReentrantLock();
-        something = l.newCondition();
-        thiefLine = new TreeSet<>();
+        prepare = l.newCondition();
+        this.thiefLine = new TreeSet<>();
     }
 
-    public boolean amINeeded() {
-        // verificar bem o que faz esta linha de codigo
+    public void addThief() {
         Thief crook = (Thief) Thread.currentThread();
 
         l.lock();
@@ -62,7 +61,45 @@ public class ConcentrationSite {
             l.unlock();
         }
 
+        return;
+    }
+
+    public boolean amINeeded() {
+        // gets current thread accessing method
+        Thief crook = (Thief) Thread.currentThread();
+
+        l.lock();
+        try {
+            // devemos ter sempre uma estrutura repetitiva? while, do..while?? 
+            // awaits to be awaken by Master-> prepareAssaultParty
+            this.prepare.await();
+
+        } catch (InterruptedException ex) {
+            // everything fine-> unlock
+            l.unlock();
+        }
+
+        l.unlock();
         return true;
+    }
+
+    public void prepareAssaultParty2() {
+        l.lock();
+
+        try {
+            // signal one thread to wake one thief
+            this.prepare.signal();
+           
+        } finally {
+            // everything fine-> unlock
+            l.unlock();
+        }
+
+    }
+
+    public int getThiefLineSize() {
+        // sera que precisamos de controlar esta execucao? 
+        return thiefLine.size();
     }
 
 }

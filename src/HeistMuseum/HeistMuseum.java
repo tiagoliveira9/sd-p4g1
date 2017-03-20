@@ -2,8 +2,7 @@ package HeistMuseum;
 
 import World.ConcentrationSite;
 import Entity.Thief;
-
-
+import Entity.MasterThief;
 
 /**
  *
@@ -20,18 +19,20 @@ public class HeistMuseum {
         ConcentrationSite.getInstance();
 
         Thief[] crook = new Thief[Constants.N_THIEVES];
-
+        MasterThief master = new MasterThief();
+        
         // Instantiating 6 Thieves 
         for (int i = 0; i < Constants.N_THIEVES; i++) {
-            crook[i] = new Thief(i, 2 * i+i);
+            crook[i] = new Thief(i, 2 * i + i);
         }
         
         // Simulation starts
+        master.start();
+        
         for (int i = 0; i < Constants.N_THIEVES; i++) {
             crook[i].start();
         }
-        
-        
+
     }
 
 }
