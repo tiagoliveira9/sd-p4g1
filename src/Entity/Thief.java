@@ -1,6 +1,8 @@
 package Entity;
 
 import HeistMuseum.Constants;
+import World.ConcentrationSite;
+import genclass.GenericIO;
 
 // import das areas with which the thief will interact
 /**
@@ -8,7 +10,7 @@ import HeistMuseum.Constants;
  *
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
-public class Thief extends Thread {
+public class Thief extends Thread implements Comparable<Thief>{
 
     /**
      * Identification of the Thief
@@ -29,7 +31,7 @@ public class Thief extends Thread {
      *
      * @serialField agility
      */
-    private final int agility;
+    private final int agility;//conc.amINeeded();
     private int position; // not yet sure, here or on assault party
 
     /**
@@ -45,6 +47,7 @@ public class Thief extends Thread {
         this.thiefId = thiefId;
         this.agility = agility;
         this.stateThief = Constants.OUTSIDE;
+        GenericIO.writelnString("Thief id: " + thiefId + ", agility: " + agility);
     }
 
     /**
@@ -58,8 +61,8 @@ public class Thief extends Thread {
         // o master vai bloqueando, e o ladrão vai acordá-lo
         // conc.amINeeded() actua sobre o concentration site
         while (amINeeded()) {
-            
-           /* assgrp = conc.prepareExcursion();
+
+            /* assgrp = conc.prepareExcursion();
             assgrp.prepareExcursion();
             ctrcol.prepareExcursion(); //se for o ultimo
             assgrp.prepareExcursion(); //bloquear
@@ -69,12 +72,15 @@ public class Thief extends Thread {
             assgrp.reverseDirection();
             while (assgrp.crawlOut());
             ctrcol.handACanvas(); */
-
         }
     }
 
     private boolean amINeeded() {
+        ConcentrationSite conc = ConcentrationSite.getInstance();
+        // quando é que ele sabe que não é preciso? 
+        conc.amINeeded();
 
+        //signal ao Master;
         return true;
     }
 
@@ -100,6 +106,21 @@ public class Thief extends Thread {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+    
+    /**
+     * MUDAR ISTO AQUI
+     * Compares this Contestant to another Contestant.
+     * Comparable implementation.
+     * @param contestant another Contestant to compare to
+     * @return contestant difference
+     */
+    // Pesquisar mais sobre o Set, TreeSet e Comparable
+    @Override
+    public int compareTo(Thief t) {
+        // gerado pelo netbeans throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.thiefId - t.thiefId;
+
     }
 
 }

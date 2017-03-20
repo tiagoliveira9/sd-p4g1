@@ -21,4 +21,9 @@ public class Constants {
     public static final int ASSEMBLING_A_GROUP = 3;
     public static final int WAITING_FOR_ARRIVAL = 4;
     public static final int PRESENTING_THE_REPORT = 5;
+    
+    
+    // other constants
+    public static final int N_THIEVES = 6;
+    
 }
