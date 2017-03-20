@@ -85,10 +85,7 @@ public class Thief extends Thread implements Comparable<Thief> {
 
         // adds to TreeSet, if already exists does nothing
         conc.addThief();
-
-        // wakes up the Master;
-        ctrcol.amINeeded();
-
+        
         // blocks until called by Master
         conc.amINeeded();
 
@@ -120,8 +117,7 @@ public class Thief extends Thread implements Comparable<Thief> {
     }
 
     /**
-     * MUDAR ISTO AQUI Compares this Contestant to another Contestant.
-     * Comparable implementation.
+     * Compares Thief ID to use for TreeSet. Something must be comparable.
      *
      * @param t Thief to compare to another Thief
      * @return ThiefID difference

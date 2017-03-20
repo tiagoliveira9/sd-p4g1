@@ -1,5 +1,6 @@
 package World;
 
+import Entity.MasterThief;
 import Entity.Thief;
 import HeistMuseum.Constants;
 import java.util.Set;
@@ -10,6 +11,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import genclass.GenericIO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,11 +23,12 @@ public class ConcentrationSite {
     private static ConcentrationSite instance;
     private final Lock l;
     private final Condition prepare;
+    private final Condition deciding;
+
     private final Set<Thief> thiefLine;
 
     /**
-     * The method returns ConcentrationSite object. This thread uses explicit
-     * monitor.
+     * The method returns ConcentrationSite object.
      *
      * @return ConcentrationSite object to be used.
      */
@@ -41,7 +45,8 @@ public class ConcentrationSite {
      */
     private ConcentrationSite() {
         l = new ReentrantLock();
-        prepare = l.newCondition();
+        this.prepare = l.newCondition();
+        this.deciding = l.newCondition();
         this.thiefLine = new TreeSet<>();
     }
 
@@ -51,10 +56,12 @@ public class ConcentrationSite {
         l.lock();
         try {
             // access the resource protected by this lock
-            thiefLine.add(crook);
+            this.thiefLine.add(crook);
+            // signal Master
+            this.deciding.signal();
 
-            // if crook is not in OUTSIDE, change to OUTSIDE and then log to Repo
             GenericIO.writelnString("Ladrao: " + crook.getThiefId() + ", Size " + thiefLine.size());
+            // log to Repo
 
         } finally {
             // everything fine-> unlock
@@ -65,7 +72,7 @@ public class ConcentrationSite {
     }
 
     public boolean amINeeded() {
-        // gets current thread accessing method
+        // gets current thread accessing method, only Thief calls this
         Thief crook = (Thief) Thread.currentThread();
 
         l.lock();
@@ -73,23 +80,29 @@ public class ConcentrationSite {
             // devemos ter sempre uma estrutura repetitiva? while, do..while?? 
             // awaits to be awaken by Master-> prepareAssaultParty
             this.prepare.await();
+            //} while (crook.getStateThief() == Constants.OUTSIDE);
 
         } catch (InterruptedException ex) {
-            // everything fine-> unlock
-            l.unlock();
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
         }
 
+        crook.setStateThief(Constants.CRAWLING_INWARDS);
+        // log to Repo
         l.unlock();
+
+        // falta considerar quando não Needed
         return true;
     }
 
     public void prepareAssaultParty2() {
+
         l.lock();
 
         try {
             // signal one thread to wake one thief
             this.prepare.signal();
-           
+
         } finally {
             // everything fine-> unlock
             l.unlock();
@@ -97,9 +110,21 @@ public class ConcentrationSite {
 
     }
 
-    public int getThiefLineSize() {
-        // sera que precisamos de controlar esta execucao? 
-        return thiefLine.size();
+    public void checkThiefNumbers() {
+
+        l.lock();
+        try {
+            while (thiefLine.size() < 3) {
+                this.deciding.await();
+            }
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
+        }
+
+        l.unlock();
+
     }
 
 }

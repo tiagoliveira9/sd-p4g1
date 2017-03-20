@@ -10,6 +10,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import genclass.GenericIO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,8 +25,7 @@ public class ControlCollectionSite {
     private final Condition deciding;
 
     /**
-     * The method returns ControlCollectionSite object. This thread uses
-     * explicit monitor.
+     * The method returns ControlCollectionSite object.
      *
      * @return ConcentrationSite object to be used.
      */
@@ -40,20 +41,20 @@ public class ControlCollectionSite {
      * Singleton needs private constructor
      */
     private ControlCollectionSite() {
+        // ReentrantLock means that several threads can lock on the same location
         l = new ReentrantLock();
         deciding = l.newCondition();
 
     }
 
     /**
-     * The method returns integer . This thread uses explicit monitor.
-     * 1 -> end of operations
-     * 2 -> prepareAssaultParty
-     * 3 -> takeARest
+     * The method returns integer. 1 -> end of operations 2 ->
+     * prepareAssaultParty 3 -> takeARest
+     *
      * @return integer with next action to perform
      */
     public int appraiseSit() {
-
+        /*
         l.lock();
         try {
             // será que posso fazer isto?? ir a outra área de memória?
@@ -63,20 +64,19 @@ public class ControlCollectionSite {
             }
 
         } catch (InterruptedException ex) {
-            l.unlock();
-            return -1;
-        }
-        
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
+        } 
+
         // Decidir o que vai fazer:
         // prepareAssaultParty-> 2
         // takeARest-> 3
-        
-        l.unlock();
+        l.unlock();*/
         // hardcoded para já, prepareAssaultParty
         return 2;
     }
 
-    public void amINeeded() {
+   /* public void amINeeded() {
         l.lock();
 
         try {
@@ -87,5 +87,5 @@ public class ControlCollectionSite {
             l.unlock();
         }
 
-    }
+    }*/
 }

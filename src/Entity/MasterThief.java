@@ -28,9 +28,9 @@ public class MasterThief extends Thread {
         int opt; // 1 - end of operations, 2 - begin assault, 3 - take a rest
         ControlCollectionSite ctrcol = ControlCollectionSite.getInstance();
         ConcentrationSite conc = ConcentrationSite.getInstance();
-        
+
         startOperations();
-        while ((opt = ctrcol.appraiseSit()) != 1) {
+        while ((opt = appraiseSit()) != 1) {
             switch (opt) {
                 case 2:
                     GenericIO.writelnString("prepareAssaultParty");
@@ -56,6 +56,12 @@ public class MasterThief extends Thread {
         setStateMaster(Constants.DECIDING_WHAT_TO_DO);
         GenericIO.writelnString("\nEstado: DECIDING_WHAT_TO_DO");
         // regista para o repositorio
+    }
+
+    public int appraiseSit() {
+        ConcentrationSite.getInstance().checkThiefNumbers();
+
+        return ControlCollectionSite.getInstance().appraiseSit();
     }
 
     public int getStateMaster() {
