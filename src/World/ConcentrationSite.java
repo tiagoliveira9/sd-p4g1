@@ -68,31 +68,6 @@ public class ConcentrationSite {
             l.unlock();
         }
 
-        return;
-    }
-
-    public boolean amINeeded() {
-        // gets current thread accessing method, only Thief calls this
-        Thief crook = (Thief) Thread.currentThread();
-
-        l.lock();
-        try {
-            // devemos ter sempre uma estrutura repetitiva? while, do..while?? 
-            // awaits to be awaken by Master-> prepareAssaultParty
-            this.prepare.await();
-            //} while (crook.getStateThief() == Constants.OUTSIDE);
-
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
-        }
-
-        crook.setStateThief(Constants.CRAWLING_INWARDS);
-        // log to Repo
-        l.unlock();
-
-        // falta considerar quando não Needed
-        return true;
     }
 
     public void prepareAssaultParty2() {
@@ -110,7 +85,7 @@ public class ConcentrationSite {
 
     }
 
-    public void checkThiefNumbers() {
+    public void checkThiefInitialNumbers() {
 
         l.lock();
         try {
@@ -124,7 +99,25 @@ public class ConcentrationSite {
         }
 
         l.unlock();
-
     }
 
+    // change Thief state and return assault group
+    public void prepareExcursion() {
+        Thief crook = (Thief) Thread.currentThread();
+
+        l.lock();
+        try {
+            this.prepare.await();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
+        }
+        crook.setStateThief(Constants.CRAWLING_INWARDS);
+        // log to Repo
+        l.unlock();
+    }
+
+    public int checkThiefNumbers() {
+        return thiefLine.size();
+    }
 }

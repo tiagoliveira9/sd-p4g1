@@ -54,14 +54,23 @@ public class MasterThief extends Thread {
 
     public void startOperations() {
         setStateMaster(Constants.DECIDING_WHAT_TO_DO);
+        // log to Repo
+        // Master blocks here if thieves < 3
+        ConcentrationSite.getInstance().checkThiefInitialNumbers();
         GenericIO.writelnString("\nEstado: DECIDING_WHAT_TO_DO");
-        // regista para o repositorio
+
     }
 
     public int appraiseSit() {
-        ConcentrationSite.getInstance().checkThiefNumbers();
+        // if every room is empty, return 1
 
-        return ControlCollectionSite.getInstance().appraiseSit();
+        // else if thieves > 2, prepareAssaultParty
+        ConcentrationSite.getInstance().checkThiefNumbers();
+        
+        // else thieves < 2, takeARest
+        
+        
+        return 2;
     }
 
     public int getStateMaster() {

@@ -23,6 +23,7 @@ public class ControlCollectionSite {
     private final Lock l;
     // condition that verifies if block on state Deciding What to Do
     private final Condition deciding;
+    private boolean sumUp;
 
     /**
      * The method returns ControlCollectionSite object.
@@ -43,49 +44,13 @@ public class ControlCollectionSite {
     private ControlCollectionSite() {
         // ReentrantLock means that several threads can lock on the same location
         l = new ReentrantLock();
-        deciding = l.newCondition();
-
+        this.deciding = l.newCondition();
+        this.sumUp = false;
     }
 
-    /**
-     * The method returns integer. 1 -> end of operations 2 ->
-     * prepareAssaultParty 3 -> takeARest
-     *
-     * @return integer with next action to perform
-     */
-    public int appraiseSit() {
-        /*
-        l.lock();
-        try {
-            // será que posso fazer isto?? ir a outra área de memória?
-            while (ConcentrationSite.getInstance().getThiefLineSize() < 3) {
-                // ao fazer o await, netbeans pediu me para apanhar uma excepcao
-                deciding.await();
-            }
+  
 
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
-        } 
-
-        // Decidir o que vai fazer:
-        // prepareAssaultParty-> 2
-        // takeARest-> 3
-        l.unlock();*/
-        // hardcoded para já, prepareAssaultParty
-        return 2;
+    public boolean canIDie() {
+        return this.sumUp;
     }
-
-   /* public void amINeeded() {
-        l.lock();
-
-        try {
-            // aqui já não é necessário apanhar excepção porquê? 
-            deciding.signal();
-
-        } finally {
-            l.unlock();
-        }
-
-    }*/
 }

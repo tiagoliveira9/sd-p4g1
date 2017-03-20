@@ -63,9 +63,8 @@ public class Thief extends Thread implements Comparable<Thief> {
         // conc.amINeeded() actua sobre o concentration site
         while (amINeeded()) {
 
-            
-            GenericIO.writelnString("prepareExcursion, id: "+this.thiefId);
-
+            GenericIO.writelnString("prepareExcursion, id: " + this.thiefId);
+            prepareExcursion();
             /* assgrp = conc.prepareExcursion();
             assgrp.prepareExcursion();
             ctrcol.prepareExcursion(); //se for o ultimo
@@ -77,6 +76,7 @@ public class Thief extends Thread implements Comparable<Thief> {
             while (assgrp.crawlOut());
             ctrcol.handACanvas(); */
         }
+
     }
 
     private boolean amINeeded() {
@@ -86,10 +86,15 @@ public class Thief extends Thread implements Comparable<Thief> {
         // adds to TreeSet, if already exists does nothing
         conc.addThief();
         
-        // blocks until called by Master
-        conc.amINeeded();
+        // if you can't die, then invert bool -> you are needed
+        return !ctrcol.canIDie();
+    }
 
-        return true;
+    private void prepareExcursion() {
+        ConcentrationSite conc = ConcentrationSite.getInstance();
+        // thief blocks here wainting orders
+        // assgrp = conc.prepareExcursion();
+        conc.prepareExcursion();
     }
 
     public int getThiefId() {
