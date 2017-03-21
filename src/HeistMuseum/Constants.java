@@ -18,6 +18,10 @@ public class Constants {
 
     public static final int PLANNING_THE_HEIST = 1;
     public static final int DECIDING_WHAT_TO_DO = 2;
+    /**
+     * blocking state master thief is waken up by the operation prepareExcursion
+     * of the last of the ordinary thieves to join the party
+     */
     public static final int ASSEMBLING_A_GROUP = 3;
     public static final int WAITING_FOR_ARRIVAL = 4;
     public static final int PRESENTING_THE_REPORT = 5;

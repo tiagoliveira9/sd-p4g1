@@ -23,7 +23,7 @@ public class Museum {
     private static Museum instance;
     private final Lock l;
     private final Condition somethingCondition;
-    private Room[] sala;
+    private Room[] rooms;
 
     private class Room {
 
@@ -59,9 +59,9 @@ public class Museum {
         l = new ReentrantLock();
         this.somethingCondition = l.newCondition();
         // exists 5 rooms on the museum
-        sala = new Room[Constants.N_ROOMS];
+        rooms = new Room[Constants.N_ROOMS];
         for (int i = 0; i < Constants.N_ROOMS; i++) {
-            sala[i] = new Room(i);
+            rooms[i] = new Room(i);
         }
 
     }
@@ -76,15 +76,16 @@ public class Museum {
     public void setUpRoom(int roomId, int distance, int canvas) {
 
         if (roomId < Constants.N_ROOMS) {
-            sala[roomId].distance = distance;
-            sala[roomId].canvas = canvas;
+            rooms[roomId].distance = distance;
+            rooms[roomId].canvas = canvas;
+            // log to Repo
         }
 
     }
 
     public int getRoomDistance(int roomId) {
         if (roomId < Constants.N_ROOMS) {
-            return sala[roomId].distance;
+            return rooms[roomId].distance;
         }
         return -1;
 
@@ -92,7 +93,7 @@ public class Museum {
 
     public int getRoomCanvas(int roomId) {
         if (roomId < Constants.N_ROOMS) {
-            return sala[roomId].canvas;
+            return rooms[roomId].canvas;
         }
         return -1;
     }

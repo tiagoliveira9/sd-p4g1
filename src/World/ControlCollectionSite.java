@@ -22,12 +22,25 @@ public class ControlCollectionSite {
     private static ControlCollectionSite instance;
     private final Lock l;
     // condition that verifies if block on state Deciding What to Do
-    private final Condition deciding;
+    private final Condition assembling;
     private boolean sumUp;
-    // 0 - no one is working, 1- assault party 1 working
-    // 2 - assault party 2 working 3 - everyone working (error if we need to check this 3?)
-    private int nAssaultPartyWorking; 
+    private boolean assaultP1;
+    private boolean assaultP2;
 
+    private Sala[] salas;
+
+    private class Sala {
+
+        private final int salaId;
+        private boolean empty;
+        private boolean inUse;
+
+        public Sala(int salaId) {
+            this.salaId = salaId;
+            this.empty = false;
+            this.inUse = false;
+        }
+    }
 
     /**
      * The method returns ControlCollectionSite object.
@@ -48,24 +61,117 @@ public class ControlCollectionSite {
     private ControlCollectionSite() {
         // ReentrantLock means that several threads can lock on the same location
         l = new ReentrantLock();
-        this.deciding = l.newCondition();
+        this.assembling = l.newCondition();
         this.sumUp = false;
-        this.nAssaultPartyWorking = 0;
+        this.assaultP1 = false;
+        this.assaultP2 = false;
+
+        salas = new Sala[Constants.N_ROOMS];
+        for (int i = 0; i < Constants.N_ROOMS; i++) {
+            salas[i] = new Sala(i);
+        }
     }
 
-    public int [] prepareAssaultParty1(){
-        int [] a = new int[2];
-        // check assault party availability
-        // random selects a not free room 
-        a[0] = 1;
-        a[0] = 2;
-        
-        return a;
-    
+    public void collectCanvas() {
+        // reset assaultP1 or assaultP2 -> "destroy" assault party
+        // reset room/distance on assault party
+    }
+
+    /**
+     * The method prepareAssaultPart stage 1. Selects Assault Party and Room to
+     * sack
+     *
+     * @return int[]{tempAssault, tempSala}
+     */
+    public int[] prepareAssaultParty1() {
+        int tempAssault = -1;
+        int tempSala = -1;
+
+        // nao esquecer de resetar a assault party quando o ultimo elemento chegar
+        l.lock();
+        if (!assaultP1) {
+            tempAssault = 0;
+            assaultP1 = true;
+        } else if (!assaultP2) {
+            tempAssault = 1;
+            assaultP2 = true;
+        }
+
+        for (int i = 0; i < Constants.N_ROOMS; i++) {
+            // if is empty, choose
+            if (!salas[i].empty) {
+                tempSala = i;
+                salas[i].inUse = true;
+                break;
+            }
+        }
+        l.unlock();
+        return new int[]{tempAssault, tempSala};
+    }
+
+    /**
+     * The method prepareAssaultPart stage 3. Master sleeps until last Thief
+     * goes to AssaultParty
+     *
+     * @return Dunno now.
+     */
+    public void prepareAssaultParty3() {
+        MasterThief master = (MasterThief) Thread.currentThread();
+
+        l.lock();
+        try {
+            // devia ter um while para prevenir esta thread de acordar e seguir "desgovernada"
+            
+            master.setStateMaster(Constants.ASSEMBLING_A_GROUP);
+            // log to Repo
+            this.assembling.await();
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
+        }
+        l.unlock();
+    }
+
+    /**
+     * The method prepareExcursion. The last Thief to enter the assault party,
+     * wakes up the Master
+     */
+    public void teamReady() {
+        l.lock();
+        try {
+            // devia ter condicao para proteger de a thread acordar sozinha
+            // e seguir
+            this.assembling.signal();
+        } finally {
+            l.unlock();
+        }
+
+    }
+
+    /**
+     * The method anyRoomLeft
+     *
+     * @return True if exists a Room to sack, False if every room is empty
+     */
+    public boolean anyRoomLeft() {
+
+        l.lock();
+
+        for (int i = 0; i < Constants.N_ROOMS; i++) {
+            // if is empty, choose
+            if (!salas[i].empty) {
+                l.unlock();
+                return true;
+            }
+        }
+
+        l.unlock();
+        return false;
     }
 
     public boolean canIDie() {
-        // ainda nao tenho a certeza de como o mato
+        // ainda nao tenho a certeza de como o mato o Ladrao
         return this.sumUp;
     }
 }

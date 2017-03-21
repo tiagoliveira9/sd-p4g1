@@ -24,6 +24,8 @@ public class ConcentrationSite {
     private final Lock l;
     private final Condition prepare;
     private final Condition deciding;
+    // 0 - assault party 1, 1 - assault party 2
+    private int nAssaultParty;
 
     private final Set<Thief> thiefLine;
 
@@ -48,6 +50,7 @@ public class ConcentrationSite {
         this.prepare = l.newCondition();
         this.deciding = l.newCondition();
         this.thiefLine = new TreeSet<>();
+        this.nAssaultParty = -1;
     }
 
     public void addThief() {
@@ -62,21 +65,6 @@ public class ConcentrationSite {
 
             GenericIO.writelnString("Ladrao: " + crook.getThiefId() + ", Size " + thiefLine.size());
             // log to Repo
-
-        } finally {
-            // everything fine-> unlock
-            l.unlock();
-        }
-
-    }
-
-    public void prepareAssaultParty2() {
-
-        l.lock();
-
-        try {
-            // signal one thread to wake one thief
-            this.prepare.signal();
 
         } finally {
             // everything fine-> unlock
@@ -101,20 +89,56 @@ public class ConcentrationSite {
         l.unlock();
     }
 
-    // change Thief state and return assault group
-    public void prepareExcursion() {
+    /**
+     * The method prepareAssaultPart stage 2. Wakes thieves to go to AssaultPart
+     * #
+     *
+     * @param PartyID. To inform what party thief must go
+     */
+    public void prepareAssaultParty2(int partyId) {
+
+        l.lock();
+
+        try {
+            // signal one thread to wake one thief
+
+            this.nAssaultParty = partyId;
+            this.prepare.signal();
+
+            // 
+        } finally {
+            // everything fine-> unlock
+            l.unlock();
+        }
+
+    }
+
+    /**
+     * Change Thief state and return assault group #
+     *
+     * @return PartyID. To inform what party thief must go.
+     */
+    public int prepareExcursion() {
         Thief crook = (Thief) Thread.currentThread();
 
         l.lock();
         try {
-            this.prepare.await();
+            // -1 means that no assault party was assigned 
+            while (nAssaultParty == -1) {
+                this.prepare.await();
+            }
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
-        crook.setStateThief(Constants.CRAWLING_INWARDS);
+        // everytime master wakes a thief, she says which party thief goes
+        int temp = nAssaultParty;
+        // reset variable
+        nAssaultParty = -1;
+        crook.setStateThief(Constants.CRAWLING_INWARDS); // now is on the team
         // log to Repo
         l.unlock();
+        return temp;
     }
 
     public int checkThiefNumbers() {
