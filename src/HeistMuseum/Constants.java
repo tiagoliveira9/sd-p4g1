@@ -25,5 +25,6 @@ public class Constants {
     
     // other constants
     public static final int N_THIEVES = 6;
+    public static final int N_SQUAD = 3;
     
 }

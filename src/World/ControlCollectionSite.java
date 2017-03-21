@@ -24,6 +24,10 @@ public class ControlCollectionSite {
     // condition that verifies if block on state Deciding What to Do
     private final Condition deciding;
     private boolean sumUp;
+    // 0 - no one is working, 1- assault party 1 working
+    // 2 - assault party 2 working 3 - everyone working (error if we need to check this 3?)
+    private int nAssaultPartyWorking; 
+
 
     /**
      * The method returns ControlCollectionSite object.
@@ -46,9 +50,19 @@ public class ControlCollectionSite {
         l = new ReentrantLock();
         this.deciding = l.newCondition();
         this.sumUp = false;
+        this.nAssaultPartyWorking = 0;
     }
 
-  
+    public int [] prepareAssaultParty1(){
+        int [] a = new int[2];
+        // check assault party availability
+        // random selects a not free room 
+        a[0] = 1;
+        a[0] = 2;
+        
+        return a;
+    
+    }
 
     public boolean canIDie() {
         return this.sumUp;

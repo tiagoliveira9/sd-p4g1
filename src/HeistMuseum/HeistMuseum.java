@@ -1,8 +1,11 @@
 package HeistMuseum;
 
 import World.ConcentrationSite;
+import World.AssaultParty;
+
 import Entity.Thief;
 import Entity.MasterThief;
+import java.util.List;
 
 /**
  *
@@ -18,6 +21,7 @@ public class HeistMuseum {
         // Instanciation of the World
         ConcentrationSite.getInstance();
 
+        /*
         Thief[] crook = new Thief[Constants.N_THIEVES];
         MasterThief master = new MasterThief();
         
@@ -32,7 +36,7 @@ public class HeistMuseum {
         for (int i = 0; i < Constants.N_THIEVES; i++) {
             crook[i].start();
         }
-
+         */
     }
 
 }
