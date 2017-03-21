@@ -6,7 +6,7 @@ import World.ControlCollectionSite;
 import genclass.GenericIO;
 
 /**
- *
+ * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
 public class MasterThief extends Thread {
@@ -66,10 +66,8 @@ public class MasterThief extends Thread {
 
         // else if thieves > 2, prepareAssaultParty
         ConcentrationSite.getInstance().checkThiefNumbers();
-        
+
         // else thieves < 2, takeARest
-        
-        
         return 2;
     }
 

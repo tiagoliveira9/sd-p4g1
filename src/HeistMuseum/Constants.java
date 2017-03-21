@@ -1,7 +1,7 @@
 package HeistMuseum;
 
 /**
- *
+ * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
 public class Constants {
@@ -21,10 +21,10 @@ public class Constants {
     public static final int ASSEMBLING_A_GROUP = 3;
     public static final int WAITING_FOR_ARRIVAL = 4;
     public static final int PRESENTING_THE_REPORT = 5;
-    
-    
+
     // other constants
     public static final int N_THIEVES = 6;
     public static final int N_SQUAD = 3;
-    
+    public static final int N_ROOMS = 5;
+    public static final int N_ASSAULT_PARTY = 2;
 }

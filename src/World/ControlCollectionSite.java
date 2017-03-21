@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
 public class ControlCollectionSite {
@@ -65,6 +65,7 @@ public class ControlCollectionSite {
     }
 
     public boolean canIDie() {
+        // ainda nao tenho a certeza de como o mato
         return this.sumUp;
     }
 }
