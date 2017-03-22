@@ -10,7 +10,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import genclass.GenericIO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,6 +59,7 @@ public class ConcentrationSite {
         try {
             // access the resource protected by this lock
             this.thiefLine.add(crook);
+             GRInformation.getInstance().setMd(crook.getThiefId(), crook.getAgility());
             // signal Master
             this.deciding.signal();
         } finally {

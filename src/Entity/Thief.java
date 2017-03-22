@@ -5,7 +5,6 @@ import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
 import World.GRInformation;
-import genclass.GenericIO;
 
 // import das areas with which the thief will interact
 /**
@@ -50,8 +49,6 @@ public class Thief extends Thread implements Comparable<Thief> {
         this.thiefId = thiefId;
         this.agility = agility;
         this.stateThief = Constants.OUTSIDE;
-        GRInformation.getInstance().setMd(thiefId, agility);
-
     }
 
     /**

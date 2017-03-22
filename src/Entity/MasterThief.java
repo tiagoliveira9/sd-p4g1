@@ -6,7 +6,6 @@ import World.ConcentrationSite;
 import World.ControlCollectionSite;
 import World.Museum;
 import World.GRInformation;
-import genclass.GenericIO;
 
 /**
  * @author João Cravo joao.cravo@ua.pt n.:63784
@@ -38,14 +37,11 @@ public class MasterThief extends Thread {
                 case 2:
                     // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
                     pick = ControlCollectionSite.getInstance().prepareAssaultParty1();
-                    genclass.GenericIO.writelnString("prepareAssaultParty1");
                     // check distance to room to setUp AssaultParty
                     dist = Museum.getInstance().getRoomDistance(pick[1]);
-                    genclass.GenericIO.writelnString("getdistance sala Museu");
-
                     AssaultParty.getInstance(pick[0]).setUpRoom(dist, pick[1]);
-                    genclass.GenericIO.writelnString("setUpRoom no Assault party");
 
+                    GRInformation.getInstance().setRoomId(pick[0], pick[1] + 1);
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
                     prepareAssaultParty2(pick[0]);
                     // assgrp.sendAssaultParty(); pseudocodigo
@@ -53,7 +49,6 @@ public class MasterThief extends Thread {
                     break;
                 case 3:
                     // do something
-                    GenericIO.writelnString("TakeARest");
                     break;
                 default:
                     // throw exception
@@ -65,12 +60,11 @@ public class MasterThief extends Thread {
     }
 
     public void startOperations() {
-        setStateMaster(Constants.DECIDING_WHAT_TO_DO);
-        GRInformation.getInstance().printUpdateLine();
         // Master blocks here if thieves < 3
         ConcentrationSite.getInstance().checkThiefInitialNumbers();
-        GenericIO.writelnString("\nStartOperations");
-
+        // exists more than 3 thief, lets decide
+        setStateMaster(Constants.DECIDING_WHAT_TO_DO);
+        GRInformation.getInstance().printUpdateLine();
     }
 
     public void prepareAssaultParty2(int partyId) {

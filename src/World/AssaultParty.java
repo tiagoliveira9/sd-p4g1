@@ -72,7 +72,7 @@ public class AssaultParty {
             if (squad.size() < Constants.N_SQUAD) {
                 squad.add(crook);
                 GRInformation.getInstance().setIdPartyElem(this.partyId,
-                        squad.size() - 1, crook.getThiefId());
+                        squad.size() - 1, crook.getThiefId()+1);
 
                 if (squad.size() == Constants.N_SQUAD) {
                     // last thief
@@ -104,7 +104,9 @@ public class AssaultParty {
     }
 
     public void sendAssaultParty() {
+        l.lock();
         genclass.GenericIO.writelnString("sendAssaultParty");
+        l.unlock();
     }
 
     public void setUpRoom(int distance, int roomId) {

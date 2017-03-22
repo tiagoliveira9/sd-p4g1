@@ -88,6 +88,9 @@ public class GRInformation {
         lock.lock();
 
         party[partyId].elements[elemId].id = id;
+        party[partyId].elements[elemId].pos = 0;
+        party[partyId].elements[elemId].cv = '0';
+        
         printDoubleLine();
         lock.unlock();
     }
@@ -305,7 +308,7 @@ public class GRInformation {
                 "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "NP DT", "NP DT", "NP DT", "ND DP", "ND DP");
 
         printer.print(strb.toString());
-
+        System.out.println(strb.toString());
         printer.flush();
         lock.unlock();
 
@@ -402,6 +405,7 @@ public class GRInformation {
 
         formatter.format("%n");
         printer.print(strb.toString());
+        System.out.println(strb.toString());
         printer.flush();
 
         lock.unlock();
@@ -417,7 +421,7 @@ public class GRInformation {
         formatter.format("%1$4s %2$3s %3$2s", party[0].elements[1].id, party[0].elements[1].pos, party[0].elements[1].cv);
         formatter.format("%1$4s %2$3s %3$2s", party[0].elements[2].id, party[0].elements[2].pos, party[0].elements[2].cv);
 
-        formatter.format("%1$4s", party[1].roomId);
+        formatter.format("%1$4s", party[1].roomId+1);
         formatter.format("%1$5s %2$3s %3$2s", party[1].elements[0].id, party[1].elements[0].pos, party[1].elements[0].cv);
         formatter.format("%1$5s %2$3s %3$2s", party[1].elements[1].id, party[1].elements[1].pos, party[1].elements[1].cv);
         formatter.format("%1$4s %2$3s %3$2s", party[1].elements[2].id, party[1].elements[2].pos, party[1].elements[2].cv);
@@ -430,9 +434,10 @@ public class GRInformation {
                 sala[4].canvas, sala[4].distance);
 
         //printMuseumRooms();
-
         formatter.format("%n");
         printer.print(strb.toString());
+        System.out.println(strb.toString());
+
         printer.flush();
 
         lock.unlock();
@@ -449,7 +454,6 @@ public class GRInformation {
 
         lock.unlock();
     }*/
-
     public void printResume() {
 
         lock.lock();
