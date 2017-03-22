@@ -9,11 +9,17 @@ import java.util.Formatter;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
 /**
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
 public class GRInformation {
+
+    private final SimpleDateFormat date;
+    private final String dateString;
 
     private final Lock lock;
     private static GRInformation instance;
@@ -141,7 +147,7 @@ public class GRInformation {
             this.thiefId = thiefId;
             this.stat = Constants.OUTSIDE;
             this.s = 'W';
-            this.md = -1;
+            this.md = 9;
         }
     }
 
@@ -153,11 +159,12 @@ public class GRInformation {
 
         public AssParty(int partyId) {
             this.partyId = partyId;
-            this.roomId = -1;
+            this.roomId = 0; // não esquecer de incrementar 1 para visualmente corresponder à sala correcta;
             this.elements = new Elem[Constants.N_SQUAD];
 
             for (int i = 0; i < Constants.N_SQUAD; i++) {
                 elements[i] = new Elem();
+
             }
         }
 
@@ -168,8 +175,8 @@ public class GRInformation {
             private char cv;
 
             public Elem() {
-                this.id = -1;
-                this.pos = -1;
+                this.id = 9;
+                this.pos = 99;
                 this.cv = '-';
             }
         }
@@ -184,19 +191,22 @@ public class GRInformation {
         private int canvas;
 
         public Room(int roomId) {
-            this.roomId = roomId;
-            this.distance = -1;
-            this.canvas = -1;
+            this.roomId = roomId; //ao imprimir acrescentar 1
+            this.distance = 99;
+            this.canvas = 99;
         }
     }
 
     public GRInformation() {
+        // to not overwrite logs (within minutes)
+        date = new SimpleDateFormat("yyyy'-'MMdd'-'HHmm");
+        dateString = (date.format(new Date()));
 
         this.lock = new ReentrantLock();
         this.masterThiefState = Constants.PLANNING_THE_HEIST;
 
         try {
-            printer = new PrintWriter(log);
+            printer = new PrintWriter("LOG-" + dateString + ".txt");
         } catch (FileNotFoundException ex) {
             printer = null;
         }
@@ -256,7 +266,7 @@ public class GRInformation {
 
         printColumnHeader();
         printEntityStates();
-        printRoomDescription();
+        printAssaultDescription();
 
         //formatter.format("Heist to the museum - Description of the internal state%n");
         //formatter.format("%n");
@@ -281,33 +291,22 @@ public class GRInformation {
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
         //formatter.format("%4$2s %3$2s %2$2s %1$2s", "a", "b", "c", "d");
-        //              "MstT""Thief1""Thief2""Thief3""Thief4"Thief5"Thief 6
-        formatter.format("%1$4s %2$21s %3$30s %4$30s %5$30s %6$30s %7$30s %n",
+        formatter.format("%1$4s %2$11s %3$12s %4$12s %5$12s %6$12s %7$12s %n",
                 "MstT", "Thief 1", "Thief 2", "Thief 3", "Thief 4", "Thief 5", "Thief 6");
-        formatter.format("%1$4s %2$28s %3$24s %4$25s %5$25s %6$25s %7$27s %n",
-                "Stat", "Stat       S     MD", "Stat       S     MD", "Stat       S     MD", "Stat       S     MD", "Stat       S     MD", "Stat       S     MD");
-        formatter.format("%1$72s %2$95s %3$110s %n", "Assault party 1",
+        formatter.format("%1$4s %2$12s %3$12s %4$12s %5$12s %6$12s %7$12s %n",
+                "Stat", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD");
+        formatter.format("%1$36s %2$38s %3$31s %n", "Assault party 1",
                 "Assault party 2", "Museum");
-        formatter.format("%1$32s %2$29s %3$29s %4$30s %5$29s %6$30s %7$40s %8$16s %9$16s %10$16s %11$16s %n",
+
+        formatter.format("%1$19s %2$10s %3$10s %4$16s %5$10s %6$10s %7$10s %8$8s %9$8s %10$8s %11$8s %n",
                 "Elem 1", "Elem 2", "Elem 3", "Elem 1", "Elem 2", "Elem 3", "Room 1", "Room 2", "Room 3", "Room 4", "Room 5");
-        formatter.format("%1$3s %2$27s %3$15s %4$16s %5$16s %6$16s %7$16s %8$16s %9$16s %10$16s %11$16s %12$16s %13$16s %n",
-                "RId", "Id   Pos   Cv", "Id   Pos   Cv", "Id   Pos   Cv", "RId",
-                "Id   Pos   Cv", "Id   Pos   Cv", "Id   Pos   Cv", "NP   DT", "NP   DT",
-                "NP   DT", "ND   DP", "ND   DP");
+
+        formatter.format("%1$7s %2$12s %3$10s %4$10s %5$4s %6$10s %7$11s %8$10s %9$9s %10$8s %11$8s %12$8s %13$8s %n",
+                "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "NP DT", "NP DT", "NP DT", "ND DP", "ND DP");
 
         printer.print(strb.toString());
 
         printer.flush();
-
-        /*
-        
-        printer.printf("MstT    Thief 1       Thief 2       Thief 3       Thief 4       Thief 5       Thief 6                                       %n");
-        printer.printf("Stat   Stat S MD     Stat S MD     Stat S MD     Stat S MD     Stat S MD     Stat S MD                                      %n");
-        printer.printf("                            Assault party 1                       Assault party 2                       Museum                 %n");
-        printer.printf("           Elem 1     Elem 2     Elem 3          Elem 1     Elem 2     Elem 3   Room 1  Room 2  Room 3  Room 4  Room 5%n");
-        printer.printf("    RId  Id Pos Cv  Id Pos Cv  Id Pos Cv  RId  Id Pos Cv  Id Pos Cv  Id Pos Cv   NP DT   NP DT   NP DT   ND DP   ND DP%n");
-        printer.flush();
-         */
         lock.unlock();
 
     }
@@ -331,8 +330,8 @@ public class GRInformation {
 
     public void printDoubleLine() {
         printEntityStates();
-        printRoomDescription();
-        printer.flush();
+        printAssaultDescription();
+        //printer.flush();
 
     }
 
@@ -388,49 +387,58 @@ public class GRInformation {
 
     public void printEntityStates() {
 
-        //StringBuilder strb = new StringBuilder();
-        //Formatter formatter = new Formatter(strb);
+        StringBuilder strb = new StringBuilder();
+        Formatter formatter = new Formatter(strb);
         lock.lock();
 
-        printer.printf(translateMasterThiefState(masterThiefState));
+        // printer.printf(translateMasterThiefState(masterThiefState));
+        formatter.format("%1$4s %2$3s", translateMasterThiefState(masterThiefState), " ");
 
         for (int i = 0; i < ladrao.length; i++) {
-            printer.printf("  " + translateThiefState(ladrao[i].stat) + " " + translateThiefSituation(ladrao[i].stat) + "  " + ladrao[i].md + "  ");
-        }
-        printer.printf("%n");
-        //genclass.GenericIO.writelnString("Ladrão: " + thiefState + "MasterThief: " + masterThiefState);
-        //System.out.print(strb);
-        //return "ola";
+            formatter.format("%1$4s %2$1s %3$2s %4$2s ", translateThiefState(ladrao[i].stat),
+                    translateThiefSituation(ladrao[i].stat), ladrao[i].md, " ");
 
-        //printer.flush();
-        //printer.print(strb);
-        //return strb.toString();  
+        }
+
+        formatter.format("%n");
+        printer.print(strb.toString());
+        printer.flush();
+
         lock.unlock();
     }
 
-    public void printRoomDescription() {
-        //StringBuilder strb = new StringBuilder();
-        //Formatter formatter = new Formatter(strb);
+    public void printAssaultDescription() {
+        StringBuilder strb = new StringBuilder();
+        Formatter formatter = new Formatter(strb);
         lock.lock();
 
-        //for(int i = 0; i< party.length;i++){
-        printer.printf("    " + party[0].roomId + "    "
-                + party[0].elements[0].id + "  " + party[0].elements[0].pos + "  " + party[0].elements[0].cv + "   "
-                + party[0].elements[1].id + "  " + party[0].elements[1].pos + "  " + party[0].elements[1].cv + "   "
-                + party[0].elements[2].id + "  " + party[0].elements[2].pos + "  " + party[0].elements[2].cv + "  "
-                + party[1].roomId + "    "
-                + party[1].elements[0].id + "  " + party[1].elements[0].pos + "  " + party[1].elements[0].cv + "   "
-                + party[1].elements[1].id + "  " + party[1].elements[1].pos + "  " + party[1].elements[1].cv + "   "
-                + party[1].elements[2].id + "  " + party[1].elements[2].pos + "  " + party[1].elements[2].cv + "   ");
-        printMuseumRooms();
-        printer.printf("%n");
+        formatter.format("%1$6s", party[0].roomId);
+        formatter.format("%1$7s %2$3s %3$2s", party[0].elements[0].id, party[0].elements[0].pos, party[0].elements[0].cv);
+        formatter.format("%1$4s %2$3s %3$2s", party[0].elements[1].id, party[0].elements[1].pos, party[0].elements[1].cv);
+        formatter.format("%1$4s %2$3s %3$2s", party[0].elements[2].id, party[0].elements[2].pos, party[0].elements[2].cv);
 
-        //printer.printf(party[0].elements[0].pos + "");
+        formatter.format("%1$4s", party[1].roomId);
+        formatter.format("%1$5s %2$3s %3$2s", party[1].elements[0].id, party[1].elements[0].pos, party[1].elements[0].cv);
+        formatter.format("%1$5s %2$3s %3$2s", party[1].elements[1].id, party[1].elements[1].pos, party[1].elements[1].cv);
+        formatter.format("%1$4s %2$3s %3$2s", party[1].elements[2].id, party[1].elements[2].pos, party[1].elements[2].cv);
+
+        formatter.format("%1$7s %2$2s %3$5s %4$2s %5$5s %6$2s %7$5s %8$2s %9$5s %10$2s",
+                sala[0].canvas, sala[0].distance,
+                sala[1].canvas, sala[1].distance,
+                sala[2].canvas, sala[2].distance,
+                sala[3].canvas, sala[3].distance,
+                sala[4].canvas, sala[4].distance);
+
+        //printMuseumRooms();
+
+        formatter.format("%n");
+        printer.print(strb.toString());
+        printer.flush();
+
         lock.unlock();
-        //return strb.toString();
     }
 
-    public void printMuseumRooms() {
+    /*public void printMuseumRooms() {
         lock.lock();
 
         printer.printf(sala[0].canvas + " " + sala[0].distance + "   "
@@ -440,7 +448,7 @@ public class GRInformation {
                 + sala[0].canvas + " " + sala[0].distance);
 
         lock.unlock();
-    }
+    }*/
 
     public void printResume() {
 
