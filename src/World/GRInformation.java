@@ -90,7 +90,7 @@ public class GRInformation {
         party[partyId].elements[elemId].id = id;
         party[partyId].elements[elemId].pos = 0;
         party[partyId].elements[elemId].cv = '0';
-        
+
         printDoubleLine();
         lock.unlock();
     }
@@ -108,6 +108,13 @@ public class GRInformation {
         printDoubleLine();
         lock.unlock();
 
+    }
+
+    public void printSomething(String a) {
+        lock.lock();
+        System.out.println(a);
+
+        lock.unlock();
     }
 
     /**
@@ -148,7 +155,7 @@ public class GRInformation {
 
         public nThief(int thiefId) {
             this.thiefId = thiefId;
-            this.stat = Constants.OUTSIDE;
+            this.stat = 0;
             this.s = 'W';
             this.md = 9;
         }
@@ -244,7 +251,8 @@ public class GRInformation {
         lock.lock();
 
         ladrao[thief.getThiefId()].stat = thief.getStateThief();
-
+        ladrao[thief.getThiefId()].md = thief.getAgility();
+        
         lock.unlock();
     }
 
@@ -350,7 +358,7 @@ public class GRInformation {
             case Constants.CRAWLING_OUTWARDS:
                 return "CRAO";
             default:
-                return "0";
+                return "----";
         }
     }
 
@@ -421,7 +429,7 @@ public class GRInformation {
         formatter.format("%1$4s %2$3s %3$2s", party[0].elements[1].id, party[0].elements[1].pos, party[0].elements[1].cv);
         formatter.format("%1$4s %2$3s %3$2s", party[0].elements[2].id, party[0].elements[2].pos, party[0].elements[2].cv);
 
-        formatter.format("%1$4s", party[1].roomId+1);
+        formatter.format("%1$4s", party[1].roomId);
         formatter.format("%1$5s %2$3s %3$2s", party[1].elements[0].id, party[1].elements[0].pos, party[1].elements[0].cv);
         formatter.format("%1$5s %2$3s %3$2s", party[1].elements[1].id, party[1].elements[1].pos, party[1].elements[1].cv);
         formatter.format("%1$4s %2$3s %3$2s", party[1].elements[2].id, party[1].elements[2].pos, party[1].elements[2].cv);

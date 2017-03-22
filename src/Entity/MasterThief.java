@@ -28,7 +28,7 @@ public class MasterThief extends Thread {
     @Override
     public void run() {
         int opt; // 1 - end of operations, 2 - begin assault, 3 - take a rest
-        int[] pick = new int[2];    // pick[0]=assaultPartyId, pick[1]=RoomId
+        int[] pick;    // pick[0]=assaultPartyId, pick[1]=RoomId
         int dist;
 
         startOperations();
@@ -41,13 +41,16 @@ public class MasterThief extends Thread {
                     dist = Museum.getInstance().getRoomDistance(pick[1]);
                     AssaultParty.getInstance(pick[0]).setUpRoom(dist, pick[1]);
 
-                    GRInformation.getInstance().setRoomId(pick[0], pick[1] + 1);
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
-                    prepareAssaultParty2(pick[0]);
+                    ConcentrationSite.getInstance().prepareAssaultParty2(pick[0], pick[1] + 1);
+
+                    // quando fizer assault 
                     // assgrp.sendAssaultParty(); pseudocodigo
                     AssaultParty.getInstance(pick[0]).sendAssaultParty();
                     break;
                 case 3:
+                    setStateMaster(Constants.WAITING_FOR_ARRIVAL);
+                    GRInformation.getInstance().printUpdateLine();
                     // do something
                     break;
                 default:
@@ -66,20 +69,6 @@ public class MasterThief extends Thread {
         setStateMaster(Constants.DECIDING_WHAT_TO_DO);
         GRInformation.getInstance().printUpdateLine();
     }
-
-    public void prepareAssaultParty2(int partyId) {
-
-        for (int i = 0; i < Constants.N_THIEVES; i++) {
-            // wake up 3 Thief to move on to assault party
-            ConcentrationSite.getInstance().prepareAssaultParty2(partyId);
-        }
-        setStateMaster(Constants.ASSEMBLING_A_GROUP);
-        GRInformation.getInstance().printUpdateLine();
-        // sleeps until last thief goes to AssaultParty #
-        ControlCollectionSite.getInstance().prepareAssaultParty3();
-
-    }
-
     /**
      * The method appraiseSit.
      *

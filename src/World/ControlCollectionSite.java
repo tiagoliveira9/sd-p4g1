@@ -83,11 +83,15 @@ public class ControlCollectionSite {
      * @return int[]{tempAssault, tempSala}
      */
     public int[] prepareAssaultParty1() {
+        MasterThief master = (MasterThief) Thread.currentThread();
         int tempAssault = -1;
         int tempSala = -1;
 
         // nao esquecer de resetar a assault party quando o ultimo elemento chegar
         l.lock();
+        master.setStateMaster(Constants.ASSEMBLING_A_GROUP);
+        GRInformation.getInstance().printUpdateLine();
+        
         if (!assaultP1) {
             tempAssault = 0;
             assaultP1 = true;
@@ -106,43 +110,6 @@ public class ControlCollectionSite {
         }
         l.unlock();
         return new int[]{tempAssault, tempSala};
-    }
-
-    /**
-     * The method prepareAssaultPart stage 3. Master sleeps until last Thief
-     * goes to AssaultParty
-     *
-     * @return Dunno now.
-     */
-    public void prepareAssaultParty3() {
-        MasterThief master = (MasterThief) Thread.currentThread();
-
-        l.lock();
-        try {
-            // devia ter um while para prevenir esta thread de acordar e seguir "desgovernada"
-            this.assembling.await();
-
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
-        }
-        l.unlock();
-    }
-
-    /**
-     * The method prepareExcursion. The last Thief to enter the assault party,
-     * wakes up the Master
-     */
-    public void teamReady() {
-        l.lock();
-        try {
-            // devia ter condicao para proteger de a thread acordar sozinha
-            // e seguir
-            this.assembling.signal();
-        } finally {
-            l.unlock();
-        }
-
     }
 
     /**

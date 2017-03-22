@@ -5,6 +5,8 @@ import Entity.Thief;
 import HeistMuseum.Constants;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -19,10 +21,13 @@ import java.util.logging.Logger;
  */
 public class ConcentrationSite {
 
+    BlockingQueue<Thief> queueThief;
+
     private static ConcentrationSite instance;
     private final Lock l;
     private final Condition prepare;
     private final Condition deciding;
+    private final Condition assembling;
     // 0 - assault party 1, 1 - assault party 2
     private int nAssaultParty;
 
@@ -48,24 +53,57 @@ public class ConcentrationSite {
         l = new ReentrantLock();
         this.prepare = l.newCondition();
         this.deciding = l.newCondition();
+        this.assembling = l.newCondition();
         this.thiefLine = new TreeSet<>();
         this.nAssaultParty = -1;
+        this.queueThief = new ArrayBlockingQueue<>(6);
     }
 
-    public void addThief() {
+    public void setnAssaultParty(int nAssaultParty) {
+        l.lock();
+        try {
+            this.nAssaultParty = nAssaultParty;
+        } finally {
+            l.unlock();
+        }
+
+    }
+
+    public void removeThief() {
         Thief crook = (Thief) Thread.currentThread();
 
         l.lock();
         try {
-            // access the resource protected by this lock
-            this.thiefLine.add(crook);
-             GRInformation.getInstance().setMd(crook.getThiefId(), crook.getAgility());
-            // signal Master
-            this.deciding.signal();
+            thiefLine.remove(crook);
         } finally {
-            // everything fine-> unlock
             l.unlock();
         }
+    }
+
+    public int addThief() {
+        Thief crook = (Thief) Thread.currentThread();
+
+        l.lock();
+
+        // access the resource protected by this lock
+        this.thiefLine.add(crook);
+        crook.setStateThief(Constants.OUTSIDE);
+        GRInformation.getInstance().printUpdateLine();
+
+        // signal Master so he can check if it has elements to make a team
+        this.deciding.signal();
+        // and right away thief blocks
+        try {
+            prepare.await();
+            //}
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
+        }
+
+        // everything fine-> unlock
+        l.unlock();
+        return nAssaultParty;
 
     }
 
@@ -96,48 +134,46 @@ public class ConcentrationSite {
      *
      * @param PartyID. To inform what party thief must go
      */
-    public void prepareAssaultParty2(int partyId) {
+    public void prepareAssaultParty2(int partyId, int roomId) {
+        MasterThief master = (MasterThief) Thread.currentThread();
 
         l.lock();
+        // signal one thread to wake one thief
+        //int i = thiefLine.size() - 3;
+        this.nAssaultParty = partyId;
+        GRInformation.getInstance().setRoomId(partyId, roomId);
 
-        try {
-            // signal one thread to wake one thief
-
-            this.nAssaultParty = partyId;
+        for (int i = 0; i < 3; i++) {
             this.prepare.signal();
-
-            // 
-        } finally {
-            // everything fine-> unlock
-            l.unlock();
         }
-
-    }
-
-    /**
-     * Change Thief state and return assault group #
-     *
-     * @return PartyID. To inform what party thief must go.
-     */
-    public int prepareExcursion() {
-        Thief crook = (Thief) Thread.currentThread();
-
-        l.lock();
         try {
-            // -1 means that no assault party was assigned 
-            while (nAssaultParty == -1) {
-                this.prepare.await();
+            // Master blocks, wakes up when team is ready
+            while (nAssaultParty != -1) {
+                this.assembling.await();
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
-        // everytime master wakes a thief, she says which party thief goes
-        int temp = nAssaultParty;
-        // reset variable
-        nAssaultParty = -1;
+
+        // 
+        // everything fine-> unlock
         l.unlock();
-        return temp;
+
+    }
+
+    /**
+     * The method prepareExcursion. The last Thief to enter the assault party,
+     * wakes up the Master
+     */
+    public void teamReady() {
+        l.lock();
+        try {
+            this.assembling.signal();
+        } finally {
+            l.unlock();
+        }
+
     }
 
     public int checkThiefNumbers() {

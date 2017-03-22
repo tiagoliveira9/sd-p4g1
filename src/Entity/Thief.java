@@ -48,7 +48,7 @@ public class Thief extends Thread implements Comparable<Thief> {
 
         this.thiefId = thiefId;
         this.agility = agility;
-        this.stateThief = Constants.OUTSIDE;
+        this.stateThief = -1;
     }
 
     /**
@@ -63,17 +63,25 @@ public class Thief extends Thread implements Comparable<Thief> {
         // conc.amINeeded() actua sobre o concentration site
         while (amINeeded()) {
 
+            // If he is needed, adds himself to 'FIFO'(TreeSet)
             // thief block here, wakes when called by Master
-            int partyId = ConcentrationSite.getInstance().prepareExcursion();
+            int partyId = ConcentrationSite.getInstance().addThief();
 
+            // thief block here, wakes when called by Master
+            //int partyId = ConcentrationSite.getInstance().prepareExcursion();
+
+            // remove from concentration site
+            ConcentrationSite.getInstance().removeThief();
             // adds this thief to the squad
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
-            setStateThief(Constants.CRAWLING_INWARDS);
-            GRInformation.getInstance().printUpdateLine();
+
+            
 
             if (last) {
+                // the last one resets 
+                ConcentrationSite.getInstance().setnAssaultParty(-1);
                 // wakes master, team is ready for sendAssaultParty
-                ControlCollectionSite.getInstance().teamReady();
+                ConcentrationSite.getInstance().teamReady();
             }
             AssaultParty.getInstance(partyId).waitToStart();
 
@@ -98,10 +106,6 @@ public class Thief extends Thread implements Comparable<Thief> {
      * @return needed. True if is needed.
      */
     private boolean amINeeded() {
-
-        // adds to TreeSet, if already exists does nothing
-        ConcentrationSite.getInstance().addThief();
-
         // if you can't die, then invert bool ! -> you are needed
         return !ControlCollectionSite.getInstance().canIDie();
     }

@@ -1,5 +1,6 @@
 package World;
 
+import Entity.MasterThief;
 import Entity.Thief;
 import HeistMuseum.Constants;
 import java.util.LinkedList;
@@ -72,8 +73,7 @@ public class AssaultParty {
             if (squad.size() < Constants.N_SQUAD) {
                 squad.add(crook);
                 GRInformation.getInstance().setIdPartyElem(this.partyId,
-                        squad.size() - 1, crook.getThiefId()+1);
-
+                        squad.size() - 1, crook.getThiefId() + 1);
                 if (squad.size() == Constants.N_SQUAD) {
                     // last thief
                     flag = true;
@@ -82,6 +82,8 @@ public class AssaultParty {
         } finally {
             l.unlock();
         }
+        crook.setStateThief(Constants.CRAWLING_INWARDS);
+        GRInformation.getInstance().printUpdateLine();
         return flag;
     }
 
@@ -99,13 +101,15 @@ public class AssaultParty {
         }
 
         l.unlock();
-
-        l.unlock();
     }
 
     public void sendAssaultParty() {
+        MasterThief master = (MasterThief) Thread.currentThread();
+
         l.lock();
         genclass.GenericIO.writelnString("sendAssaultParty");
+        master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
+        GRInformation.getInstance().printUpdateLine();
         l.unlock();
     }
 
