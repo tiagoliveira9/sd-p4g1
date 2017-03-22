@@ -78,7 +78,7 @@ public class Museum {
         if (roomId < Constants.N_ROOMS) {
             rooms[roomId].distance = distance;
             rooms[roomId].canvas = canvas;
-            // log to Repo
+            GRInformation.getInstance().setUpMuseumRoom(roomId, distance, canvas);
         }
 
     }

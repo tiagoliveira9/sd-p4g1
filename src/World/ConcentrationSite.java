@@ -62,10 +62,6 @@ public class ConcentrationSite {
             this.thiefLine.add(crook);
             // signal Master
             this.deciding.signal();
-
-            GenericIO.writelnString("Ladrao: " + crook.getThiefId() + ", Size " + thiefLine.size());
-            // log to Repo
-
         } finally {
             // everything fine-> unlock
             l.unlock();
@@ -73,6 +69,12 @@ public class ConcentrationSite {
 
     }
 
+    /**
+     * This method blocks the Master. Until thieves on the concentration site
+     * ("fifo") are not at leat 3, it blocks the Master
+     *
+     *
+     */
     public void checkThiefInitialNumbers() {
 
         l.lock();
@@ -85,7 +87,6 @@ public class ConcentrationSite {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
-
         l.unlock();
     }
 
@@ -135,8 +136,6 @@ public class ConcentrationSite {
         int temp = nAssaultParty;
         // reset variable
         nAssaultParty = -1;
-        crook.setStateThief(Constants.CRAWLING_INWARDS); // now is on the team
-        // log to Repo
         l.unlock();
         return temp;
     }

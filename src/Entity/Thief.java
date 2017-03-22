@@ -4,6 +4,7 @@ import HeistMuseum.Constants;
 import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
+import World.GRInformation;
 import genclass.GenericIO;
 
 // import das areas with which the thief will interact
@@ -49,7 +50,8 @@ public class Thief extends Thread implements Comparable<Thief> {
         this.thiefId = thiefId;
         this.agility = agility;
         this.stateThief = Constants.OUTSIDE;
-        GenericIO.writelnString("Thief id: " + thiefId + ", agility: " + agility);
+        GRInformation.getInstance().setMd(thiefId, agility);
+
     }
 
     /**
@@ -65,15 +67,20 @@ public class Thief extends Thread implements Comparable<Thief> {
         while (amINeeded()) {
 
             // thief block here, wakes when called by Master
-            int partyId = prepareExcursion();
+            int partyId = ConcentrationSite.getInstance().prepareExcursion();
 
             // adds this thief to the squad
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
+            setStateThief(Constants.CRAWLING_INWARDS);
+            GRInformation.getInstance().printUpdateLine();
+
             if (last) {
                 // wakes master, team is ready for sendAssaultParty
                 ControlCollectionSite.getInstance().teamReady();
             }
-            
+            AssaultParty.getInstance(partyId).waitToStart();
+
+
             // back to assault party to sleep
 
             /* 
@@ -91,26 +98,15 @@ public class Thief extends Thread implements Comparable<Thief> {
     /**
      * Thief checks if is needed.
      *
-     * @return needed. True if is needed. 
+     * @return needed. True if is needed.
      */
     private boolean amINeeded() {
-        ConcentrationSite conc = ConcentrationSite.getInstance();
-        ControlCollectionSite ctrcol = ControlCollectionSite.getInstance();
 
         // adds to TreeSet, if already exists does nothing
-        conc.addThief();
+        ConcentrationSite.getInstance().addThief();
 
-        // if you can't die, then invert bool -> you are needed
-        return !ctrcol.canIDie();
-    }
-
-    /**
-     * Thief blocks waiting to be called by master
-     *
-     * @return partyId AssaultParty ID, so thief knows which party to join.
-     */
-    private int prepareExcursion() {
-        return ConcentrationSite.getInstance().prepareExcursion();
+        // if you can't die, then invert bool ! -> you are needed
+        return !ControlCollectionSite.getInstance().canIDie();
     }
 
     public int getThiefId() {

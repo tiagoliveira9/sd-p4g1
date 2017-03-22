@@ -121,9 +121,6 @@ public class ControlCollectionSite {
         l.lock();
         try {
             // devia ter um while para prevenir esta thread de acordar e seguir "desgovernada"
-            
-            master.setStateMaster(Constants.ASSEMBLING_A_GROUP);
-            // log to Repo
             this.assembling.await();
 
         } catch (InterruptedException ex) {

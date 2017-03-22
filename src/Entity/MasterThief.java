@@ -5,6 +5,7 @@ import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
 import World.Museum;
+import World.GRInformation;
 import genclass.GenericIO;
 
 /**
@@ -35,17 +36,20 @@ public class MasterThief extends Thread {
         while ((opt = appraiseSit()) != 1) {
             switch (opt) {
                 case 2:
-                    //GenericIO.writelnString("prepareAssaultParty");
                     // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
                     pick = ControlCollectionSite.getInstance().prepareAssaultParty1();
+                    genclass.GenericIO.writelnString("prepareAssaultParty1");
                     // check distance to room to setUp AssaultParty
                     dist = Museum.getInstance().getRoomDistance(pick[1]);
+                    genclass.GenericIO.writelnString("getdistance sala Museu");
+
                     AssaultParty.getInstance(pick[0]).setUpRoom(dist, pick[1]);
+                    genclass.GenericIO.writelnString("setUpRoom no Assault party");
+
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
                     prepareAssaultParty2(pick[0]);
-                    // assgrp = ctrcol.prepareAssaultParty3(); // pseudocodigo
                     // assgrp.sendAssaultParty(); pseudocodigo
-                    
+                    AssaultParty.getInstance(pick[0]).sendAssaultParty();
                     break;
                 case 3:
                     // do something
@@ -62,10 +66,10 @@ public class MasterThief extends Thread {
 
     public void startOperations() {
         setStateMaster(Constants.DECIDING_WHAT_TO_DO);
-        // log to Repo
+        GRInformation.getInstance().printUpdateLine();
         // Master blocks here if thieves < 3
         ConcentrationSite.getInstance().checkThiefInitialNumbers();
-        GenericIO.writelnString("\nEstado: DECIDING_WHAT_TO_DO");
+        GenericIO.writelnString("\nStartOperations");
 
     }
 
@@ -75,6 +79,8 @@ public class MasterThief extends Thread {
             // wake up 3 Thief to move on to assault party
             ConcentrationSite.getInstance().prepareAssaultParty2(partyId);
         }
+        setStateMaster(Constants.ASSEMBLING_A_GROUP);
+        GRInformation.getInstance().printUpdateLine();
         // sleeps until last thief goes to AssaultParty #
         ControlCollectionSite.getInstance().prepareAssaultParty3();
 
@@ -97,7 +103,13 @@ public class MasterThief extends Thread {
             // + else thieves < 2, takeARest
             return 3;
         }*/
-        return 2;
+        if (ConcentrationSite.getInstance().checkThiefNumbers() > 2) {
+            return 2;
+        } else {
+            // + else thieves < 2, takeARest
+            return 3;
+        }
+
     }
 
     /**

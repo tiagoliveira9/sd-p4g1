@@ -22,11 +22,13 @@ public class AssaultParty {
     private static final AssaultParty[] instances = new AssaultParty[Constants.N_ASSAULT_PARTY];
     private final int partyId;
     private final Lock l;
-    private final Condition someConditionA;
+    private final Condition startAssault;
     private final Set<Thief> squad;
     private int distance;
     private int roomId;
 
+    // canvas devia estar aqui? fazemos um total e cada vez que um ladrao
+    // entrega decrementa o sum, no ultimo hand a canvas, limpa assault party
     public static synchronized AssaultParty getInstance(int i) {
 
         try {
@@ -49,7 +51,7 @@ public class AssaultParty {
     private AssaultParty(int partyId) {
         this.partyId = partyId;
         l = new ReentrantLock();
-        someConditionA = l.newCondition();
+        startAssault = l.newCondition();
         squad = new TreeSet<>();
         roomId = -1;
         distance = -1;
@@ -69,13 +71,12 @@ public class AssaultParty {
         try {
             if (squad.size() < Constants.N_SQUAD) {
                 squad.add(crook);
-                // log to Repo
-                crook.setStateThief(Constants.CRAWLING_INWARDS);
-                // log to Repo
+                GRInformation.getInstance().setIdPartyElem(this.partyId,
+                        squad.size() - 1, crook.getThiefId());
+
                 if (squad.size() == Constants.N_SQUAD) {
                     // last thief
                     flag = true;
-                    // log to Repo every info of AssaultParty
                 }
             }
         } finally {
@@ -84,9 +85,38 @@ public class AssaultParty {
         return flag;
     }
 
+    /**
+     * Thief blocks waiting for Master signal.
+     *
+     */
+    public void waitToStart() {
+        l.lock();
+        try {
+            startAssault.await();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
+        }
+
+        l.unlock();
+
+        l.unlock();
+    }
+
+    public void sendAssaultParty() {
+        genclass.GenericIO.writelnString("sendAssaultParty");
+    }
+
     public void setUpRoom(int distance, int roomId) {
-        this.distance = distance;
-        this.roomId = roomId;
+        l.lock();
+        try {
+            this.distance = distance;
+            this.roomId = roomId;
+            GRInformation.getInstance().setRoomId(this.partyId, roomId);
+
+        } finally {
+            l.unlock();
+        }
     }
 
     public int getRoomId() {
