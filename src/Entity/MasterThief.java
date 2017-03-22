@@ -65,9 +65,7 @@ public class MasterThief extends Thread {
     public void startOperations() {
         // Master blocks here if thieves < 3
         ConcentrationSite.getInstance().checkThiefInitialNumbers();
-        // exists more than 3 thief, lets decide
-        setStateMaster(Constants.DECIDING_WHAT_TO_DO);
-        GRInformation.getInstance().printUpdateLine();
+       
     }
     /**
      * The method appraiseSit.

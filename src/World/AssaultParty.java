@@ -3,8 +3,6 @@ package World;
 import Entity.MasterThief;
 import Entity.Thief;
 import HeistMuseum.Constants;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Condition;
@@ -107,7 +105,7 @@ public class AssaultParty {
         MasterThief master = (MasterThief) Thread.currentThread();
 
         l.lock();
-        genclass.GenericIO.writelnString("sendAssaultParty");
+        System.out.println("sendAssaultParty");
         master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
         GRInformation.getInstance().printUpdateLine();
         l.unlock();

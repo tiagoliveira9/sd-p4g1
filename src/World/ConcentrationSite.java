@@ -114,6 +114,7 @@ public class ConcentrationSite {
      *
      */
     public void checkThiefInitialNumbers() {
+        MasterThief master = (MasterThief) Thread.currentThread();
 
         l.lock();
         try {
@@ -125,6 +126,9 @@ public class ConcentrationSite {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
+        // exists more than 3 thief, lets decide
+        master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
+        GRInformation.getInstance().printUpdateLine();
         l.unlock();
     }
 
