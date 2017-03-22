@@ -21,7 +21,7 @@ public class ControlCollectionSite {
     private static ControlCollectionSite instance;
     private final Lock l;
     // condition that verifies if block on state Deciding What to Do
-    private final Condition assembling;
+    private Condition assembling;
     private boolean sumUp;
     private boolean assaultP1;
     private boolean assaultP2;

@@ -67,15 +67,10 @@ public class Thief extends Thread implements Comparable<Thief> {
             // thief block here, wakes when called by Master
             int partyId = ConcentrationSite.getInstance().addThief();
 
-            // thief block here, wakes when called by Master
-            //int partyId = ConcentrationSite.getInstance().prepareExcursion();
-
             // remove from concentration site
             ConcentrationSite.getInstance().removeThief();
             // adds this thief to the squad
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
-
-            
 
             if (last) {
                 // the last one resets 
@@ -83,10 +78,10 @@ public class Thief extends Thread implements Comparable<Thief> {
                 // wakes master, team is ready for sendAssaultParty
                 ConcentrationSite.getInstance().teamReady();
             }
-            AssaultParty.getInstance(partyId).waitToStart();
-
-
+            
             // back to assault party to sleep
+            AssaultParty.getInstance(partyId).waitToStartRobbing();
+
 
             /* 
             while (assgrp.crawlIn());	//último, acorda os outros

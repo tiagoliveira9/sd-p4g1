@@ -73,7 +73,7 @@ public class GRInformation {
     public void setRoomId(int partyId, int roomId) {
         lock.lock();
         party[partyId].roomId = roomId;
-        printDoubleLine();
+        //printDoubleLine();
         lock.unlock();
     }
 

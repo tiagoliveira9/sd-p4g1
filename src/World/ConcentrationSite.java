@@ -58,7 +58,11 @@ public class ConcentrationSite {
         this.nAssaultParty = -1;
         this.queueThief = new ArrayBlockingQueue<>(6);
     }
-
+    /**
+     * Method for the last Thief entering party to reset nAssaultParty. 
+     * @param nAssaultParty 
+     */
+    
     public void setnAssaultParty(int nAssaultParty) {
         l.lock();
         try {

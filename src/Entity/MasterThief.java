@@ -49,6 +49,13 @@ public class MasterThief extends Thread {
                     AssaultParty.getInstance(pick[0]).sendAssaultParty();
                     break;
                 case 3:
+                    /* dois metodos necessarios para o master bloquear no Control
+                     1 metodo é chamado pelo master e bloqueia
+                     2 metodo é chamado pelo thief para sinalizar(acordar) o master. 
+                        tem que ter um parametro de entrada booleano
+                        para o ladrao passar o canvas (vê como passo o nAssaultParty 
+                        no concentration site entre os dois metodos de bloqueio)
+                    */
                     setStateMaster(Constants.WAITING_FOR_ARRIVAL);
                     GRInformation.getInstance().printUpdateLine();
                     // do something
@@ -65,8 +72,8 @@ public class MasterThief extends Thread {
     public void startOperations() {
         // Master blocks here if thieves < 3
         ConcentrationSite.getInstance().checkThiefInitialNumbers();
-       
     }
+    
     /**
      * The method appraiseSit.
      *
@@ -75,7 +82,7 @@ public class MasterThief extends Thread {
     public int appraiseSit() {
 
         /*// + if every room is empty, return 1
-        if (!everythingRobbed()) {
+        if (!everythingRobbed() cuidado que podes ter ladroes a roubar ainda) {
             return 1;
         } // + else if thieves > 2, prepareAssaultParty
         else if (ConcentrationSite.getInstance().checkThiefNumbers() > 2) {

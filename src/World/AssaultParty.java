@@ -84,12 +84,12 @@ public class AssaultParty {
         GRInformation.getInstance().printUpdateLine();
         return flag;
     }
-
+   
     /**
      * Thief blocks waiting for Master signal.
      *
      */
-    public void waitToStart() {
+    public void waitToStartRobbing() {
         l.lock();
         try {
             startAssault.await();
