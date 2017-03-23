@@ -92,7 +92,7 @@ public class Thief extends Thread implements Comparable<Thief> {
             // while (assgrp.crawlOut())
             // ONE is for CRAWL OUT
             int lastArriving = AssaultParty.getInstance(partyId).crawl(-1);
-
+            AssaultParty.getInstance(partyId).fixAll(lastArriving);
             //handACanvas(partyId, room, lastArriving);
             /* 
             while (assgrp.crawlIn());	//último, acorda os outros

@@ -177,7 +177,7 @@ public class AssaultParty {
                 GRInformation.getInstance().printUpdateLine();
                 // {myPositionLine, nextThiefLine}
                 int next[] = selectNext(t.getThiefId());
-                // to detect the last one giving the canvas
+                // 
                 ret = next[0];
                 startAssault[next[1]].signal();
                 startAssault[next[0]].await();
@@ -217,6 +217,17 @@ public class AssaultParty {
         }
         return new int[]{myPositionLine, nextThiefLine};
 
+    }
+
+    public void fixAll(int pos) {
+        l.lock();
+        for (int i = 0; i < 3; i++) {
+            if (pos != i) {
+                startAssault[i].signal();
+            }
+
+        }
+        l.unlock();
     }
 
     public void setUpRoom(int distance, int roomId) {
