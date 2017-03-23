@@ -44,7 +44,7 @@ public class GRInformation {
      */
     public void setPos(int partyId, int elemId, int pos) {
         lock.lock();
-        party[partyId].elements[elemId].pos = pos;
+        party[partyId].elements[elemId].pos = Integer.toString(pos);
         printDoubleLine();
         lock.unlock();
     }
@@ -59,7 +59,7 @@ public class GRInformation {
     public void setCv(int partyId, int elemId, int cv) {
         lock.lock();
 
-        party[partyId].elements[elemId].cv = cv;
+        party[partyId].elements[elemId].cv = Integer.toString(cv);
         printDoubleLine();
         lock.unlock();
     }
@@ -73,8 +73,8 @@ public class GRInformation {
      */
     public void setRoomId(int partyId, int roomId) {
         lock.lock();
-        party[partyId].roomId = roomId;
-        printDoubleLine();
+        party[partyId].roomId = Integer.toString(roomId +1);
+        //printDoubleLine();
         lock.unlock();
     }
 
@@ -88,9 +88,9 @@ public class GRInformation {
     public void setIdPartyElem(int partyId, int elemId, int id) {
         lock.lock();
 
-        party[partyId].elements[elemId].id = id;
-        party[partyId].elements[elemId].pos = 0;
-        party[partyId].elements[elemId].cv = 0;
+        party[partyId].elements[elemId].id = Integer.toString(id);
+        party[partyId].elements[elemId].pos = "0";
+        party[partyId].elements[elemId].cv = "0";
 
         //printDoubleLine();
         lock.unlock();
@@ -105,7 +105,7 @@ public class GRInformation {
     public void setMd(int thiefId, int md) {
         lock.lock();
 
-        ladrao[thiefId].md = md;
+        ladrao[thiefId].md = Integer.toString(md);
         printDoubleLine();
         lock.unlock();
 
@@ -128,8 +128,8 @@ public class GRInformation {
      */
     public void setUpMuseumRoom(int roomId, int distance, int canvas) {
         lock.lock();
-        sala[roomId].distance = distance;
-        sala[roomId].canvas = canvas;
+        sala[roomId].distance = Integer.toString(distance);
+        sala[roomId].canvas = Integer.toString(canvas);
         printDoubleLine();
         lock.unlock();
     }
@@ -141,7 +141,11 @@ public class GRInformation {
      */
     public void updateMuseumRoom(int roomId) {
         lock.lock();
-        sala[roomId].canvas--;
+                
+        int a = Integer.parseInt(sala[roomId].canvas);
+        a--;
+        sala[roomId].canvas = Integer.toString(a);
+        
         //printDoubleLine();
         lock.unlock();
 
@@ -152,25 +156,25 @@ public class GRInformation {
         private int thiefId;
         private int stat;
         private char s;
-        private int md;
+        private String md;
 
         public nThief(int thiefId) {
             this.thiefId = thiefId;
-            this.stat = 0;
-            this.s = 'W';
-            this.md = 9;
+            this.stat = '-';
+            this.s = '-';
+            this.md = "-";
         }
     }
 
     private class AssParty {
 
         private int partyId;
-        private int roomId;
+        private String roomId;
         private Elem[] elements;
 
         public AssParty(int partyId) {
             this.partyId = partyId;
-            this.roomId = 0; // não esquecer de incrementar 1 para visualmente corresponder à sala correcta;
+            this.roomId = "-"; // não esquecer de incrementar 1 para visualmente corresponder à sala correcta;
             this.elements = new Elem[Constants.N_SQUAD];
 
             for (int i = 0; i < Constants.N_SQUAD; i++) {
@@ -181,14 +185,14 @@ public class GRInformation {
 
         private class Elem {
 
-            private int id;
-            private int pos;
-            private int cv;
+            private String id;
+            private String pos;
+            private String cv;
 
             public Elem() {
-                this.id = 9;
-                this.pos = 99;
-                this.cv = 99;
+                this.id = "-";
+                this.pos = "--";
+                this.cv = "-";
             }
         }
     }
@@ -198,13 +202,13 @@ public class GRInformation {
     private class Room {
 
         private final int roomId;
-        private int distance;
-        private int canvas;
+        private String distance;
+        private String canvas;
 
         public Room(int roomId) {
             this.roomId = roomId; //ao imprimir acrescentar 1
-            this.distance = 99;
-            this.canvas = 99;
+            this.distance = "--";
+            this.canvas = "-";
         }
     }
 
@@ -254,9 +258,9 @@ public class GRInformation {
     public void setStateThief(Thief thief) {
 
         lock.lock();
-
+        
         ladrao[thief.getThiefId()].stat = thief.getStateThief();
-        ladrao[thief.getThiefId()].md = thief.getAgility();
+        ladrao[thief.getThiefId()].md = Integer.toString(thief.getAgility());
 
         lock.unlock();
     }
@@ -433,7 +437,7 @@ public class GRInformation {
             case Constants.PRESENTING_THE_REPORT:
                 return "PRTR";
             default:
-                return "0";
+                return "----";
         }
     }
 
@@ -446,9 +450,9 @@ public class GRInformation {
             case Constants.AT_A_ROOM:
                 return "P";
             case Constants.CRAWLING_OUTWARDS:
-                return "p";
+                return "P";
             default:
-                return "0";
+                return "-";
         }
 
     }

@@ -41,7 +41,7 @@ public class MasterThief extends Thread {
                     AssaultParty.getInstance(pick[0]).setUpRoom(dist, pick[1]);
 
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
-                    ConcentrationSite.getInstance().prepareAssaultParty2(pick[0], pick[1] + 1);
+                    ConcentrationSite.getInstance().prepareAssaultParty2(pick[0], pick[1]);
 
                     // quando fizer assault 
                     // assgrp.sendAssaultParty(); pseudocodigo
@@ -90,7 +90,8 @@ public class MasterThief extends Thread {
             // + else thieves < 2, takeARest
             return 3;
         }*/
-        if (ConcentrationSite.getInstance().checkThiefNumbers() > 2) {
+        if (ConcentrationSite.getInstance().checkThiefNumbers() > 2 &&
+                ControlCollectionSite.getInstance().anyTeamAvailable()) {
             return 2;
         } else {
             // + else thieves < 2, takeARest

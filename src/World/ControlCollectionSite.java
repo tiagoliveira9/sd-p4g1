@@ -2,8 +2,6 @@ package World;
 
 import Entity.MasterThief;
 import HeistMuseum.Constants;
-import java.util.Set;
-import java.util.TreeSet;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -23,6 +21,7 @@ public class ControlCollectionSite {
     private final static Lock l = new ReentrantLock();
     // condition that verifies if block on state Deciding What to Do
     private final Condition rest;
+    private boolean restBool;
     private boolean sumUp;
     private boolean assaultP1;
     private boolean assaultP2;
@@ -66,11 +65,11 @@ public class ControlCollectionSite {
     private ControlCollectionSite() {
         // bind lock with a condition
         this.rest = l.newCondition();
+        this.restBool = false;
         this.sumUp = false;
         this.assaultP1 = false;
         this.assaultP2 = false;
         this.nCanvas = 0;
-
 
         salas = new Sala[Constants.N_ROOMS];
         for (int i = 0; i < Constants.N_ROOMS; i++) {
@@ -100,11 +99,13 @@ public class ControlCollectionSite {
         } else if (!assaultP2) {
             tempAssault = 1;
             assaultP2 = true;
+        } else {
+            System.out.println("Vai dar merda");
         }
 
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             // if is empty, choose
-            if (!salas[i].empty & salas[i].inUse == false) {
+            if (!salas[i].empty && salas[i].inUse == false) {
                 tempSala = i;
                 salas[i].inUse = true;
                 // ATENCAO, O MASTER TEM QUE METER ESTA FLAG A FALSE
@@ -120,7 +121,6 @@ public class ControlCollectionSite {
      * Master thief blocks and wait the signal of a thief to wake up and get the
      * canvas that he will give to her, if he has one.
      *
-     * @return
      */
     public void takeARest() {
         MasterThief master = (MasterThief) Thread.currentThread();
@@ -131,12 +131,17 @@ public class ControlCollectionSite {
         GRInformation.getInstance().printUpdateLine();
 
         try {
-            rest.await();
+            while (!restBool) {
+                rest.await();
+            }
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
-
+        restBool = false;
+        // wakes up, so moves the state
+        master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
+        GRInformation.getInstance().printUpdateLine();
         l.unlock();
     }
 
@@ -151,7 +156,6 @@ public class ControlCollectionSite {
     public void handACanvas(boolean canvas, int roomId, int partyId, int lastArriving) {
 
         l.lock();
-
         // nao sei se vou ter problemas de não ser o ULTIMO ladrao que reseta a 
         // assault party 
         // add the canvas stolen to Control&Collection Site
@@ -168,6 +172,9 @@ public class ControlCollectionSite {
                 assaultP2 = false;
             }
         }
+        // seria melhor se fosse por estados..mas como mudar o estado do
+        // master se não sei que thread é?
+        restBool = true;
         this.rest.signal();
 
         l.unlock();
@@ -197,5 +204,21 @@ public class ControlCollectionSite {
     public boolean canIDie() {
         // ainda nao tenho a certeza de como o mato o Ladrao
         return this.sumUp;
+    }
+
+    /**
+     * This method checks Assault Parties availability. Return true if exists at
+     * least one, returns false if every team is occupied
+     *
+     * @return availability
+     */
+    public boolean anyTeamAvailable() {
+
+        if (!assaultP1) {
+            return true;
+        } else if (!assaultP2) {
+            return true;
+        }
+        return false;
     }
 }

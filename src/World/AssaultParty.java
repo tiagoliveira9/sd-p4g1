@@ -47,6 +47,7 @@ public class AssaultParty {
     // entrega decrementa o sum, no ultimo hand a canvas, limpa assault party
     public static AssaultParty getInstance(int i) {
         l.lock();
+
         try {
             if (instances[i] == null) {
                 instances[i] = new AssaultParty(i);
@@ -157,8 +158,8 @@ public class AssaultParty {
     }
 
     /**
-     *
-     * @param int direction, 1 is for CRAWL IN, -1 is for CRAWL OUT
+     * Parameter direction : 1 is for CRAWL IN, -1 is for CRAWL OUT
+     * @param direction
      * @return
      */
     public int crawl(int direction) {
