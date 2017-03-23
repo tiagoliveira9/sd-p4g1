@@ -3,8 +3,6 @@ package World;
 import Entity.MasterThief;
 import Entity.Thief;
 import HeistMuseum.Constants;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -22,11 +20,13 @@ public class AssaultParty {
     private final int partyId;
     private final static Lock l = new ReentrantLock();
     private final Condition[] startAssault;
+    private final Condition crawlOutCondition;
     private int[] line; // order that thieves blocks for the first time awaiting orders
     private Crook[] squad;
     private int distance;
     private int roomId;
     private int nCrook;
+    private int nCanvas;
 
     private class Crook {
 
@@ -70,22 +70,14 @@ public class AssaultParty {
         this.distance = -1;
         this.nCrook = 0;
 
-        startAssault = new Condition[3];
-        line = new int[3];
-        squad = new Crook[3];
-        for (int i = 0; i < 3; i++) {
+        startAssault = new Condition[Constants.N_SQUAD];
+        line = new int[Constants.N_SQUAD];
+        squad = new Crook[Constants.N_SQUAD];
+        for (int i = 0; i < Constants.N_SQUAD; i++) {
             startAssault[i] = l.newCondition();
             line[i] = -1;
         }
-
-        // initialization of the array of conditions
-        for (int i = 0; i < 3; i++) {
-
-        }
-        // initialize the order that thieves blocks for the first time
-
-        for (int i = 0; i < 3; i++) {
-        }
+        crawlOutCondition = l.newCondition();
 
     }
 
@@ -133,13 +125,12 @@ public class AssaultParty {
         l.lock();
         try {
             int i;
-            for (i = 0; i < 3; i++) {
+            for (i = 0; i < Constants.N_SQUAD; i++) {
                 if (line[i] == -1) {
                     line[i] = t.getThiefId();
                     break;
                 }
             }
-
             // it's like they stop one after each other, a team line
             startAssault[i].await();
         } catch (InterruptedException ex) {
@@ -158,7 +149,6 @@ public class AssaultParty {
         MasterThief master = (MasterThief) Thread.currentThread();
 
         l.lock();
-        System.out.println("sendAssaultParty");
         // Master wakes up the first Thief to block on the team
         startAssault[0].signal();
         master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
@@ -166,12 +156,67 @@ public class AssaultParty {
         l.unlock();
     }
 
-    public int crawl() {
+    /**
+     *
+     * @param int direction, 1 is for CRAWL IN, -1 is for CRAWL OUT
+     * @return
+     */
+    public int crawl(int direction) {
+        Thief t = (Thief) Thread.currentThread();
+        int ret = 0;
+
         l.lock();
-        System.out.println("caminhei tudo");
+        if (direction == 1) {
+            t.setStateThief(Constants.CRAWLING_INWARDS);
+            GRInformation.getInstance().printUpdateLine();
+            ret = this.roomId;
+
+        } else {
+            try {
+                t.setStateThief(Constants.CRAWLING_OUTWARDS);
+                GRInformation.getInstance().printUpdateLine();
+                // {myPositionLine, nextThiefLine}
+                int next[] = selectNext(t.getThiefId());
+                // to detect the last one giving the canvas
+                ret = next[0];
+                startAssault[next[1]].signal();
+                startAssault[next[0]].await();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
 
         l.unlock();
-        return this.roomId;
+        return ret;
+    }
+
+    /**
+     * This method returns the Thief active and next in line to wake. This way
+     * is possible to use the correct condition (array of conditions) to block
+     * and wake up the next
+     *
+     * @param myThiefId
+     * @return int[]{myPositionLine, nextThiefLine}
+     */
+    public int[] selectNext(int myThiefId) {
+
+        int myPositionLine = -1;
+        int nextThiefLine = -1;
+
+        for (int i = 0; i < Constants.N_SQUAD; i++) {
+            if (line[i] == myThiefId) {
+                myPositionLine = i;
+            }
+        }
+        // if I am the last, the next to awake is the first
+        if (myPositionLine + 1 > 2) {
+            nextThiefLine = 0;
+        } else {
+            nextThiefLine = myPositionLine + 1;
+        }
+        return new int[]{myPositionLine, nextThiefLine};
+
     }
 
     public void setUpRoom(int distance, int roomId) {
@@ -201,6 +246,29 @@ public class AssaultParty {
      */
     public int getPartyId() {
         return this.partyId;
+    }
+
+    /**
+     * Pop canvas from Assault Party. If nCanvas is >1, remove one canvas and
+     * return
+     *
+     * @return partyId Party identifier.
+     */
+    public boolean getnCanvas() {
+        l.lock();
+        if (nCanvas > 1) {
+            nCanvas--;
+            return true;
+        }
+        l.unlock();
+        return false;
+    }
+
+    /**
+     * TODO
+     */
+    public void resetAssaultPart() {
+
     }
 
 }

@@ -1,11 +1,11 @@
 package World;
 
+import Entity.Thief;
 import HeistMuseum.Constants;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
 
 /**
  * @author João Cravo joao.cravo@ua.pt n.:63784
@@ -77,6 +77,8 @@ public class Museum {
     }
 
     public boolean rollACanvas(int roomId) {
+        Thief t = (Thief) Thread.currentThread();
+
         l.lock();
         boolean flag = false;
         int number = rooms[roomId].canvas;
@@ -86,6 +88,8 @@ public class Museum {
             flag = true;
             // change in Repository
             GRInformation.getInstance().updateMuseumRoom(roomId);
+            t.setStateThief(Constants.AT_A_ROOM);
+            GRInformation.getInstance().printUpdateLine();
         }
 
         System.out.println("roubei cenas");

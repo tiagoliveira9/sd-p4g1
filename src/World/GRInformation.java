@@ -142,7 +142,7 @@ public class GRInformation {
     public void updateMuseumRoom(int roomId) {
         lock.lock();
         sala[roomId].canvas--;
-        printDoubleLine();
+        //printDoubleLine();
         lock.unlock();
 
     }

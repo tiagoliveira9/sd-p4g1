@@ -21,7 +21,6 @@ public class MasterThief extends Thread {
     private int stateMaster;
 
     public MasterThief() {
-
         this.stateMaster = Constants.PLANNING_THE_HEIST;
     }
 
@@ -55,9 +54,9 @@ public class MasterThief extends Thread {
                         tem que ter um parametro de entrada booleano
                         para o ladrao passar o canvas (vê como passo o nAssaultParty 
                         no concentration site entre os dois metodos de bloqueio)
-                    */
-                    setStateMaster(Constants.WAITING_FOR_ARRIVAL);
-                    GRInformation.getInstance().printUpdateLine();
+                     */
+                    ControlCollectionSite.getInstance().takeARest();
+                    
                     // do something
                     break;
                 default:
@@ -73,7 +72,7 @@ public class MasterThief extends Thread {
         // Master blocks here if thieves < 3
         ConcentrationSite.getInstance().checkThiefInitialNumbers();
     }
-    
+
     /**
      * The method appraiseSit.
      *

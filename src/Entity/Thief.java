@@ -79,23 +79,27 @@ public class Thief extends Thread implements Comparable<Thief> {
                 // wakes master, team is ready for sendAssaultParty
                 ConcentrationSite.getInstance().teamReady();
             }
-            
+
             // back to assault party to sleep
             AssaultParty.getInstance(partyId).waitToStartRobbing();
 
-            GRInformation.getInstance().printSomething("Acordei, sou o primeiro a fazer crawinl "+getThiefId());
-            // para já não faz nada
-            int room = AssaultParty.getInstance(partyId).crawl();
-            
+            // while (assgrp.crawlIn()) último, acorda os outros
+            // para já só muda estado
+            // ONE is for CRAWL IN
+            int room = AssaultParty.getInstance(partyId).crawl(1);
+            // 
             Museum.getInstance().rollACanvas(room);
+            // while (assgrp.crawlOut())
+            // ONE is for CRAWL OUT
+            int lastArriving = AssaultParty.getInstance(partyId).crawl(-1);
+
+            //handACanvas(partyId, room, lastArriving);
             /* 
             while (assgrp.crawlIn());	//último, acorda os outros
             museum.rollACanvas(assgrp.getRoomID);
             assgrp.reverseDirection();
             while (assgrp.crawlOut());
-            ctrcol.handACanvas(); */ {
-
-            }
+            ctrcol.handACanvas(); */
         }
 
     }
@@ -108,6 +112,16 @@ public class Thief extends Thread implements Comparable<Thief> {
     private boolean amINeeded() {
         // if you can't die, then invert bool ! -> you are needed
         return !ControlCollectionSite.getInstance().canIDie();
+    }
+
+    private void handACanvas(int partyId, int room, int last) {
+        boolean hasCanvas = AssaultParty.getInstance(partyId).getnCanvas();
+        // antes do ultimo fazer a entrega do canvas, resetar a assault party
+        if (last == 2) {
+            // reset to assault part #
+        }
+        ControlCollectionSite.getInstance().handACanvas(hasCanvas, room, partyId, last);
+
     }
 
     public int getThiefId() {

@@ -22,10 +22,11 @@ public class ControlCollectionSite {
     // ReentrantLock means that several threads can lock on the same location
     private final static Lock l = new ReentrantLock();
     // condition that verifies if block on state Deciding What to Do
-    private Condition assembling;
+    private final Condition rest;
     private boolean sumUp;
     private boolean assaultP1;
     private boolean assaultP2;
+    private int nCanvas; // number of canvas stolen
 
     private Sala[] salas;
 
@@ -63,21 +64,18 @@ public class ControlCollectionSite {
      * Singleton needs private constructor
      */
     private ControlCollectionSite() {
-
-        this.assembling = l.newCondition();
+        // bind lock with a condition
+        this.rest = l.newCondition();
         this.sumUp = false;
         this.assaultP1 = false;
         this.assaultP2 = false;
+        this.nCanvas = 0;
+
 
         salas = new Sala[Constants.N_ROOMS];
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             salas[i] = new Sala(i);
         }
-    }
-
-    public void collectCanvas() {
-        // reset assaultP1 or assaultP2 -> "destroy" assault party
-        // reset room/distance on assault party
     }
 
     /**
@@ -116,6 +114,63 @@ public class ControlCollectionSite {
         }
         l.unlock();
         return new int[]{tempAssault, tempSala};
+    }
+
+    /**
+     * Master thief blocks and wait the signal of a thief to wake up and get the
+     * canvas that he will give to her, if he has one.
+     *
+     * @return
+     */
+    public void takeARest() {
+        MasterThief master = (MasterThief) Thread.currentThread();
+
+        l.lock();
+
+        master.setStateMaster(Constants.WAITING_FOR_ARRIVAL);
+        GRInformation.getInstance().printUpdateLine();
+
+        try {
+            rest.await();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
+        }
+
+        l.unlock();
+    }
+
+    /**
+     * Wake up master and give her a canvas. Also, marks the room NOT in use
+     * Room id to identify which room is not in use. Canvas true if has canvas
+     * to deliver.
+     *
+     * @param boolean
+     * @param roomId
+     */
+    public void handACanvas(boolean canvas, int roomId, int partyId, int lastArriving) {
+
+        l.lock();
+
+        // nao sei se vou ter problemas de não ser o ULTIMO ladrao que reseta a 
+        // assault party 
+        // add the canvas stolen to Control&Collection Site
+        if (canvas) {
+            nCanvas++;
+        }
+
+        // ultimo ladrao a chegar, nao sei se é necessario limpar esta flag só no ultimo
+        if (lastArriving == 2) {
+            salas[roomId].inUse = false;
+            if (partyId == 0) {
+                assaultP1 = false;
+            } else if (partyId == 1) {
+                assaultP2 = false;
+            }
+        }
+        this.rest.signal();
+
+        l.unlock();
     }
 
     /**
