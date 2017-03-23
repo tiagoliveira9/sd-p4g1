@@ -511,15 +511,7 @@ public class GRInformation {
 
     }
 
-//    public String printEmptyResult() {
-//
-//        StringBuilder strb = new StringBuilder();
-//        Formatter formatter = new Formatter(strb);
-//
-//        formatter.format(" - - - . - - - -- --%n");
-//
-//        return strb.toString();
-//    }
+
     public void close() {
 
         lock.lock();

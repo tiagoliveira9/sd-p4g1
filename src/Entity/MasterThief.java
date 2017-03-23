@@ -79,7 +79,6 @@ public class MasterThief extends Thread {
      * @return x if y, z if w etc..
      */
     public int appraiseSit() {
-
         /*// + if every room is empty, return 1
         if (!everythingRobbed() cuidado que podes ter ladroes a roubar ainda) {
             return 1;

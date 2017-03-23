@@ -46,7 +46,7 @@ public class Museum {
     }
 
     /**
-     * Singleton needs private constructor
+     * Singleton needs private constructor.
      */
     private Museum() {
         // ReentrantLock means that several threads can lock on the same location

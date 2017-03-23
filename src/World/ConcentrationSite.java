@@ -96,11 +96,11 @@ public class ConcentrationSite {
 
         // access the resource protected by this lock
         this.thiefLine.add(crook);
+        // signal Master so he can check if it has elements to make a team
+        this.deciding.signal();
         crook.setStateThief(Constants.OUTSIDE);
         GRInformation.getInstance().printUpdateLine();
 
-        // signal Master so he can check if it has elements to make a team
-        this.deciding.signal();
         // and right away thief blocks
         try {
             prepare.await();
@@ -118,9 +118,7 @@ public class ConcentrationSite {
 
     /**
      * This method blocks the Master. Until thieves on the concentration site
-     * ("fifo") are not at leat 3, it blocks the Master
-     *
-     *
+     * ("fifo") are not at leat 3, Master blo
      */
     public void checkThiefInitialNumbers() {
         MasterThief master = (MasterThief) Thread.currentThread();
