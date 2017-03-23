@@ -5,6 +5,7 @@ import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
 import World.GRInformation;
+import World.Museum;
 
 // import das areas with which the thief will interact
 /**
@@ -82,7 +83,11 @@ public class Thief extends Thread implements Comparable<Thief> {
             // back to assault party to sleep
             AssaultParty.getInstance(partyId).waitToStartRobbing();
 
-
+            GRInformation.getInstance().printSomething("Acordei, sou o primeiro a fazer crawinl "+getThiefId());
+            // para já não faz nada
+            int room = AssaultParty.getInstance(partyId).crawl();
+            
+            Museum.getInstance().rollACanvas(room);
             /* 
             while (assgrp.crawlIn());	//último, acorda os outros
             museum.rollACanvas(assgrp.getRoomID);

@@ -1,17 +1,11 @@
 package World;
 
-import Entity.MasterThief;
-import Entity.Thief;
 import HeistMuseum.Constants;
-import java.util.Set;
-import java.util.TreeSet;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author João Cravo joao.cravo@ua.pt n.:63784
@@ -20,7 +14,7 @@ import java.util.logging.Logger;
 public class Museum {
 
     private static Museum instance;
-    private final Lock l;
+    private final static Lock l = new ReentrantLock();
     private final Condition somethingCondition;
     private Room[] rooms;
 
@@ -42,11 +36,12 @@ public class Museum {
      *
      * @return ConcentrationSite object to be used.
      */
-    public static synchronized Museum getInstance() {
+    public static Museum getInstance() {
+        l.lock();
         if (instance == null) {
             instance = new Museum();
         }
-
+        l.unlock();
         return instance;
     }
 
@@ -55,7 +50,6 @@ public class Museum {
      */
     private Museum() {
         // ReentrantLock means that several threads can lock on the same location
-        l = new ReentrantLock();
         this.somethingCondition = l.newCondition();
         // exists 5 rooms on the museum
         rooms = new Room[Constants.N_ROOMS];
@@ -73,13 +67,31 @@ public class Museum {
      * @param canvas How much paintings exists on this Room
      */
     public void setUpRoom(int roomId, int distance, int canvas) {
-
+        l.lock();
         if (roomId < Constants.N_ROOMS) {
             rooms[roomId].distance = distance;
             rooms[roomId].canvas = canvas;
             GRInformation.getInstance().setUpMuseumRoom(roomId, distance, canvas);
         }
+        l.unlock();
+    }
 
+    public boolean rollACanvas(int roomId) {
+        l.lock();
+        boolean flag = false;
+        int number = rooms[roomId].canvas;
+        if (number > 1) {
+            // change in museum
+            rooms[roomId].canvas--;
+            flag = true;
+            // change in Repository
+            GRInformation.getInstance().updateMuseumRoom(roomId);
+        }
+
+        System.out.println("roubei cenas");
+        l.unlock();
+
+        return flag;
     }
 
     public int getRoomDistance(int roomId) {

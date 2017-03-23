@@ -24,7 +24,7 @@ public class ConcentrationSite {
     BlockingQueue<Thief> queueThief;
 
     private static ConcentrationSite instance;
-    private final Lock l;
+    private final static Lock l = new ReentrantLock();
     private final Condition prepare;
     private final Condition deciding;
     private final Condition assembling;
@@ -38,11 +38,15 @@ public class ConcentrationSite {
      *
      * @return ConcentrationSite object to be used.
      */
-    public static synchronized ConcentrationSite getInstance() {
-        if (instance == null) {
-            instance = new ConcentrationSite();
+    public static ConcentrationSite getInstance() {
+        l.lock();
+        try {
+            if (instance == null) {
+                instance = new ConcentrationSite();
+            }
+        } finally {
+            l.unlock();
         }
-
         return instance;
     }
 
@@ -50,7 +54,7 @@ public class ConcentrationSite {
      * Singleton needs private constructor
      */
     private ConcentrationSite() {
-        l = new ReentrantLock();
+        //l = new ReentrantLock();
         this.prepare = l.newCondition();
         this.deciding = l.newCondition();
         this.assembling = l.newCondition();
@@ -58,11 +62,12 @@ public class ConcentrationSite {
         this.nAssaultParty = -1;
         this.queueThief = new ArrayBlockingQueue<>(6);
     }
+
     /**
-     * Method for the last Thief entering party to reset nAssaultParty. 
-     * @param nAssaultParty 
+     * Method for the last Thief entering party to reset nAssaultParty.
+     *
+     * @param nAssaultParty
      */
-    
     public void setnAssaultParty(int nAssaultParty) {
         l.lock();
         try {

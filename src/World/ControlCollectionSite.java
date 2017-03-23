@@ -19,7 +19,8 @@ import java.util.logging.Logger;
 public class ControlCollectionSite {
 
     private static ControlCollectionSite instance;
-    private final Lock l;
+    // ReentrantLock means that several threads can lock on the same location
+    private final static Lock l = new ReentrantLock();
     // condition that verifies if block on state Deciding What to Do
     private Condition assembling;
     private boolean sumUp;
@@ -46,11 +47,15 @@ public class ControlCollectionSite {
      *
      * @return ConcentrationSite object to be used.
      */
-    public static synchronized ControlCollectionSite getInstance() {
-        if (instance == null) {
-            instance = new ControlCollectionSite();
+    public static ControlCollectionSite getInstance() {
+        l.lock();
+        try {
+            if (instance == null) {
+                instance = new ControlCollectionSite();
+            }
+        } finally {
+            l.unlock();
         }
-
         return instance;
     }
 
@@ -58,8 +63,7 @@ public class ControlCollectionSite {
      * Singleton needs private constructor
      */
     private ControlCollectionSite() {
-        // ReentrantLock means that several threads can lock on the same location
-        l = new ReentrantLock();
+
         this.assembling = l.newCondition();
         this.sumUp = false;
         this.assaultP1 = false;
@@ -91,7 +95,7 @@ public class ControlCollectionSite {
         l.lock();
         master.setStateMaster(Constants.ASSEMBLING_A_GROUP);
         GRInformation.getInstance().printUpdateLine();
-        
+
         if (!assaultP1) {
             tempAssault = 0;
             assaultP1 = true;
@@ -102,9 +106,11 @@ public class ControlCollectionSite {
 
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             // if is empty, choose
-            if (!salas[i].empty) {
+            if (!salas[i].empty & salas[i].inUse == false) {
                 tempSala = i;
                 salas[i].inUse = true;
+                // ATENCAO, O MASTER TEM QUE METER ESTA FLAG A FALSE
+                // QUANDO FAZ COLLECT A CANVAS
                 break;
             }
         }

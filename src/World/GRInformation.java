@@ -11,6 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author João Cravo joao.cravo@ua.pt n.:63784
@@ -21,7 +22,7 @@ public class GRInformation {
     private final SimpleDateFormat date;
     private final String dateString;
 
-    private final Lock lock;
+    private final static Lock lock = new ReentrantLock();
     private static GRInformation instance;
 
     private PrintWriter printer;
@@ -49,13 +50,13 @@ public class GRInformation {
     }
 
     /**
-     * Change canvas status
+     * Change canvas status from element
      *
      * @param partyId
      * @param elemId
      * @param pos
      */
-    public void setCv(int partyId, int elemId, char cv) {
+    public void setCv(int partyId, int elemId, int cv) {
         lock.lock();
 
         party[partyId].elements[elemId].cv = cv;
@@ -73,7 +74,7 @@ public class GRInformation {
     public void setRoomId(int partyId, int roomId) {
         lock.lock();
         party[partyId].roomId = roomId;
-        //printDoubleLine();
+        printDoubleLine();
         lock.unlock();
     }
 
@@ -89,7 +90,7 @@ public class GRInformation {
 
         party[partyId].elements[elemId].id = id;
         party[partyId].elements[elemId].pos = 0;
-        party[partyId].elements[elemId].cv = '0';
+        party[partyId].elements[elemId].cv = 0;
 
         //printDoubleLine();
         lock.unlock();
@@ -182,12 +183,12 @@ public class GRInformation {
 
             private int id;
             private int pos;
-            private char cv;
+            private int cv;
 
             public Elem() {
                 this.id = 9;
                 this.pos = 99;
-                this.cv = '-';
+                this.cv = 99;
             }
         }
     }
@@ -207,10 +208,16 @@ public class GRInformation {
         }
     }
 
-    public static synchronized GRInformation getInstance() {
-        if (instance == null) {
-            instance = new GRInformation();
+    public static GRInformation getInstance() {
+        lock.lock();
+        try {
+            if (instance == null) {
+                instance = new GRInformation();
+            }
+        } finally {
+            lock.unlock();
         }
+
         return instance;
     }
 
@@ -218,8 +225,6 @@ public class GRInformation {
         // to not overwrite logs (within minutes)
         date = new SimpleDateFormat("yyyy'-'MMdd'-'HHmm");
         dateString = (date.format(new Date()));
-
-        this.lock = new ReentrantLock();
         this.masterThiefState = Constants.PLANNING_THE_HEIST;
 
         try {
