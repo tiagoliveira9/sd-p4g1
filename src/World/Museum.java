@@ -76,7 +76,7 @@ public class Museum {
         l.unlock();
     }
 
-    public boolean rollACanvas(int roomId) {
+    public boolean rollACanvas(int roomId, int elemPos) {
         Thief t = (Thief) Thread.currentThread();
 
         l.lock();
@@ -86,11 +86,12 @@ public class Museum {
             // change in museum
             rooms[roomId].canvas--;
             flag = true;
-            // change in Repository
             GRInformation.getInstance().updateMuseumRoom(roomId);
-            t.setStateThief(Constants.AT_A_ROOM);
-            GRInformation.getInstance().printUpdateLine();
+            GRInformation.getInstance().setCanvasElem(roomId, elemPos, 1);
         }
+        // change in Repository
+        t.setStateThief(Constants.AT_A_ROOM);
+        GRInformation.getInstance().printUpdateLine();
 
         System.out.println("roubei cenas");
         l.unlock();

@@ -81,6 +81,8 @@ public class MasterThief extends Thread {
     public int appraiseSit() {
         /*// + if every room is empty, return 1
         if (!everythingRobbed() cuidado que podes ter ladroes a roubar ainda) {
+        // control-> meter a variavel sumUp a true para os ladroes morrerem
+        // acordar todos os ladroes que estiverem na FIFO
             return 1;
         } // + else if thieves > 2, prepareAssaultParty
         else if (ConcentrationSite.getInstance().checkThiefNumbers() > 2) {

@@ -159,6 +159,7 @@ public class AssaultParty {
 
     /**
      * Parameter direction : 1 is for CRAWL IN, -1 is for CRAWL OUT
+     *
      * @param direction
      * @return
      */
@@ -202,14 +203,9 @@ public class AssaultParty {
      */
     public int[] selectNext(int myThiefId) {
 
-        int myPositionLine = -1;
         int nextThiefLine = -1;
-
-        for (int i = 0; i < Constants.N_SQUAD; i++) {
-            if (line[i] == myThiefId) {
-                myPositionLine = i;
-            }
-        }
+        int myPositionLine = myPositionTeam(myThiefId);
+        
         // if I am the last, the next to awake is the first
         if (myPositionLine + 1 > 2) {
             nextThiefLine = 0;
@@ -217,7 +213,19 @@ public class AssaultParty {
             nextThiefLine = myPositionLine + 1;
         }
         return new int[]{myPositionLine, nextThiefLine};
+    }
 
+    public int myPositionTeam(int myThiefId) {
+        l.lock();
+        int myPosition = -1;
+
+        for (int i = 0; i < Constants.N_SQUAD; i++) {
+            if (line[i] == myThiefId) {
+                myPosition = i;
+            }
+        }
+        l.unlock();
+        return myPosition;
     }
 
     public void fixAll(int pos) {
@@ -262,7 +270,7 @@ public class AssaultParty {
 
     /**
      * Pop canvas from Assault Party. If nCanvas is >1, remove one canvas and
-     * return
+     * give it to the Master
      *
      * @return partyId Party identifier.
      */

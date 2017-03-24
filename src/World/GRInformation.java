@@ -56,11 +56,11 @@ public class GRInformation {
      * @param elemId
      * @param pos
      */
-    public void setCv(int partyId, int elemId, int cv) {
+    public void setCanvasElem(int partyId, int elemId, int cv) {
         lock.lock();
 
         party[partyId].elements[elemId].cv = Integer.toString(cv);
-        printDoubleLine();
+        //printDoubleLine();
         lock.unlock();
     }
 
@@ -102,14 +102,14 @@ public class GRInformation {
      * @param thiefId
      * @param md
      */
-    public void setMd(int thiefId, int md) {
+    /*public void setMd(int thiefId, int md) {
         lock.lock();
 
         ladrao[thiefId].md = Integer.toString(md);
         printDoubleLine();
         lock.unlock();
 
-    }
+    }*/
 
     public void printSomething(String a) {
         lock.lock();
@@ -276,14 +276,21 @@ public class GRInformation {
     }
 
     public void printHeader() {
-        //StringBuilder strb = new StringBuilder();
-        //Formatter formatter = new Formatter(strb);
+        StringBuilder strb = new StringBuilder();
+        Formatter formatter = new Formatter(strb);
 
         lock.lock();
 
-        printer.printf("                            Heist to the museum - Description of the internal state%n");
-        printer.printf("%n");
+        //printer.printf("                            Heist to the museum - Description of the internal state%n");
+        //printer.printf("%n");
 
+        formatter.format("%1$84s%n","Heist to the museum - Description of the internal state");
+        //formatter.format("%n");
+        
+        printer.print(strb.toString());
+        System.out.println(strb.toString());
+        printer.flush();
+        
         printColumnHeader();
         printEntityStates();
         printAssaultDescription();
@@ -311,17 +318,19 @@ public class GRInformation {
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
         //formatter.format("%4$2s %3$2s %2$2s %1$2s", "a", "b", "c", "d");
-        formatter.format("%1$4s %2$11s %3$12s %4$12s %5$12s %6$12s %7$12s %n",
+        //formatter.format("%1$84s%n","Heist to the museum - Description of the internal state");
+        //formatter.format("%n");
+        formatter.format("%1$4s %2$9s %3$12s %4$12s %5$12s %6$12s %7$12s%n",
                 "MstT", "Thief 1", "Thief 2", "Thief 3", "Thief 4", "Thief 5", "Thief 6");
-        formatter.format("%1$4s %2$12s %3$12s %4$12s %5$12s %6$12s %7$12s %n",
+        formatter.format("%1$4s %2$10s %3$12s %4$12s %5$12s %6$12s %7$12s %n",
                 "Stat", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD");
-        formatter.format("%1$36s %2$38s %3$31s %n", "Assault party 1",
+        formatter.format("%1$34s %2$37s %3$30s %n", "Assault party 1",
                 "Assault party 2", "Museum");
-
-        formatter.format("%1$19s %2$10s %3$10s %4$16s %5$10s %6$10s %7$10s %8$8s %9$8s %10$8s %11$8s %n",
+        
+        formatter.format("%1$17s %2$10s %3$10s %4$15s %5$10s %6$10s %7$8s %8$8s %9$8s %10$8s %11$8s %n",
                 "Elem 1", "Elem 2", "Elem 3", "Elem 1", "Elem 2", "Elem 3", "Room 1", "Room 2", "Room 3", "Room 4", "Room 5");
 
-        formatter.format("%1$7s %2$12s %3$10s %4$10s %5$4s %6$10s %7$11s %8$10s %9$9s %10$8s %11$8s %12$8s %13$8s %n",
+        formatter.format("%1$7s %2$10s %3$10s %4$10s %5$4s %6$10s %7$10s %8$10s %9$7s %10$8s %11$8s %12$8s %13$8s %n",
                 "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "NP DT", "NP DT", "NP DT", "ND DP", "ND DP");
 
         printer.print(strb.toString());
@@ -360,7 +369,7 @@ public class GRInformation {
         lock.lock();
 
         // printer.printf(translateMasterThiefState(masterThiefState));
-        formatter.format("%1$4s %2$3s", translateMasterThiefState(masterThiefState), " ");
+        formatter.format("%1$4s %2$1s", translateMasterThiefState(masterThiefState), "");
 
         for (int i = 0; i < ladrao.length; i++) {
             formatter.format("%1$4s %2$1s %3$2s %4$2s ", translateThiefState(ladrao[i].stat),
@@ -382,16 +391,16 @@ public class GRInformation {
         lock.lock();
 
         formatter.format("%1$6s", party[0].roomId);
-        formatter.format("%1$7s %2$3s %3$2s", party[0].elements[0].id, party[0].elements[0].pos, party[0].elements[0].cv);
+        formatter.format("%1$5s %2$3s %3$2s", party[0].elements[0].id, party[0].elements[0].pos, party[0].elements[0].cv);
         formatter.format("%1$4s %2$3s %3$2s", party[0].elements[1].id, party[0].elements[1].pos, party[0].elements[1].cv);
         formatter.format("%1$4s %2$3s %3$2s", party[0].elements[2].id, party[0].elements[2].pos, party[0].elements[2].cv);
 
         formatter.format("%1$4s", party[1].roomId);
         formatter.format("%1$5s %2$3s %3$2s", party[1].elements[0].id, party[1].elements[0].pos, party[1].elements[0].cv);
-        formatter.format("%1$5s %2$3s %3$2s", party[1].elements[1].id, party[1].elements[1].pos, party[1].elements[1].cv);
+        formatter.format("%1$4s %2$3s %3$2s", party[1].elements[1].id, party[1].elements[1].pos, party[1].elements[1].cv);
         formatter.format("%1$4s %2$3s %3$2s", party[1].elements[2].id, party[1].elements[2].pos, party[1].elements[2].cv);
 
-        formatter.format("%1$7s %2$2s %3$5s %4$2s %5$5s %6$2s %7$5s %8$2s %9$5s %10$2s",
+        formatter.format("%1$5s %2$2s %3$5s %4$2s %5$5s %6$2s %7$5s %8$2s %9$5s %10$2s",
                 sala[0].canvas, sala[0].distance,
                 sala[1].canvas, sala[1].distance,
                 sala[2].canvas, sala[2].distance,

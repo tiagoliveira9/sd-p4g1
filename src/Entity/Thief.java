@@ -53,7 +53,7 @@ public class Thief extends Thread implements Comparable<Thief> {
     }
 
     /**
-     * Run this thread -> Life cycle of the thief
+     * Run this thread -> Life cycle of the Thief.
      */
     @Override
     public void run() {
@@ -80,7 +80,7 @@ public class Thief extends Thread implements Comparable<Thief> {
                 ConcentrationSite.getInstance().teamReady();
             }
 
-            // back to assault party to sleep
+            // back to assault party to block
             AssaultParty.getInstance(partyId).waitToStartRobbing();
 
             // while (assgrp.crawlIn()) último, acorda os outros
@@ -88,7 +88,8 @@ public class Thief extends Thread implements Comparable<Thief> {
             // ONE is for CRAWL IN
             int room = AssaultParty.getInstance(partyId).crawl(1);
             // 
-            Museum.getInstance().rollACanvas(room);
+            int elemPos = AssaultParty.getInstance(partyId).myPositionTeam(thiefId);
+            Museum.getInstance().rollACanvas(room, elemPos);
             // while (assgrp.crawlOut())
             // ONE is for CRAWL OUT
             int lastArriving = AssaultParty.getInstance(partyId).crawl(-1);
