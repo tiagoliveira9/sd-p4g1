@@ -151,9 +151,8 @@ public class AssaultParty {
      * @param direction
      * @return
      */
-    public boolean crawl(int direction) {
+    public int[] crawl(int direction) {
         Thief t = (Thief) Thread.currentThread();
-        boolean flag = false;
         l.lock();
         int myself = myPositionTeam(t.getThiefId());
         int next = selectNext(t.getThiefId());
@@ -165,6 +164,7 @@ public class AssaultParty {
                     startAssault[myself].await();
                 }
                 startAssault[next].signal();
+                System.out.println("fiz o crawlin todo");
             } catch (InterruptedException ex) {
                 Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(0);
@@ -182,7 +182,7 @@ public class AssaultParty {
         }
 
         l.unlock();
-        return flag;
+        return getRoomIdToAssault(t.getThiefId());
     }
 
     private boolean crawlIn() {
@@ -191,41 +191,48 @@ public class AssaultParty {
         boolean flagI = false;
         int elemId = myPositionTeam(c.id);
 
-        // erase old position
-        teamLineup[c.pos] = -1;
-
         do {
             int pos = c.pos + c.agility;
 
-            /*if (pos >= distance) {
-                c.pos = distance;
-                GRInformation.getInstance().setPosElem(partyId, elemId, distance);
-                flagI = true;
-                break;
-            }*/
-            if (pos < teamHead) {
+            if (pos <= teamHead) {
                 while (true) {
                     if (teamLineup[pos] != -1) {
                         pos--;
                     } else {
                         // update elem position and registers
+                        teamLineup[c.pos] = -1;
                         c.pos = pos;
                         teamLineup[pos] = elemId;
                         break;
                     }
                 }
-
-            } else if (pos > teamHead) {
-                
+            } else {
                 if (pos - teamHead > 3) {
+                    teamLineup[c.pos] = -1;
                     c.pos = teamHead + 3;
+
+                    if (pos >= distance) {
+                        c.pos = distance;
+                        teamLineup[c.pos] = elemId;
+                        GRInformation.getInstance().setPosElem(partyId, elemId, c.pos);
+                        flagI = true;
+                        break;
+                    }
                     teamLineup[c.pos] = elemId;
                 } else {
+                    teamLineup[c.pos] = -1;
                     c.pos = pos;
-                    teamLineup[pos] = elemId;
+                    if (pos >= distance) {
+                        c.pos = distance;
+                        teamLineup[c.pos] = elemId;
+                        GRInformation.getInstance().setPosElem(partyId, elemId, c.pos);
+                        flagI = true;
+                        break;
+                    }
+                    teamLineup[c.pos] = elemId;
                 }
             }
-            GRInformation.getInstance().setPosElem(partyId, elemId, distance);
+            GRInformation.getInstance().setPosElem(partyId, elemId, c.pos);
         } while (c.pos - teamHead != 3);
         teamHead = c.pos;
         // he will be always 3 positions ahead or at room

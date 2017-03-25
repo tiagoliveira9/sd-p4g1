@@ -93,7 +93,7 @@ public class Museum {
         t.setStateThief(Constants.AT_A_ROOM);
         GRInformation.getInstance().printUpdateLine();
 
-        System.out.println("roubei cenas");
+        //System.out.println("roubei cenas");
         l.unlock();
 
         return flag;
