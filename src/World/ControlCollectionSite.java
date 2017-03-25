@@ -153,7 +153,7 @@ public class ControlCollectionSite {
      * @param boolean
      * @param roomId
      */
-    public void handACanvas(boolean canvas, int roomId, int partyId, int lastArriving) {
+    public void handACanvas(boolean canvas, int roomId, int partyId) {
 
         l.lock();
         // nao sei se vou ter problemas de não ser o ULTIMO ladrao que reseta a 
@@ -162,9 +162,9 @@ public class ControlCollectionSite {
         if (canvas) {
             nCanvas++;
         }
-
+        boolean lastArriving = false; // temos que fazer verificacao de quem foi o ultimo
         // ultimo ladrao a chegar, nao sei se é necessario limpar esta flag só no ultimo
-        if (lastArriving == 2) {
+        if (lastArriving) {
             salas[roomId].inUse = false;
             if (partyId == 0) {
                 assaultP1 = false;

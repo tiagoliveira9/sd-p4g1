@@ -42,7 +42,7 @@ public class GRInformation {
      * @param elemId
      * @param pos
      */
-    public void setPos(int partyId, int elemId, int pos) {
+    public void setPosElem(int partyId, int elemId, int pos) {
         lock.lock();
         party[partyId].elements[elemId].pos = Integer.toString(pos);
         printDoubleLine();

@@ -80,21 +80,19 @@ public class Thief extends Thread implements Comparable<Thief> {
                 ConcentrationSite.getInstance().teamReady();
             }
 
-            // back to assault party to block
+            // back to assault party to block and get in line
             AssaultParty.getInstance(partyId).waitToStartRobbing();
 
-            // while (assgrp.crawlIn()) último, acorda os outros
-            // para já só muda estado
             // ONE is for CRAWL IN
-            int room = AssaultParty.getInstance(partyId).crawl(1);
+            AssaultParty.getInstance(partyId).crawl(1);
             // 
-            int elemPos = AssaultParty.getInstance(partyId).myPositionTeam(thiefId);
-            Museum.getInstance().rollACanvas(room, elemPos);
-            // while (assgrp.crawlOut())
+            int [] roll = AssaultParty.getInstance(partyId).getRoomIdToAssault(thiefId);
+            Museum.getInstance().rollACanvas(roll[0], roll[1]);
+         
             // ONE is for CRAWL OUT
-            int lastArriving = AssaultParty.getInstance(partyId).crawl(-1);
+            AssaultParty.getInstance(partyId).crawl(-1);
             //AssaultParty.getInstance(partyId).fixAll(lastArriving);
-            //handACanvas(partyId, room, lastArriving);
+            //handACanvas(partyId, room);
             /*///////////////////////////////////////////////////////////////// 
             while (assgrp.crawlIn());	//último, acorda os outros
             museum.rollACanvas(assgrp.getRoomID(partyId));
@@ -118,11 +116,8 @@ public class Thief extends Thread implements Comparable<Thief> {
 
     private void handACanvas(int partyId, int room, int last) {
         boolean hasCanvas = AssaultParty.getInstance(partyId).getnCanvas();
-        // antes do ultimo fazer a entrega do canvas, resetar a assault party
-        if (last == 2) {
-            // reset to assault part #
-        }
-        ControlCollectionSite.getInstance().handACanvas(hasCanvas, room, partyId, last);
+        
+        ControlCollectionSite.getInstance().handACanvas(hasCanvas, room, partyId);
 
     }
 
