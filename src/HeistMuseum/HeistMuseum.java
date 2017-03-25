@@ -34,7 +34,7 @@ public class HeistMuseum {
 
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             // distance between 15 and 30
-            //distance = 16;
+            //istance = 15;
             distance = ThreadLocalRandom.current().nextInt(15, 30 + 1);
             // canvas between 8 and 16
             canvas = ThreadLocalRandom.current().nextInt(8, 16 + 1);
@@ -49,6 +49,7 @@ public class HeistMuseum {
         for (int i = 0; i < Constants.N_THIEVES; i++) {
 
             agility = ThreadLocalRandom.current().nextInt(2, 6 + 1);
+           // agility = 2;
             crook[i] = new Thief(i, agility);
         }
 

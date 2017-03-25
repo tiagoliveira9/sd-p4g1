@@ -20,7 +20,7 @@ public class AssaultParty {
     private final int partyId;
     private final static Lock l = new ReentrantLock();
     private final Condition[] startAssault;
-    private final Condition crawlOutCondition;
+    private final Condition cenas;
     private int[] line; // order that thieves blocks for the first time awaiting orders
     private Crook[] squad;
     private int distance; // targeted room distance
@@ -81,7 +81,7 @@ public class AssaultParty {
             startAssault[i] = l.newCondition();
             line[i] = -1;
         }
-        crawlOutCondition = l.newCondition();
+        cenas = l.newCondition();
 
     }
 
@@ -103,10 +103,11 @@ public class AssaultParty {
                 squad[nCrook] = new Crook(t.getThiefId(), t.getAgility());
                 nCrook++;
                 //GRInformation.getInstance().setIdPartyElem(this.partyId,
-                  //      nCrook - 1, t.getThiefId() + 1);
+                //      nCrook - 1, t.getThiefId() + 1);
 
                 if (nCrook == Constants.N_SQUAD) {
                     // last thief
+
                     flag = true;
                 }
             }
@@ -126,14 +127,14 @@ public class AssaultParty {
     public void waitToStartRobbing() {
         l.lock();
         Thief t = (Thief) Thread.currentThread();
-        
+
         try {
             int i;
             for (i = 0; i < Constants.N_SQUAD; i++) {
                 if (line[i] == -1) {
                     line[i] = t.getThiefId();
                     GRInformation.getInstance().setIdPartyElem(this.partyId,
-                        i , t.getThiefId() + 1);
+                            i, t.getThiefId() + 1);
                     break;
                 }
             }
@@ -156,7 +157,8 @@ public class AssaultParty {
     public int[] crawl(int direction) {
         l.lock();
         Thief t = (Thief) Thread.currentThread();
-        
+        Crook c = getCrook(t.getThiefId());
+
         int myself = myPositionTeam(t.getThiefId());
         int next = selectNext(t.getThiefId());
 
@@ -177,7 +179,9 @@ public class AssaultParty {
             try {
                 t.setStateThief(Constants.CRAWLING_OUTWARDS);
                 GRInformation.getInstance().printUpdateLine();
-                startAssault[myself].await();
+                cenas.await();
+                //startAssault[myself].await();
+
             } catch (InterruptedException ex) {
                 Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(0);
