@@ -28,35 +28,37 @@ public class HeistMuseum {
         for (int i = 0; i < Constants.N_ASSAULT_PARTY; i++) {
             AssaultParty.getInstance(i);
         }
-        
+
         Museum hermitage = Museum.getInstance();
         int distance, canvas;
 
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             // distance between 15 and 30
+            //distance = 16;
             distance = ThreadLocalRandom.current().nextInt(15, 30 + 1);
             // canvas between 8 and 16
             canvas = ThreadLocalRandom.current().nextInt(8, 16 + 1);
             hermitage.setUpRoom(i, distance, canvas);
         }
-        
+
         Thief[] crook = new Thief[Constants.N_THIEVES];
         MasterThief master = new MasterThief();
         int agility;
-       
+
         // Instantiation of the Thieves 
         for (int i = 0; i < Constants.N_THIEVES; i++) {
+
             agility = ThreadLocalRandom.current().nextInt(2, 6 + 1);
-            crook[i] = new Thief(i,agility);
+            crook[i] = new Thief(i, agility);
         }
-        
+
         // Simulation starts
         master.start();
-        
+
         for (int i = 0; i < Constants.N_THIEVES; i++) {
             crook[i].start();
         }
-         
+
     }
 
 }

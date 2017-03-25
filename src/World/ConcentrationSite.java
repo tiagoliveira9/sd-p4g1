@@ -21,8 +21,7 @@ import java.util.logging.Logger;
  */
 public class ConcentrationSite {
 
-    BlockingQueue<Thief> queueThief;
-
+    //BlockingQueue<Thief> queueThief;
     private static ConcentrationSite instance;
     private final static Lock l = new ReentrantLock();
     private final Condition prepare;
@@ -54,13 +53,12 @@ public class ConcentrationSite {
      * Singleton needs private constructor
      */
     private ConcentrationSite() {
-        //l = new ReentrantLock();
         this.prepare = l.newCondition();
         this.deciding = l.newCondition();
         this.assembling = l.newCondition();
         this.thiefLine = new TreeSet<>();
         this.nAssaultParty = -1;
-        this.queueThief = new ArrayBlockingQueue<>(6);
+        //this.queueThief = new ArrayBlockingQueue<>(6);
     }
 
     /**
@@ -79,9 +77,8 @@ public class ConcentrationSite {
     }
 
     public void removeThief() {
-        Thief crook = (Thief) Thread.currentThread();
-
         l.lock();
+        Thief crook = (Thief) Thread.currentThread();
         try {
             thiefLine.remove(crook);
         } finally {
@@ -90,10 +87,9 @@ public class ConcentrationSite {
     }
 
     public int addThief() {
-        Thief crook = (Thief) Thread.currentThread();
-
         l.lock();
 
+        Thief crook = (Thief) Thread.currentThread();
         // access the resource protected by this lock
         this.thiefLine.add(crook);
         // signal Master so he can check if it has elements to make a team
@@ -118,12 +114,13 @@ public class ConcentrationSite {
 
     /**
      * This method blocks the Master. Until thieves on the concentration site
-     * ("fifo") are not at leat 3, Master blo
+     * ("fifo") are not at leat 3, Master blocks
      */
     public void checkThiefInitialNumbers() {
+        l.lock();
+
         MasterThief master = (MasterThief) Thread.currentThread();
 
-        l.lock();
         try {
             while (thiefLine.size() < 3) {
                 this.deciding.await();
@@ -141,14 +138,15 @@ public class ConcentrationSite {
 
     /**
      * The method prepareAssaultPart stage 2. Wakes thieves to go to AssaultPart
-     * #
+     * #. PartyID. To inform what party thief must go
      *
-     * @param PartyID. To inform what party thief must go
+     * @param partyId
+     * @param roomId
      */
     public void prepareAssaultParty2(int partyId, int roomId) {
+        l.lock();
         MasterThief master = (MasterThief) Thread.currentThread();
 
-        l.lock();
         // signal one thread to wake one thief
         //int i = thiefLine.size() - 3;
         this.nAssaultParty = partyId;
@@ -170,7 +168,6 @@ public class ConcentrationSite {
         // 
         // everything fine-> unlock
         l.unlock();
-
     }
 
     /**

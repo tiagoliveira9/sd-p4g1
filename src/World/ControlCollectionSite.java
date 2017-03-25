@@ -84,12 +84,13 @@ public class ControlCollectionSite {
      * @return int[]{tempAssault, tempSala}
      */
     public int[] prepareAssaultParty1() {
+        l.lock();
+
         MasterThief master = (MasterThief) Thread.currentThread();
         int tempAssault = -1;
         int tempSala = -1;
 
         // nao esquecer de resetar a assault party quando o ultimo elemento chegar
-        l.lock();
         master.setStateMaster(Constants.ASSEMBLING_A_GROUP);
         GRInformation.getInstance().printUpdateLine();
 
@@ -123,10 +124,9 @@ public class ControlCollectionSite {
      *
      */
     public void takeARest() {
-        MasterThief master = (MasterThief) Thread.currentThread();
-
         l.lock();
 
+        MasterThief master = (MasterThief) Thread.currentThread();
         master.setStateMaster(Constants.WAITING_FOR_ARRIVAL);
         GRInformation.getInstance().printUpdateLine();
 

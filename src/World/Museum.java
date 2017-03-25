@@ -15,7 +15,6 @@ public class Museum {
 
     private static Museum instance;
     private final static Lock l = new ReentrantLock();
-    private final Condition somethingCondition;
     private Room[] rooms;
 
     private class Room {
@@ -49,8 +48,6 @@ public class Museum {
      * Singleton needs private constructor.
      */
     private Museum() {
-        // ReentrantLock means that several threads can lock on the same location
-        this.somethingCondition = l.newCondition();
         // exists 5 rooms on the museum
         rooms = new Room[Constants.N_ROOMS];
         for (int i = 0; i < Constants.N_ROOMS; i++) {
@@ -77,22 +74,26 @@ public class Museum {
     }
 
     public boolean rollACanvas(int roomId, int elemPos) {
+        l.lock();
+
         Thief t = (Thief) Thread.currentThread();
 
-        l.lock();
         boolean flag = false;
         int number = rooms[roomId].canvas;
         if (number > 1) {
             // change in museum
             rooms[roomId].canvas--;
             flag = true;
-            GRInformation.getInstance().updateMuseumRoom(roomId);
+            t.setStateThief(Constants.AT_A_ROOM);
+            GRInformation.getInstance().printUpdateLine();
             GRInformation.getInstance().setCanvasElem(roomId, elemPos, 1);
-        }
-        // change in Repository
-        t.setStateThief(Constants.AT_A_ROOM);
-        GRInformation.getInstance().printUpdateLine();
+            GRInformation.getInstance().updateMuseumRoom(roomId);
 
+        } else {
+            // change in Repository
+            t.setStateThief(Constants.AT_A_ROOM);
+            GRInformation.getInstance().printUpdateLine();
+        }
         //System.out.println("roubei cenas");
         l.unlock();
 

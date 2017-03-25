@@ -60,7 +60,7 @@ public class GRInformation {
         lock.lock();
 
         party[partyId].elements[elemId].cv = Integer.toString(cv);
-        //printDoubleLine();
+        printDoubleLine();
         lock.unlock();
     }
 
@@ -73,8 +73,8 @@ public class GRInformation {
      */
     public void setRoomId(int partyId, int roomId) {
         lock.lock();
-        party[partyId].roomId = Integer.toString(roomId +1);
-        //printDoubleLine();
+        party[partyId].roomId = Integer.toString(roomId + 1);
+        printDoubleLine();
         lock.unlock();
     }
 
@@ -110,7 +110,6 @@ public class GRInformation {
         lock.unlock();
 
     }*/
-
     public void printSomething(String a) {
         lock.lock();
         System.out.println(a);
@@ -141,12 +140,12 @@ public class GRInformation {
      */
     public void updateMuseumRoom(int roomId) {
         lock.lock();
-                
+
         int a = Integer.parseInt(sala[roomId].canvas);
         a--;
         sala[roomId].canvas = Integer.toString(a);
-        
-        //printDoubleLine();
+
+        printDoubleLine();
         lock.unlock();
 
     }
@@ -258,7 +257,7 @@ public class GRInformation {
     public void setStateThief(Thief thief) {
 
         lock.lock();
-        
+
         ladrao[thief.getThiefId()].stat = thief.getStateThief();
         ladrao[thief.getThiefId()].md = Integer.toString(thief.getAgility());
 
@@ -276,21 +275,21 @@ public class GRInformation {
     }
 
     public void printHeader() {
-        StringBuilder strb = new StringBuilder();
-        Formatter formatter = new Formatter(strb);
 
         lock.lock();
 
+        StringBuilder strb = new StringBuilder();
+        Formatter formatter = new Formatter(strb);
         //printer.printf("                            Heist to the museum - Description of the internal state%n");
         //printer.printf("%n");
 
-        formatter.format("%1$84s%n","Heist to the museum - Description of the internal state");
+        formatter.format("%1$84s%n", "Heist to the museum - Description of the internal state");
         //formatter.format("%n");
-        
+
         printer.print(strb.toString());
         System.out.println(strb.toString());
         printer.flush();
-        
+
         printColumnHeader();
         printEntityStates();
         printAssaultDescription();
@@ -326,7 +325,7 @@ public class GRInformation {
                 "Stat", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD");
         formatter.format("%1$34s %2$37s %3$30s %n", "Assault party 1",
                 "Assault party 2", "Museum");
-        
+
         formatter.format("%1$17s %2$10s %3$10s %4$15s %5$10s %6$10s %7$8s %8$8s %9$8s %10$8s %11$8s %n",
                 "Elem 1", "Elem 2", "Elem 3", "Elem 1", "Elem 2", "Elem 3", "Room 1", "Room 2", "Room 3", "Room 4", "Room 5");
 
@@ -341,11 +340,9 @@ public class GRInformation {
     }
 
     public void printUpdateLine() {
-
-        Thread thread = Thread.currentThread();
-
         lock.lock();
 
+        Thread thread = Thread.currentThread();
         if (thread.getClass() == Thief.class) {
             setStateThief((Thief) thread);
         } else if (thread.getClass() == MasterThief.class) {
@@ -358,15 +355,17 @@ public class GRInformation {
     }
 
     public void printDoubleLine() {
+        lock.lock();
         printEntityStates();
         printAssaultDescription();
+        lock.unlock();
     }
 
     public void printEntityStates() {
+        lock.lock();
 
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
-        lock.lock();
 
         // printer.printf(translateMasterThiefState(masterThiefState));
         formatter.format("%1$4s %2$1s", translateMasterThiefState(masterThiefState), "");
@@ -386,9 +385,10 @@ public class GRInformation {
     }
 
     public void printAssaultDescription() {
+        lock.lock();
+
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
-        lock.lock();
 
         formatter.format("%1$6s", party[0].roomId);
         formatter.format("%1$5s %2$3s %3$2s", party[0].elements[0].id, party[0].elements[0].pos, party[0].elements[0].cv);
@@ -519,7 +519,6 @@ public class GRInformation {
         lock.unlock();
 
     }
-
 
     public void close() {
 

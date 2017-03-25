@@ -92,9 +92,9 @@ public class AssaultParty {
      * @return boolean. True if is the last Thief, false otherwise.
      */
     public boolean addToSquad() {
+        l.lock();
         Thief t = (Thief) Thread.currentThread();
         boolean flag = false;
-        l.lock();
 
         try {
 
@@ -102,8 +102,8 @@ public class AssaultParty {
 
                 squad[nCrook] = new Crook(t.getThiefId(), t.getAgility());
                 nCrook++;
-                GRInformation.getInstance().setIdPartyElem(this.partyId,
-                        nCrook - 1, t.getThiefId() + 1);
+                //GRInformation.getInstance().setIdPartyElem(this.partyId,
+                  //      nCrook - 1, t.getThiefId() + 1);
 
                 if (nCrook == Constants.N_SQUAD) {
                     // last thief
@@ -124,14 +124,16 @@ public class AssaultParty {
      *
      */
     public void waitToStartRobbing() {
-        Thief t = (Thief) Thread.currentThread();
-
         l.lock();
+        Thief t = (Thief) Thread.currentThread();
+        
         try {
             int i;
             for (i = 0; i < Constants.N_SQUAD; i++) {
                 if (line[i] == -1) {
                     line[i] = t.getThiefId();
+                    GRInformation.getInstance().setIdPartyElem(this.partyId,
+                        i , t.getThiefId() + 1);
                     break;
                 }
             }
@@ -152,8 +154,9 @@ public class AssaultParty {
      * @return
      */
     public int[] crawl(int direction) {
-        Thief t = (Thief) Thread.currentThread();
         l.lock();
+        Thief t = (Thief) Thread.currentThread();
+        
         int myself = myPositionTeam(t.getThiefId());
         int next = selectNext(t.getThiefId());
 
@@ -164,7 +167,8 @@ public class AssaultParty {
                     startAssault[myself].await();
                 }
                 startAssault[next].signal();
-                System.out.println("fiz o crawlin todo");
+                return getRoomIdToAssault(t.getThiefId());
+
             } catch (InterruptedException ex) {
                 Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(0);
@@ -186,8 +190,11 @@ public class AssaultParty {
     }
 
     private boolean crawlIn() {
+        l.lock();
+
         Thief t = (Thief) Thread.currentThread();
         Crook c = getCrook(t.getThiefId());
+
         boolean flagI = false;
         int elemId = myPositionTeam(c.id);
 
@@ -213,7 +220,7 @@ public class AssaultParty {
 
                     if (pos >= distance) {
                         c.pos = distance;
-                        teamLineup[c.pos] = elemId;
+                        //teamLineup[c.pos] = elemId;
                         GRInformation.getInstance().setPosElem(partyId, elemId, c.pos);
                         flagI = true;
                         break;
@@ -224,7 +231,7 @@ public class AssaultParty {
                     c.pos = pos;
                     if (pos >= distance) {
                         c.pos = distance;
-                        teamLineup[c.pos] = elemId;
+                        //teamLineup[c.pos] = elemId;
                         GRInformation.getInstance().setPosElem(partyId, elemId, c.pos);
                         flagI = true;
                         break;
@@ -236,13 +243,14 @@ public class AssaultParty {
         } while (c.pos - teamHead != 3);
         teamHead = c.pos;
         // he will be always 3 positions ahead or at room
-
+        l.unlock();
         return flagI;
     }
 
     private void crawlOut() {
-        Thief t = (Thief) Thread.currentThread();
+        l.lock();
 
+        Thief t = (Thief) Thread.currentThread();
         try {
             t.setStateThief(Constants.CRAWLING_OUTWARDS);
             GRInformation.getInstance().printUpdateLine();
@@ -255,9 +263,11 @@ public class AssaultParty {
         } catch (InterruptedException ex) {
             Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
         }
+        l.unlock();
     }
 
     public Crook getCrook(int thiefId) {
+        l.lock();
         int i;
 
         for (i = 0; i < Constants.N_SQUAD; i++) {
@@ -265,7 +275,7 @@ public class AssaultParty {
                 break;
             }
         }
-
+        l.unlock();
         return squad[i];
     }
 
@@ -278,7 +288,7 @@ public class AssaultParty {
      * @return nextThiefLine
      */
     public int selectNext(int myThiefId) {
-
+        l.lock();
         int nextThiefLine = -1;
         int myPositionLine = myPositionTeam(myThiefId);
 
@@ -288,6 +298,7 @@ public class AssaultParty {
         } else {
             nextThiefLine = myPositionLine + 1;
         }
+        l.unlock();
         return nextThiefLine;
     }
 
