@@ -89,9 +89,10 @@ public class Thief extends Thread implements Comparable<Thief> {
             // ONE is for CRAWL OUT
             AssaultParty.getInstance(partyId).crawl(false);
             // BLOQUEIA
-            AssaultParty.getInstance(partyId).bloqueia();
             AssaultParty.getInstance(partyId).removeCrook(roll[1]);
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
+            //AssaultParty.getInstance(partyId).bloqueia();
+
         }
 
     }
@@ -105,7 +106,6 @@ public class Thief extends Thread implements Comparable<Thief> {
         // if you can't die, then invert bool ! -> you are needed
         return !ControlCollectionSite.getInstance().canIDie();
     }
-
 
     public int getThiefId() {
         return thiefId;

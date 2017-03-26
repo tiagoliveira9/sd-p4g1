@@ -180,7 +180,7 @@ public class AssaultParty {
                 }
                 idGlobal = squad[next].id;
                 moveThief.signalAll();
-
+                l.unlock();
                 return getRoomIdToAssault(t.getThiefId());
 
             } catch (InterruptedException ex) {
@@ -191,10 +191,10 @@ public class AssaultParty {
             try {
                 t.setStateThief(Constants.CRAWLING_OUTWARDS);
                 GRInformation.getInstance().printUpdateLine();
-                /* c.pos = 0;
-                while (!startAssaultBool[myself]) {
-                    startAssault[myself].await();
-                }*/
+
+                while (c.id != idGlobal) {
+                    moveThief.await();
+                }
                 c.pos = 0;
                 while (!crawlGo(direction)) {
 
@@ -208,9 +208,10 @@ public class AssaultParty {
                 }
                 idGlobal = squad[next].id;
                 moveThief.signalAll();
+                l.unlock();
+                return getRoomIdToAssault(t.getThiefId());
 
                 //cenas.await();
-                return getRoomIdToAssault(t.getThiefId());
             } catch (InterruptedException ex) {
                 Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(0);
@@ -413,7 +414,7 @@ public class AssaultParty {
                 teamLineup[i] = -1;
                 translatePos[i] = distance - i;
             }
-            GRInformation.getInstance().setRoomId(this.partyId, roomId);
+            //GRInformation.getInstance().setRoomId(this.partyId, roomId);
 
         } finally {
             l.unlock();
