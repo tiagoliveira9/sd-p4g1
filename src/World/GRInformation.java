@@ -85,10 +85,10 @@ public class GRInformation {
      * @param elemId
      * @param id
      */
-    public void setIdPartyElem(int partyId, int elemId, int id) {
+    public void setIdPartyElem(int partyId, int elemId, String id) {
         lock.lock();
 
-        party[partyId].elements[elemId].id = Integer.toString(id);
+        party[partyId].elements[elemId].id = id;
         party[partyId].elements[elemId].pos = "0";
         party[partyId].elements[elemId].cv = "0";
 

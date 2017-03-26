@@ -27,11 +27,10 @@ public class AssaultParty {
     private int distance; // targeted room distance
     private int roomId;
     private int nCrook; // thief counter
-    private int nCanvas; // number of canvas stolen by party
     private int[] teamLineup;
     private int[] translatePos;
-    private int teamHeadIn;
-    private int teamHeadOut;
+    private int teamHeadIn; // thief that goes on the front crawling IN
+    private int teamHeadOut; // thief that goes on the front crawling OUT
 
     private class Crook {
 
@@ -140,8 +139,9 @@ public class AssaultParty {
             for (i = 0; i < Constants.N_SQUAD; i++) {
                 if (line[i] == -1) {
                     line[i] = t.getThiefId();
+                    String a = Integer.toString(t.getThiefId() + 1);
                     GRInformation.getInstance().setIdPartyElem(this.partyId,
-                            i, t.getThiefId() + 1);
+                            i, a);
                     break;
                 }
             }
@@ -411,6 +411,8 @@ public class AssaultParty {
         try {
             this.distance = distance;
             this.roomId = roomId;
+            this.teamHeadIn = 0;
+            this.teamHeadOut = 0;
 
             // thief are in position zero that doesn't count, so +1
             teamLineup = new int[distance + 1];
@@ -453,26 +455,39 @@ public class AssaultParty {
     }
 
     /**
-     * Pop canvas from Assault Party. If nCanvas is >1, remove one canvas and
-     * give it to the Master
+     * This method returns the canvas of the Thief and removes himself from the
+     * team.
      *
-     * @return partyId Party identifier.
+     * @param elemId
+     * @return <li> True, if Thief has a canvas
+     * <li> False otherwise
      */
-    public boolean getnCanvas() {
+    public boolean getCrookCanvas(int elemId) {
         l.lock();
-        if (nCanvas > 1) {
-            nCanvas--;
-            return true;
-        }
+        Crook c = squad[elemId];
+        // reseting-------
+        line[elemId] = -1;
+        nCrook--;
+        GRInformation.getInstance().setCanvasElem(roomId, elemId, 0);
+
+        //----------------
+        boolean temp = c.canvas;
         l.unlock();
-        return false;
+
+        return temp;
     }
 
     /**
      * TODO
      */
     public void resetAssaultPart() {
+        l.lock();
 
+        for (int i = 0; i < Constants.N_SQUAD; i++) {
+            GRInformation.getInstance().setIdPartyElem(this.partyId, i, "-");
+        }
+
+        l.unlock();
     }
 
 }

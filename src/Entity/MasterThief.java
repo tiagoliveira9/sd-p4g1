@@ -5,7 +5,6 @@ import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
 import World.Museum;
-import World.GRInformation;
 
 /**
  * @author João Cravo joao.cravo@ua.pt n.:63784
@@ -55,8 +54,11 @@ public class MasterThief extends Thread {
                         para o ladrao passar o canvas (vê como passo o nAssaultParty 
                         no concentration site entre os dois metodos de bloqueio)
                      */
-                    ControlCollectionSite.getInstance().takeARest();
-                    
+                    int eraseId = ControlCollectionSite.getInstance().takeARest();
+                    // reset assault party
+                    if (eraseId > -1) {
+                        AssaultParty.getInstance(eraseId).resetAssaultPart();
+                    }
                     // do something
                     break;
                 default:
@@ -91,8 +93,8 @@ public class MasterThief extends Thread {
             // + else thieves < 2, takeARest
             return 3;
         }*/
-        if (ConcentrationSite.getInstance().checkThiefNumbers() > 2 &&
-                ControlCollectionSite.getInstance().anyTeamAvailable()) {
+        if (ConcentrationSite.getInstance().checkThiefNumbers() > 2
+                && ControlCollectionSite.getInstance().anyTeamAvailable()) {
             return 2;
         } else {
             // + else thieves < 2, takeARest

@@ -25,6 +25,8 @@ public class ControlCollectionSite {
     private boolean sumUp;
     private boolean assaultP1;
     private boolean assaultP2;
+    private int[] partyIdCounter; // to count from each party, how many handed a Canvas 
+    private int eraseParty;
     private int nCanvas; // number of canvas stolen
 
     private Sala[] salas;
@@ -70,7 +72,9 @@ public class ControlCollectionSite {
         this.assaultP1 = false;
         this.assaultP2 = false;
         this.nCanvas = 0;
-
+        this.partyIdCounter = new int[Constants.N_ASSAULT_PARTY];
+        this.partyIdCounter[0] = this.partyIdCounter[1] = 0;
+        this.eraseParty = -1;
         salas = new Sala[Constants.N_ROOMS];
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             salas[i] = new Sala(i);
@@ -100,8 +104,6 @@ public class ControlCollectionSite {
         } else if (!assaultP2) {
             tempAssault = 1;
             assaultP2 = true;
-        } else {
-            System.out.println("Vai dar merda");
         }
 
         for (int i = 0; i < Constants.N_ROOMS; i++) {
@@ -123,7 +125,7 @@ public class ControlCollectionSite {
      * canvas that he will give to her, if he has one.
      *
      */
-    public void takeARest() {
+    public int takeARest() {
         l.lock();
 
         MasterThief master = (MasterThief) Thread.currentThread();
@@ -143,6 +145,9 @@ public class ControlCollectionSite {
         master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
         GRInformation.getInstance().printUpdateLine();
         l.unlock();
+        int temp = this.eraseParty;
+        this.eraseParty = -1;
+        return temp;
     }
 
     /**
@@ -156,20 +161,25 @@ public class ControlCollectionSite {
     public void handACanvas(boolean canvas, int roomId, int partyId) {
 
         l.lock();
-        // nao sei se vou ter problemas de não ser o ULTIMO ladrao que reseta a 
-        // assault party 
-        // add the canvas stolen to Control&Collection Site
+        boolean lastArriving = false;
         if (canvas) {
             nCanvas++;
         }
-        boolean lastArriving = false; // temos que fazer verificacao de quem foi o ultimo
-        // ultimo ladrao a chegar, nao sei se é necessario limpar esta flag só no ultimo
+        partyIdCounter[partyId]++;
+
+        if (partyIdCounter[partyId] == 3) {
+            lastArriving = true;
+            partyIdCounter[partyId] = 0;
+        }
+
         if (lastArriving) {
             salas[roomId].inUse = false;
             if (partyId == 0) {
                 assaultP1 = false;
+                this.eraseParty = 0;
             } else if (partyId == 1) {
                 assaultP2 = false;
+                this.eraseParty = 1;
             }
         }
         // seria melhor se fosse por estados..mas como mudar o estado do
@@ -221,4 +231,5 @@ public class ControlCollectionSite {
         }
         return false;
     }
+
 }

@@ -1,10 +1,8 @@
 package Entity;
 
-import HeistMuseum.Constants;
 import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
-import World.GRInformation;
 import World.Museum;
 
 // import das areas with which the thief will interact
@@ -84,22 +82,19 @@ public class Thief extends Thread implements Comparable<Thief> {
             AssaultParty.getInstance(partyId).waitToStartRobbing();
 
             // for synchronism, returns the room and elemId right here on crawl
-            int [] roll = AssaultParty.getInstance(partyId).crawl(true);
-            // 
+            int[] roll = AssaultParty.getInstance(partyId).crawl(true);
+            // roll[0] = roomId, roll[1] = elemId 
             Museum.getInstance().rollACanvas(roll[0], roll[1]);
-         
+
             // ONE is for CRAWL OUT
             AssaultParty.getInstance(partyId).crawl(false);
-            AssaultParty.getInstance(partyId).bloqueia();
-            //AssaultParty.getInstance(partyId).fixAll(lastArriving);
-            //handACanvas(partyId, room);
+
+            //AssaultParty.getInstance(partyId).bloqueia();
+            handACanvas(partyId, roll[0], roll[1]);
             /*///////////////////////////////////////////////////////////////// 
-            while (assgrp.crawlIn());	//último, acorda os outros
-            museum.rollACanvas(assgrp.getRoomID(partyId));
-            assgrp.reverseDirection();
-            while (assgrp.crawlOut());
+
             ctrcol.handACanvas(); 
-            *//////////////////////////////////////////////////////////////////
+             *//////////////////////////////////////////////////////////////////
         }
 
     }
@@ -114,9 +109,9 @@ public class Thief extends Thread implements Comparable<Thief> {
         return !ControlCollectionSite.getInstance().canIDie();
     }
 
-    private void handACanvas(int partyId, int room, int last) {
-        boolean hasCanvas = AssaultParty.getInstance(partyId).getnCanvas();
-        
+    private void handACanvas(int partyId, int room, int elemId) {
+        boolean hasCanvas = AssaultParty.getInstance(partyId).getCrookCanvas(elemId);
+
         ControlCollectionSite.getInstance().handACanvas(hasCanvas, room, partyId);
 
     }
