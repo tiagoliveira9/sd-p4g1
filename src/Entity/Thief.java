@@ -84,12 +84,13 @@ public class Thief extends Thread implements Comparable<Thief> {
             AssaultParty.getInstance(partyId).waitToStartRobbing();
 
             // for synchronism, returns the room and elemId right here on crawl
-            int [] roll = AssaultParty.getInstance(partyId).crawl(1);
+            int [] roll = AssaultParty.getInstance(partyId).crawl(true);
             // 
             Museum.getInstance().rollACanvas(roll[0], roll[1]);
          
             // ONE is for CRAWL OUT
-            AssaultParty.getInstance(partyId).crawl(-1);
+            AssaultParty.getInstance(partyId).crawl(false);
+            AssaultParty.getInstance(partyId).bloqueia();
             //AssaultParty.getInstance(partyId).fixAll(lastArriving);
             //handACanvas(partyId, room);
             /*///////////////////////////////////////////////////////////////// 
