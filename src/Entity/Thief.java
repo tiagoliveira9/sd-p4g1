@@ -72,8 +72,6 @@ public class Thief extends Thread implements Comparable<Thief> {
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
 
             if (last) {
-                // the last one resets 
-                ConcentrationSite.getInstance().setnAssaultParty(-1);
                 // wakes master, team is ready for sendAssaultParty
                 ConcentrationSite.getInstance().teamReady();
             }

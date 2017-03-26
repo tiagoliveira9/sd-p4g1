@@ -5,9 +5,6 @@ import Entity.Thief;
 import HeistMuseum.Constants;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -61,21 +58,6 @@ public class ConcentrationSite {
         //this.queueThief = new ArrayBlockingQueue<>(6);
     }
 
-    /**
-     * Method for the last Thief entering party to reset nAssaultParty.
-     *
-     * @param nAssaultParty
-     */
-    public void setnAssaultParty(int nAssaultParty) {
-        l.lock();
-        try {
-            this.nAssaultParty = nAssaultParty;
-        } finally {
-            l.unlock();
-        }
-
-    }
-
     public void removeThief() {
         l.lock();
         Thief crook = (Thief) Thread.currentThread();
@@ -99,7 +81,9 @@ public class ConcentrationSite {
 
         // and right away thief blocks
         try {
-            prepare.await();
+            while (nAssaultParty == -1) {
+                prepare.await();
+            }
             //}
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
@@ -177,6 +161,7 @@ public class ConcentrationSite {
     public void teamReady() {
         l.lock();
         try {
+            this.nAssaultParty = -1;
             this.assembling.signal();
         } finally {
             l.unlock();
