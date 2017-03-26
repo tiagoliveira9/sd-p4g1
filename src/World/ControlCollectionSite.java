@@ -85,7 +85,7 @@ public class ControlCollectionSite {
      * The method prepareAssaultPart stage 1. Selects Assault Party and Room to
      * sack
      *
-     * @return int[]{tempAssault, tempSala}
+     * @return {AssaultPartyId, tSala}
      */
     public int[] prepareAssaultParty1() {
         l.lock();

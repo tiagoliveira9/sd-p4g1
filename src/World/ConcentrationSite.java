@@ -78,13 +78,10 @@ public class ConcentrationSite {
         this.deciding.signal();
         crook.setStateThief(Constants.OUTSIDE);
         GRInformation.getInstance().printUpdateLine();
-
         // and right away thief blocks
         try {
-            while (nAssaultParty == -1) {
-                prepare.await();
-            }
-            //}
+            prepare.await();
+
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);

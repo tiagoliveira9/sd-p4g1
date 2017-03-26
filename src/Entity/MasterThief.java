@@ -34,6 +34,7 @@ public class MasterThief extends Thread {
             switch (opt) {
                 case 2:
                     // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
+                    // {AssaultPartyId, tSala}
                     pick = ControlCollectionSite.getInstance().prepareAssaultParty1();
                     // check distance to room to setUp AssaultParty
                     dist = Museum.getInstance().getRoomDistance(pick[1]);

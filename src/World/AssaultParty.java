@@ -19,8 +19,7 @@ public class AssaultParty {
     private static final AssaultParty[] instances = new AssaultParty[Constants.N_ASSAULT_PARTY];
     private final int partyId;
     private final static Lock l = new ReentrantLock();
-    private final Condition[] startAssault;
-    private boolean startAssaultBool[];
+    private final Condition moveThief;
     private final Condition cenas;
     private int[] line; // order that thieves blocks for the first time awaiting orders
     private Crook[] squad;
@@ -31,6 +30,7 @@ public class AssaultParty {
     private int[] translatePos;
     private int teamHeadIn; // thief that goes on the front crawling IN
     private int teamHeadOut; // thief that goes on the front crawling OUT
+    private int idGlobal;
 
     private class Crook {
 
@@ -77,19 +77,14 @@ public class AssaultParty {
         this.teamHeadIn = 0;
         this.teamHeadOut = 0;
 
-        startAssault = new Condition[Constants.N_SQUAD];
         line = new int[Constants.N_SQUAD];
         squad = new Crook[Constants.N_SQUAD];
         for (int i = 0; i < Constants.N_SQUAD; i++) {
-            startAssault[i] = l.newCondition();
             line[i] = -1;
         }
-        startAssaultBool = new boolean[Constants.N_SQUAD];
-        for (int i = 0; i < Constants.N_SQUAD; i++) {
-            startAssaultBool[i] = false;
-        }
         cenas = l.newCondition();
-
+        moveThief = l.newCondition();
+        idGlobal = -1;
     }
 
     /**
@@ -109,8 +104,6 @@ public class AssaultParty {
 
                 squad[nCrook] = new Crook(t.getThiefId(), t.getAgility());
                 nCrook++;
-                //GRInformation.getInstance().setIdPartyElem(this.partyId,
-                //      nCrook - 1, t.getThiefId() + 1);
 
                 if (nCrook == Constants.N_SQUAD) {
                     // last thief
@@ -133,7 +126,7 @@ public class AssaultParty {
     public void waitToStartRobbing() {
         l.lock();
         Thief t = (Thief) Thread.currentThread();
-
+        Crook c = getCrook(t.getThiefId());
         try {
             int i;
             for (i = 0; i < Constants.N_SQUAD; i++) {
@@ -146,10 +139,10 @@ public class AssaultParty {
                 }
             }
             // it's like they stop one after each other, a team line
-            while (!startAssaultBool[i]) {
-                startAssault[i].await();
+            while (c.id != idGlobal) {
+                moveThief.await();
             }
-            startAssaultBool[i] = false;
+            idGlobal = -1;
 
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
@@ -175,25 +168,18 @@ public class AssaultParty {
 
         if (direction) {
             try {
-
                 while (!crawlGo(direction)) {
-                    startAssaultBool[myself] = false;
-                    /*
-                     we had problems with threads wakening out of nothing,
-                     so we needed to use some variable to block them 
-                     in a while structure
-                     */
 
-                    startAssaultBool[next] = true;
-                    startAssault[next].signal();
+                    //startAssaultBool[next] = true;
+                    idGlobal = squad[next].id;
+                    moveThief.signalAll();
 
-                    while (!startAssaultBool[myself]) {
-                        startAssault[myself].await();
+                    while (c.id != idGlobal) {
+                        moveThief.await();
                     }
-                    startAssaultBool[myself] = false;
                 }
-                startAssaultBool[next] = true;
-                startAssault[next].signal();
+                idGlobal = squad[next].id;
+                moveThief.signalAll();
 
                 return getRoomIdToAssault(t.getThiefId());
 
@@ -203,34 +189,33 @@ public class AssaultParty {
             }
         } else {
             try {
-                //teamHead = 0;
                 t.setStateThief(Constants.CRAWLING_OUTWARDS);
                 GRInformation.getInstance().printUpdateLine();
-                c.pos = 0;
+                /* c.pos = 0;
                 while (!startAssaultBool[myself]) {
                     startAssault[myself].await();
-                }
+                }*/
+                c.pos = 0;
                 while (!crawlGo(direction)) {
-                    startAssaultBool[myself] = false;
 
-                    startAssaultBool[next] = true;
-                    startAssault[next].signal();
+                    //startAssaultBool[next] = true;
+                    idGlobal = squad[next].id;
+                    moveThief.signalAll();
 
-                    while (!startAssaultBool[myself]) {
-                        startAssault[myself].await();
+                    while (c.id != idGlobal) {
+                        moveThief.await();
                     }
-                    startAssaultBool[myself] = false;
                 }
-                startAssaultBool[next] = true;
-                startAssault[next].signal();
-                return getRoomIdToAssault(t.getThiefId());
+                idGlobal = squad[next].id;
+                moveThief.signalAll();
+
                 //cenas.await();
+                return getRoomIdToAssault(t.getThiefId());
             } catch (InterruptedException ex) {
                 Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(0);
             }
         }
-
         l.unlock();
         return getRoomIdToAssault(t.getThiefId());
     }
@@ -393,8 +378,15 @@ public class AssaultParty {
 
         l.lock();
         // Master wakes up the first Thief to block on the team
-        startAssaultBool[0] = true;
-        startAssault[0].signal();
+        int i;
+        for (i = 0; i < 3; i++) {
+            if (squad[i].id == line[0]) {
+                break;
+            }
+        }
+        idGlobal = squad[i].id;
+        moveThief.signalAll();
+
         master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
         GRInformation.getInstance().printUpdateLine();
         l.unlock();
@@ -462,19 +454,23 @@ public class AssaultParty {
      * @return <li> True, if Thief has a canvas
      * <li> False otherwise
      */
-    public boolean getCrookCanvas(int elemId) {
+    public void removeCrook(int elemId) {
         l.lock();
         Crook c = squad[elemId];
-        // reseting-------
+
         line[elemId] = -1;
         nCrook--;
         GRInformation.getInstance().setCanvasElem(roomId, elemId, 0);
 
-        //----------------
-        boolean temp = c.canvas;
+        l.unlock();
+    }
+
+    public void addCrookCanvas(int elemId) {
+        l.lock();
+        Crook c = squad[elemId];
+        c.canvas = true;
         l.unlock();
 
-        return temp;
     }
 
     /**
