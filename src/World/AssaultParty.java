@@ -206,7 +206,7 @@ public class AssaultParty {
                 //teamHead = 0;
                 t.setStateThief(Constants.CRAWLING_OUTWARDS);
                 GRInformation.getInstance().printUpdateLine();
-
+                c.pos = 0;
                 while (!startAssaultBool[myself]) {
                     startAssault[myself].await();
                 }
