@@ -3,8 +3,7 @@ package World;
 import Entity.MasterThief;
 import Entity.Thief;
 import HeistMuseum.Constants;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Stack;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -26,8 +25,9 @@ public class ConcentrationSite {
     private final Condition assembling;
     // 0 - assault party 1, 1 - assault party 2
     private int nAssaultParty;
-
-    private final Set<Thief> thiefLine;
+    private int globalId;
+    private Stack stThief;
+    private int counterThief;
 
     /**
      * The method returns ConcentrationSite object.
@@ -53,34 +53,39 @@ public class ConcentrationSite {
         this.prepare = l.newCondition();
         this.deciding = l.newCondition();
         this.assembling = l.newCondition();
-        this.thiefLine = new TreeSet<>();
         this.nAssaultParty = -1;
+        this.globalId = -1;
+        this.stThief = new Stack();
+        this.counterThief = 0;
         //this.queueThief = new ArrayBlockingQueue<>(6);
-    }
-
-    public void removeThief() {
-        l.lock();
-        Thief crook = (Thief) Thread.currentThread();
-        try {
-            thiefLine.remove(crook);
-        } finally {
-            l.unlock();
-        }
     }
 
     public int addThief() {
         l.lock();
 
         Thief crook = (Thief) Thread.currentThread();
-        // access the resource protected by this lock
-        this.thiefLine.add(crook);
-        // signal Master so he can check if it has elements to make a team
-        this.deciding.signal();
         crook.setStateThief(Constants.OUTSIDE);
         GRInformation.getInstance().printUpdateLine();
+        // access the resource protected by this lock
+        this.stThief.push(crook);
+        // signal Master so he can check if it has elements to make a team
+        this.deciding.signal();
+
         // and right away thief blocks
         try {
-            prepare.await();
+            while (crook.getThiefId() != this.globalId) {
+                prepare.await();
+            }
+
+            counterThief++;
+            if (counterThief < 3) {
+                Thief c = (Thief) stThief.pop();
+                this.globalId = c.getThiefId();
+                this.prepare.signalAll();
+            } else {
+                this.globalId = -1;
+                counterThief = 0;
+            }
 
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,7 +108,7 @@ public class ConcentrationSite {
         MasterThief master = (MasterThief) Thread.currentThread();
 
         try {
-            while (thiefLine.size() < 3) {
+            while (stThief.size() < 3) {
                 this.deciding.await();
             }
 
@@ -132,10 +137,12 @@ public class ConcentrationSite {
         //int i = thiefLine.size() - 3;
         this.nAssaultParty = partyId;
         GRInformation.getInstance().setRoomId(partyId, roomId);
+        //for (int i = 0; i < 3; i++) {
+        Thief c = (Thief) stThief.pop();
+        this.globalId = c.getThiefId();
+        this.prepare.signalAll();
+        //}
 
-        for (int i = 0; i < 3; i++) {
-            this.prepare.signal();
-        }
         try {
             // Master blocks, wakes up when team is ready
             while (nAssaultParty != -1) {
@@ -167,6 +174,6 @@ public class ConcentrationSite {
     }
 
     public int checkThiefNumbers() {
-        return thiefLine.size();
+        return this.stThief.size();
     }
 }

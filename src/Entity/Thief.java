@@ -67,7 +67,7 @@ public class Thief extends Thread implements Comparable<Thief> {
             int partyId = ConcentrationSite.getInstance().addThief();
 
             // remove from concentration site
-            ConcentrationSite.getInstance().removeThief();
+            //ConcentrationSite.getInstance().removeThief();
             // adds this thief to the squad
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
 
@@ -82,7 +82,7 @@ public class Thief extends Thread implements Comparable<Thief> {
             // for synchronism, returns the room and elemId right here on crawl
             int[] roll = AssaultParty.getInstance(partyId).crawl(true);
             // roll[0] = roomId, roll[1] = elemId 
-            boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1]);
+            boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
             if (painting) {
                 AssaultParty.getInstance(partyId).addCrookCanvas(roll[1]);
             }
@@ -91,7 +91,6 @@ public class Thief extends Thread implements Comparable<Thief> {
             // BLOQUEIA
             AssaultParty.getInstance(partyId).removeCrook(roll[1]);
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
-            //AssaultParty.getInstance(partyId).bloqueia();
 
         }
 

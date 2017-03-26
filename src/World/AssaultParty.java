@@ -20,7 +20,6 @@ public class AssaultParty {
     private final int partyId;
     private final static Lock l = new ReentrantLock();
     private final Condition moveThief;
-    private final Condition cenas;
     private int[] line; // order that thieves blocks for the first time awaiting orders
     private Crook[] squad;
     private int distance; // targeted room distance
@@ -82,7 +81,6 @@ public class AssaultParty {
         for (int i = 0; i < Constants.N_SQUAD; i++) {
             line[i] = -1;
         }
-        cenas = l.newCondition();
         moveThief = l.newCondition();
         idGlobal = -1;
     }
@@ -198,7 +196,6 @@ public class AssaultParty {
                 c.pos = 0;
                 while (!crawlGo(direction)) {
 
-                    //startAssaultBool[next] = true;
                     idGlobal = squad[next].id;
                     moveThief.signalAll();
 
@@ -211,7 +208,6 @@ public class AssaultParty {
                 l.unlock();
                 return getRoomIdToAssault(t.getThiefId());
 
-                //cenas.await();
             } catch (InterruptedException ex) {
                 Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(0);
@@ -310,16 +306,6 @@ public class AssaultParty {
         return flagI;
     }
 
-    public void bloqueia() {
-        l.lock();
-        try {
-            cenas.await();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        l.unlock();
-
-    }
 
     public Crook getCrook(int thiefId) {
         l.lock();
@@ -461,8 +447,8 @@ public class AssaultParty {
 
         line[elemId] = -1;
         nCrook--;
-        GRInformation.getInstance().setCanvasElem(roomId, elemId, 0);
-
+        GRInformation.getInstance().resetIdPartyElem(partyId, elemId);
+        
         l.unlock();
     }
 

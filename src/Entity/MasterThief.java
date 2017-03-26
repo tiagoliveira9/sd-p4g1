@@ -36,6 +36,10 @@ public class MasterThief extends Thread {
                     // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
                     // {AssaultPartyId, tSala}
                     pick = ControlCollectionSite.getInstance().prepareAssaultParty1();
+                    if (pick[1] == -1) {
+                        // no rooms, go deciding what to do
+                        break;
+                    }
                     // check distance to room to setUp AssaultParty
                     dist = Museum.getInstance().getRoomDistance(pick[1]);
                     AssaultParty.getInstance(pick[0]).setUpRoom(dist, pick[1]);
@@ -67,8 +71,8 @@ public class MasterThief extends Thread {
                     break;
             }
         }
-        // sumUpResults
-
+        // sumUpResults, falta acordar ladroes para eles morrerem
+        ControlCollectionSite.getInstance().printResult();
     }
 
     public void startOperations() {
@@ -82,18 +86,10 @@ public class MasterThief extends Thread {
      * @return x if y, z if w etc..
      */
     public int appraiseSit() {
-        /*// + if every room is empty, return 1
-        if (!everythingRobbed() cuidado que podes ter ladroes a roubar ainda) {
-        // control-> meter a variavel sumUp a true para os ladroes morrerem
-        // acordar todos os ladroes que estiverem na FIFO
-            return 1;
-        } // + else if thieves > 2, prepareAssaultParty
-        else if (ConcentrationSite.getInstance().checkThiefNumbers() > 2) {
-            return 2;
-        } else {
-            // + else thieves < 2, takeARest
-            return 3;
-        }*/
+        // + if every room is empty, return 1
+        //if (!everythingRobbed()) {
+        //  return 1;
+
         if (ConcentrationSite.getInstance().checkThiefNumbers() > 2
                 && ControlCollectionSite.getInstance().anyTeamAvailable()) {
             return 2;

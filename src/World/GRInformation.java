@@ -57,8 +57,8 @@ public class GRInformation {
      * @param pos
      */
     public void setCanvasElem(int partyId, int elemId, int cv) {
+        Thief crook = (Thief) Thread.currentThread();
         lock.lock();
-
         party[partyId].elements[elemId].cv = Integer.toString(cv);
         printDoubleLine();
         lock.unlock();
@@ -91,6 +91,26 @@ public class GRInformation {
         party[partyId].elements[elemId].id = id;
         party[partyId].elements[elemId].pos = "0";
         party[partyId].elements[elemId].cv = "0";
+
+        //printDoubleLine();
+        lock.unlock();
+    }
+
+    public void resetIdPartyElem(int partyId, int elemId) {
+        lock.lock();
+
+        party[partyId].elements[elemId].id = "-";
+        party[partyId].elements[elemId].pos = "-";
+        party[partyId].elements[elemId].cv = "-";
+
+        //printDoubleLine();
+        lock.unlock();
+    }
+
+    public void resetIdPartyRoom(int partyId) {
+        lock.lock();
+
+        party[partyId].roomId = "-";
 
         //printDoubleLine();
         lock.unlock();
@@ -466,19 +486,10 @@ public class GRInformation {
 
     }
 
-    public void printResume() {
-
+    public void printResume(int totalPaints) {
         lock.lock();
 
         printer.printf("My friends, tonight's effort producced " + totalPaints + " priceless paintings!%n");
-
-        lock.unlock();
-    }
-
-    public void setTotalPaints(int totalPaints) {
-        lock.lock();
-
-        this.totalPaints = totalPaints;
 
         lock.unlock();
     }

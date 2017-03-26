@@ -73,20 +73,20 @@ public class Museum {
         l.unlock();
     }
 
-    public boolean rollACanvas(int roomId, int elemPos) {
+    public boolean rollACanvas(int roomId, int elemPos, int partyId) {
         l.lock();
 
         Thief t = (Thief) Thread.currentThread();
 
         boolean flag = false;
         int number = rooms[roomId].canvas;
-        if (number > 1) {
+        if (number >= 1) {
             // change in museum
             rooms[roomId].canvas--;
             flag = true;
             t.setStateThief(Constants.AT_A_ROOM);
             GRInformation.getInstance().printUpdateLine();
-            GRInformation.getInstance().setCanvasElem(roomId, elemPos, 1);
+            GRInformation.getInstance().setCanvasElem(partyId, elemPos, 1);
             GRInformation.getInstance().updateMuseumRoom(roomId);
 
         } else {

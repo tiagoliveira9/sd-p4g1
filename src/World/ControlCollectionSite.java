@@ -21,6 +21,8 @@ public class ControlCollectionSite {
     private final static Lock l = new ReentrantLock();
     // condition that verifies if block on state Deciding What to Do
     private final Condition rest;
+    private final Condition handing; // thief ca block to deliver
+
     private boolean restBool;
     private boolean sumUp;
     private boolean assaultP1;
@@ -28,6 +30,7 @@ public class ControlCollectionSite {
     private int[] partyIdCounter; // to count from each party, how many handed a Canvas 
     private int eraseParty;
     private int nCanvas; // number of canvas stolen
+    private int stateMaster;
 
     private Sala[] salas;
 
@@ -67,6 +70,7 @@ public class ControlCollectionSite {
     private ControlCollectionSite() {
         // bind lock with a condition
         this.rest = l.newCondition();
+        this.handing = l.newCondition();
         this.restBool = false;
         this.sumUp = false;
         this.assaultP1 = false;
@@ -75,6 +79,7 @@ public class ControlCollectionSite {
         this.partyIdCounter = new int[Constants.N_ASSAULT_PARTY];
         this.partyIdCounter[0] = this.partyIdCounter[1] = 0;
         this.eraseParty = -1;
+        this.stateMaster = -1;
         salas = new Sala[Constants.N_ROOMS];
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             salas[i] = new Sala(i);
@@ -95,7 +100,8 @@ public class ControlCollectionSite {
         int tempSala = -1;
 
         // nao esquecer de resetar a assault party quando o ultimo elemento chegar
-        master.setStateMaster(Constants.ASSEMBLING_A_GROUP);
+        stateMaster = Constants.ASSEMBLING_A_GROUP;
+        master.setStateMaster(stateMaster);
         GRInformation.getInstance().printUpdateLine();
 
         if (!assaultP1) {
@@ -108,11 +114,9 @@ public class ControlCollectionSite {
 
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             // if is empty, choose
-            if (!salas[i].empty && salas[i].inUse == false) {
+            if (salas[i].empty == false && salas[i].inUse == false) {
                 tempSala = i;
                 salas[i].inUse = true;
-                // ATENCAO, O MASTER TEM QUE METER ESTA FLAG A FALSE
-                // QUANDO FAZ COLLECT A CANVAS
                 break;
             }
         }
@@ -129,8 +133,10 @@ public class ControlCollectionSite {
         l.lock();
 
         MasterThief master = (MasterThief) Thread.currentThread();
-        master.setStateMaster(Constants.WAITING_FOR_ARRIVAL);
+        stateMaster = Constants.WAITING_FOR_ARRIVAL;
+        master.setStateMaster(stateMaster);
         GRInformation.getInstance().printUpdateLine();
+        handing.signal();
 
         try {
             while (!restBool) {
@@ -142,7 +148,8 @@ public class ControlCollectionSite {
         }
         restBool = false;
         // wakes up, so moves the state
-        master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
+        stateMaster = Constants.DECIDING_WHAT_TO_DO;
+        master.setStateMaster(stateMaster);
         GRInformation.getInstance().printUpdateLine();
         l.unlock();
         int temp = this.eraseParty;
@@ -161,9 +168,20 @@ public class ControlCollectionSite {
     public void handACanvas(boolean canvas, int roomId, int partyId) {
 
         l.lock();
+        while (stateMaster != Constants.WAITING_FOR_ARRIVAL) {
+            try {
+                handing.await();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+                System.exit(0);
+            }
+        }
+
         boolean lastArriving = false;
         if (canvas) {
             nCanvas++;
+        } else {
+            salas[roomId].empty = true;
         }
         partyIdCounter[partyId]++;
 
@@ -173,6 +191,7 @@ public class ControlCollectionSite {
         }
 
         if (lastArriving) {
+            GRInformation.getInstance().resetIdPartyRoom(partyId);
             salas[roomId].inUse = false;
             if (partyId == 0) {
                 assaultP1 = false;
@@ -197,17 +216,20 @@ public class ControlCollectionSite {
      */
     public boolean anyRoomLeft() {
 
-        l.lock();
+        // se só o master chama esta funcao, nao precisamos usar lock
+        // trying to find if every thief can die.
+        this.sumUp = true;
 
         for (int i = 0; i < Constants.N_ROOMS; i++) {
-            // if is empty, choose
+            // if is empty, choose (empty = false on creation)
             if (!salas[i].empty) {
-                l.unlock();
                 return true;
+            } // (inUse = false on creation)
+            else if (salas[i].inUse) {
+                this.sumUp = false;
             }
         }
 
-        l.unlock();
         return false;
     }
 
@@ -223,7 +245,6 @@ public class ControlCollectionSite {
      * @return availability
      */
     public boolean anyTeamAvailable() {
-
         if (!assaultP1) {
             return true;
         } else if (!assaultP2) {
@@ -232,4 +253,9 @@ public class ControlCollectionSite {
         return false;
     }
 
+    public void printResult() {
+        l.lock();
+        GRInformation.getInstance().printResume(nCanvas);
+        l.unlock();
+    }
 }
