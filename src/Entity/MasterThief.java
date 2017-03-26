@@ -18,11 +18,15 @@ public class MasterThief extends Thread {
      * @serialField stateMaster
      */
     private int stateMaster;
-
+    /**
+    * Inicial master state.
+    */
     public MasterThief() {
         this.stateMaster = Constants.PLANNING_THE_HEIST;
     }
-
+    /**
+     * Master thief life cycle.
+     */
     @Override
     public void run() {
         int opt; // 1 - end of operations, 2 - begin assault, 3 - take a rest
@@ -88,9 +92,9 @@ public class MasterThief extends Thread {
     public int appraiseSit() {
         // + if every room is empty, return 1
         //if (!everythingRobbed()) {
-        //  return 1;
-
-        if (ConcentrationSite.getInstance().checkThiefNumbers() > 2
+          //  return 1;
+        
+          if (ConcentrationSite.getInstance().checkThiefNumbers() > 2
                 && ControlCollectionSite.getInstance().anyTeamAvailable()) {
             return 2;
         } else {
@@ -109,11 +113,17 @@ public class MasterThief extends Thread {
 
         return ControlCollectionSite.getInstance().anyRoomLeft();
     }
-
+    /**
+     * Method to get the Master thief state.
+     * @return stateMaster master thief state
+     */
     public int getStateMaster() {
         return stateMaster;
     }
-
+    /**
+    * Method to set Master Thief state.
+    * @param stateMaster master thief state
+    */
     public void setStateMaster(int stateMaster) {
         this.stateMaster = stateMaster;
     }
