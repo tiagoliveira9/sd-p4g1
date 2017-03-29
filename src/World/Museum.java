@@ -84,10 +84,11 @@ public class Museum {
             // change in museum
             rooms[roomId].canvas--;
             flag = true;
-            t.setStateThief(Constants.AT_A_ROOM);
-            GRInformation.getInstance().printUpdateLine();
+            
             GRInformation.getInstance().setCanvasElem(partyId, elemPos, 1);
             GRInformation.getInstance().updateMuseumRoom(roomId);
+            t.setStateThief(Constants.AT_A_ROOM);
+            GRInformation.getInstance().printUpdateLine();
 
         } else {
             // change in Repository

@@ -1,6 +1,7 @@
 package World;
 
 import Entity.MasterThief;
+import Entity.Thief;
 import HeistMuseum.Constants;
 
 import java.util.concurrent.locks.Condition;
@@ -86,6 +87,15 @@ public class ControlCollectionSite {
         }
     }
 
+    public void setDeciding() {
+        l.lock();
+
+        MasterThief master = (MasterThief) Thread.currentThread();
+        master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
+        GRInformation.getInstance().printUpdateLine();
+        l.unlock();
+    }
+
     /**
      * The method prepareAssaultPart stage 1. Selects Assault Party and Room to
      * sack
@@ -99,7 +109,6 @@ public class ControlCollectionSite {
         int tempAssault = -1;
         int tempSala = -1;
 
-        // nao esquecer de resetar a assault party quando o ultimo elemento chegar
         stateMaster = Constants.ASSEMBLING_A_GROUP;
         master.setStateMaster(stateMaster);
         GRInformation.getInstance().printUpdateLine();
@@ -151,9 +160,10 @@ public class ControlCollectionSite {
         stateMaster = Constants.DECIDING_WHAT_TO_DO;
         master.setStateMaster(stateMaster);
         GRInformation.getInstance().printUpdateLine();
-        l.unlock();
         int temp = this.eraseParty;
         this.eraseParty = -1;
+        l.unlock();
+
         return temp;
     }
 
@@ -216,6 +226,7 @@ public class ControlCollectionSite {
      */
     public boolean anyRoomLeft() {
 
+        l.lock();
         // se só o master chama esta funcao, nao precisamos usar lock
         // trying to find if every thief can die.
         this.sumUp = true;
@@ -229,12 +240,11 @@ public class ControlCollectionSite {
                 this.sumUp = false;
             }
         }
-
+        l.unlock();
         return false;
     }
 
     public boolean canIDie() {
-        // ainda nao tenho a certeza de como o mato o Ladrao
         return this.sumUp;
     }
 

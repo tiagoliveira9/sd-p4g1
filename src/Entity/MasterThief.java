@@ -37,6 +37,7 @@ public class MasterThief extends Thread {
                     // {AssaultPartyId, tSala}
                     pick = ControlCollectionSite.getInstance().prepareAssaultParty1();
                     if (pick[1] == -1) {
+                        System.out.println("NAO CONSEGUI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                         // no rooms, go deciding what to do
                         break;
                     }
@@ -47,8 +48,6 @@ public class MasterThief extends Thread {
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
                     ConcentrationSite.getInstance().prepareAssaultParty2(pick[0], pick[1]);
 
-                    // quando fizer assault 
-                    // assgrp.sendAssaultParty(); pseudocodigo
                     AssaultParty.getInstance(pick[0]).sendAssaultParty();
                     break;
                 case 3:
@@ -76,8 +75,7 @@ public class MasterThief extends Thread {
     }
 
     public void startOperations() {
-        // Master blocks here if thieves < 3
-        ConcentrationSite.getInstance().checkThiefInitialNumbers();
+        ControlCollectionSite.getInstance().setDeciding();
     }
 
     /**
@@ -86,10 +84,12 @@ public class MasterThief extends Thread {
      * @return x if y, z if w etc..
      */
     public int appraiseSit() {
+
+        ControlCollectionSite.getInstance().setDeciding();
+
         // + if every room is empty, return 1
         //if (!everythingRobbed()) {
         //  return 1;
-
         if (ConcentrationSite.getInstance().checkThiefNumbers() > 2
                 && ControlCollectionSite.getInstance().anyTeamAvailable()) {
             return 2;
@@ -105,7 +105,7 @@ public class MasterThief extends Thread {
      *
      * @return True if exists a Room to sack, False if every room is empty
      */
-    public boolean everythingRobbed() {
+    public boolean anyRoomLeft() {
 
         return ControlCollectionSite.getInstance().anyRoomLeft();
     }

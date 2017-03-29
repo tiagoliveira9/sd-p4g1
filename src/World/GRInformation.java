@@ -60,7 +60,7 @@ public class GRInformation {
         Thief crook = (Thief) Thread.currentThread();
         lock.lock();
         party[partyId].elements[elemId].cv = Integer.toString(cv);
-        printDoubleLine();
+        //printDoubleLine();
         lock.unlock();
     }
 
@@ -116,20 +116,6 @@ public class GRInformation {
         lock.unlock();
     }
 
-    /**
-     * Change maximum displacement
-     *
-     * @param thiefId
-     * @param md
-     */
-    /*public void setMd(int thiefId, int md) {
-        lock.lock();
-
-        ladrao[thiefId].md = Integer.toString(md);
-        printDoubleLine();
-        lock.unlock();
-
-    }*/
     public void printSomething(String a) {
         lock.lock();
         System.out.println(a);
@@ -149,7 +135,7 @@ public class GRInformation {
         lock.lock();
         sala[roomId].distance = Integer.toString(distance);
         sala[roomId].canvas = Integer.toString(canvas);
-        printDoubleLine();
+        //printDoubleLine();
         lock.unlock();
     }
 
@@ -165,9 +151,7 @@ public class GRInformation {
         a--;
         sala[roomId].canvas = Integer.toString(a);
 
-        printDoubleLine();
         lock.unlock();
-
     }
 
     private class nThief {
@@ -179,7 +163,7 @@ public class GRInformation {
 
         public nThief(int thiefId) {
             this.thiefId = thiefId;
-            this.stat = '-';
+            this.stat = Constants.OUTSIDE;
             this.s = '-';
             this.md = "-";
         }

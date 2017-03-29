@@ -17,7 +17,6 @@ import java.util.logging.Logger;
  */
 public class ConcentrationSite {
 
-    //BlockingQueue<Thief> queueThief;
     private static ConcentrationSite instance;
     private final static Lock l = new ReentrantLock();
     private final Condition prepare;
@@ -47,7 +46,7 @@ public class ConcentrationSite {
     }
 
     /**
-     * Singleton needs private constructor
+     * Singleton needs private constructor.
      */
     private ConcentrationSite() {
         this.prepare = l.newCondition();
@@ -64,12 +63,13 @@ public class ConcentrationSite {
         l.lock();
 
         Thief crook = (Thief) Thread.currentThread();
-        crook.setStateThief(Constants.OUTSIDE);
-        GRInformation.getInstance().printUpdateLine();
+
+        //crook.setStateThief(Constants.OUTSIDE);
+        //GRInformation.getInstance().printUpdateLine();
         // access the resource protected by this lock
         this.stThief.push(crook);
         // signal Master so he can check if it has elements to make a team
-        this.deciding.signal();
+        // this.deciding.signal();
 
         // and right away thief blocks
         try {
@@ -96,30 +96,6 @@ public class ConcentrationSite {
         l.unlock();
         return nAssaultParty;
 
-    }
-
-    /**
-     * This method blocks the Master. Until thieves on the concentration site
-     * ("fifo") are not at leat 3, Master blocks
-     */
-    public void checkThiefInitialNumbers() {
-        l.lock();
-
-        MasterThief master = (MasterThief) Thread.currentThread();
-
-        try {
-            while (stThief.size() < 3) {
-                this.deciding.await();
-            }
-
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
-        }
-        // exists more than 3 thief, lets decide
-        master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
-        GRInformation.getInstance().printUpdateLine();
-        l.unlock();
     }
 
     /**
@@ -175,5 +151,13 @@ public class ConcentrationSite {
 
     public int checkThiefNumbers() {
         return this.stThief.size();
+    }
+
+    public void setOutside() {
+        l.lock();
+        Thief crook = (Thief) Thread.currentThread();
+        crook.setStateThief(Constants.OUTSIDE);
+        GRInformation.getInstance().printUpdateLine();
+        l.unlock();
     }
 }

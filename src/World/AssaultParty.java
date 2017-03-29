@@ -306,7 +306,6 @@ public class AssaultParty {
         return flagI;
     }
 
-
     public Crook getCrook(int thiefId) {
         l.lock();
         int i;
@@ -373,9 +372,6 @@ public class AssaultParty {
         }
         idGlobal = squad[i].id;
         moveThief.signalAll();
-
-        master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
-        GRInformation.getInstance().printUpdateLine();
         l.unlock();
     }
 
@@ -438,17 +434,12 @@ public class AssaultParty {
      * team.
      *
      * @param elemId
-     * @return <li> True, if Thief has a canvas
-     * <li> False otherwise
      */
     public void removeCrook(int elemId) {
         l.lock();
         Crook c = squad[elemId];
-
         line[elemId] = -1;
         nCrook--;
-        GRInformation.getInstance().resetIdPartyElem(partyId, elemId);
-        
         l.unlock();
     }
 

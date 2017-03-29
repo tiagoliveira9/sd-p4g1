@@ -1,5 +1,6 @@
 package Entity;
 
+import HeistMuseum.Constants;
 import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
@@ -47,7 +48,7 @@ public class Thief extends Thread implements Comparable<Thief> {
 
         this.thiefId = thiefId;
         this.agility = agility;
-        this.stateThief = -1;
+        this.stateThief = Constants.OUTSIDE;
     }
 
     /**
@@ -56,9 +57,6 @@ public class Thief extends Thread implements Comparable<Thief> {
     @Override
     public void run() {
 
-        // coloca no "fifo" da concentration site
-        // no início quando os ladrões estão a chegar ao site
-        // o master vai bloqueando, e o ladrão vai acordá-lo
         // conc.amINeeded() actua sobre o concentration site
         while (amINeeded()) {
 
@@ -66,8 +64,6 @@ public class Thief extends Thread implements Comparable<Thief> {
             // thief block here, wakes when called by Master
             int partyId = ConcentrationSite.getInstance().addThief();
 
-            // remove from concentration site
-            //ConcentrationSite.getInstance().removeThief();
             // adds this thief to the squad
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
 
@@ -89,8 +85,10 @@ public class Thief extends Thread implements Comparable<Thief> {
             // ONE is for CRAWL OUT
             AssaultParty.getInstance(partyId).crawl(false);
             // BLOQUEIA
-            AssaultParty.getInstance(partyId).removeCrook(roll[1]);
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
+            AssaultParty.getInstance(partyId).removeCrook(roll[1]);
+
+            ConcentrationSite.getInstance().setOutside();
 
         }
 
@@ -102,6 +100,7 @@ public class Thief extends Thread implements Comparable<Thief> {
      * @return needed. True if is needed.
      */
     private boolean amINeeded() {
+
         // if you can't die, then invert bool ! -> you are needed
         return !ControlCollectionSite.getInstance().canIDie();
     }
