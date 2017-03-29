@@ -47,9 +47,10 @@ public class MasterThief extends Thread {
 
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
                     ConcentrationSite.getInstance().prepareAssaultParty2(pick[0], pick[1]);
-                    System.out.println("send assault");
 
                     AssaultParty.getInstance(pick[0]).sendAssaultParty();
+                    System.out.println("send assault, ASG: " + pick[0] + " SALA: " + pick[1]);
+
                     break;
                 case 3:
                     /* dois metodos necessarios para o master bloquear no Control
@@ -83,15 +84,13 @@ public class MasterThief extends Thread {
     public int appraiseSit() {
 
         ControlCollectionSite.getInstance().setDeciding();
+        int nThieves = ConcentrationSite.getInstance().checkThiefNumbers();
+        System.out.println("nThieves: " + nThieves+"cenas"+ControlCollectionSite.getInstance().anyRoomLeft());
 
         // + if every room is empty, return 1
-        if (!anyRoomLeft())  {
+        if (!anyRoomLeft()) {
             return 1;
-        }
-        
-        int nThieves = ConcentrationSite.getInstance().checkThiefNumbers();
-        System.out.println("nThieves: " + nThieves);
-        if ((nThieves > 2) && ControlCollectionSite.getInstance().anyTeamAvailable()) {
+        } else if ((nThieves > 2) && ControlCollectionSite.getInstance().anyTeamAvailable()) {
             System.out.println("x");
             return 2;
         } else {

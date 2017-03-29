@@ -89,7 +89,6 @@ public class ControlCollectionSite {
 
     public void setDeciding() {
         l.lock();
-
         MasterThief master = (MasterThief) Thread.currentThread();
         master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
         GRInformation.getInstance().printUpdateLine();
@@ -226,19 +225,22 @@ public class ControlCollectionSite {
     public boolean anyRoomLeft() {
 
         l.lock();
-        // se só o master chama esta funcao, nao precisamos usar lock
+
         // trying to find if every thief can die.
-        this.sumUp = true;
+        boolean temp = true;
 
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             // if is empty, choose (empty = false on creation)
             if (!salas[i].empty) {
+                l.unlock();
                 return true;
-            } // (inUse = false on creation)
-            else if (salas[i].inUse) {
-                this.sumUp = false;
+            } 
+            else {
+                temp = false;
             }
         }
+        
+        this.sumUp = temp;
         l.unlock();
         return false;
     }

@@ -90,7 +90,7 @@ public class Thief extends Thread implements Comparable<Thief> {
             AssaultParty.getInstance(partyId).removeMyself(roll[1]);
 
         }
-
+        System.out.println("morri: "+(this.thiefId+1));
     }
 
     /**
@@ -99,8 +99,6 @@ public class Thief extends Thread implements Comparable<Thief> {
      * @return needed. True if is needed.
      */
     private boolean amINeeded() {
-        ConcentrationSite.getInstance().setOutside();
-
         // if you can't die, then invert bool ! -> you are needed
         return !ControlCollectionSite.getInstance().canIDie();
     }

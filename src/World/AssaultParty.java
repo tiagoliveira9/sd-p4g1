@@ -110,8 +110,7 @@ public class AssaultParty {
         } finally {
             l.unlock();
         }
-        t.setStateThief(Constants.CRAWLING_INWARDS);
-        GRInformation.getInstance().printUpdateLine();
+
         return flag;
     }
 
@@ -136,16 +135,18 @@ public class AssaultParty {
                 }
             }
             // it's like they stop one after each other, a team line
-            while (c.id != idGlobal) {
+            while (c.id != idGlobal) {  // ele aqui pode não esperar??
                 moveThief.await();
             }
-            idGlobal = -1;
+            //idGlobal = -1;
 
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
 
         }
+        t.setStateThief(Constants.CRAWLING_INWARDS);
+        GRInformation.getInstance().printUpdateLine();
 
         l.unlock();
     }
@@ -439,6 +440,9 @@ public class AssaultParty {
         l.lock();
         Crook c = squad[elemId];
         line[elemId] = -1;
+        if (elemId == 2) {
+            this.idGlobal = -1;
+        }
         nCrook--;
         GRInformation.getInstance().resetIdPartyElem(partyId, elemId);
         l.unlock();

@@ -62,6 +62,7 @@ public class ConcentrationSite {
         Thief crook = (Thief) Thread.currentThread();
 
         this.stThief.push(crook);
+        setOutside(); // change state to outside
         try {
             while (crook.getThiefId() != this.globalId) {
                 prepare.await();
@@ -127,6 +128,7 @@ public class ConcentrationSite {
     public void teamReady() {
         l.lock();
         try {
+            System.out.println("bomba para -1");
             this.nAssaultParty = -1;
             this.assembling.signal();
         } finally {
