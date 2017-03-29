@@ -4,6 +4,7 @@ import HeistMuseum.Constants;
 import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
+import World.GRInformation;
 import World.Museum;
 
 // import das areas with which the thief will interact
@@ -60,7 +61,7 @@ public class Thief extends Thread implements Comparable<Thief> {
         // conc.amINeeded() actua sobre o concentration site
         while (amINeeded()) {
 
-            // If he is needed, adds himself to 'FIFO'(TreeSet)
+            // If he is needed, adds himself to 'FIFO'(Stack)
             // thief block here, wakes when called by Master
             int partyId = ConcentrationSite.getInstance().addThief();
 
@@ -86,9 +87,7 @@ public class Thief extends Thread implements Comparable<Thief> {
             AssaultParty.getInstance(partyId).crawl(false);
             // BLOQUEIA
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
-            AssaultParty.getInstance(partyId).removeCrook(roll[1]);
-
-            ConcentrationSite.getInstance().setOutside();
+            AssaultParty.getInstance(partyId).removeMyself(roll[1]);
 
         }
 
@@ -100,6 +99,7 @@ public class Thief extends Thread implements Comparable<Thief> {
      * @return needed. True if is needed.
      */
     private boolean amINeeded() {
+        ConcentrationSite.getInstance().setOutside();
 
         // if you can't die, then invert bool ! -> you are needed
         return !ControlCollectionSite.getInstance().canIDie();

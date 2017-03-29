@@ -20,7 +20,6 @@ public class ConcentrationSite {
     private static ConcentrationSite instance;
     private final static Lock l = new ReentrantLock();
     private final Condition prepare;
-    private final Condition deciding;
     private final Condition assembling;
     // 0 - assault party 1, 1 - assault party 2
     private int nAssaultParty;
@@ -50,13 +49,11 @@ public class ConcentrationSite {
      */
     private ConcentrationSite() {
         this.prepare = l.newCondition();
-        this.deciding = l.newCondition();
         this.assembling = l.newCondition();
         this.nAssaultParty = -1;
         this.globalId = -1;
         this.stThief = new Stack();
         this.counterThief = 0;
-        //this.queueThief = new ArrayBlockingQueue<>(6);
     }
 
     public int addThief() {
@@ -64,14 +61,7 @@ public class ConcentrationSite {
 
         Thief crook = (Thief) Thread.currentThread();
 
-        //crook.setStateThief(Constants.OUTSIDE);
-        //GRInformation.getInstance().printUpdateLine();
-        // access the resource protected by this lock
         this.stThief.push(crook);
-        // signal Master so he can check if it has elements to make a team
-        // this.deciding.signal();
-
-        // and right away thief blocks
         try {
             while (crook.getThiefId() != this.globalId) {
                 prepare.await();
@@ -109,15 +99,13 @@ public class ConcentrationSite {
         l.lock();
         MasterThief master = (MasterThief) Thread.currentThread();
 
-        // signal one thread to wake one thief
-        //int i = thiefLine.size() - 3;
         this.nAssaultParty = partyId;
         GRInformation.getInstance().setRoomId(partyId, roomId);
-        //for (int i = 0; i < 3; i++) {
+
         Thief c = (Thief) stThief.pop();
         this.globalId = c.getThiefId();
+        // signal one thread to wake one thief
         this.prepare.signalAll();
-        //}
 
         try {
             // Master blocks, wakes up when team is ready
@@ -129,8 +117,6 @@ public class ConcentrationSite {
             System.exit(0);
         }
 
-        // 
-        // everything fine-> unlock
         l.unlock();
     }
 

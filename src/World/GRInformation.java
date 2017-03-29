@@ -35,6 +35,28 @@ public class GRInformation {
 
     private int totalPaints;
 
+    public void setStateThief(Thief thief) {
+
+        lock.lock();
+        ladrao[thief.getThiefId()].stat = thief.getStateThief();
+        lock.unlock();
+    }
+
+    public void setStateAgility(Thief thief) {
+
+        lock.lock();
+        ladrao[thief.getThiefId()].md = Integer.toString(thief.getAgility());
+        lock.unlock();
+    }
+
+    public void setStateMasterThief(MasterThief masterThief) {
+
+        lock.lock();
+        masterThiefState = masterThief.getStateMaster();
+        lock.unlock();
+
+    }
+
     /**
      * Change the position of each element
      *
@@ -60,7 +82,6 @@ public class GRInformation {
         Thief crook = (Thief) Thread.currentThread();
         lock.lock();
         party[partyId].elements[elemId].cv = Integer.toString(cv);
-        //printDoubleLine();
         lock.unlock();
     }
 
@@ -74,7 +95,6 @@ public class GRInformation {
     public void setRoomId(int partyId, int roomId) {
         lock.lock();
         party[partyId].roomId = Integer.toString(roomId + 1);
-        printDoubleLine();
         lock.unlock();
     }
 
@@ -92,7 +112,6 @@ public class GRInformation {
         party[partyId].elements[elemId].pos = "0";
         party[partyId].elements[elemId].cv = "0";
 
-        //printDoubleLine();
         lock.unlock();
     }
 
@@ -103,23 +122,12 @@ public class GRInformation {
         party[partyId].elements[elemId].pos = "-";
         party[partyId].elements[elemId].cv = "-";
 
-        //printDoubleLine();
         lock.unlock();
     }
 
     public void resetIdPartyRoom(int partyId) {
         lock.lock();
-
         party[partyId].roomId = "-";
-
-        //printDoubleLine();
-        lock.unlock();
-    }
-
-    public void printSomething(String a) {
-        lock.lock();
-        System.out.println(a);
-
         lock.unlock();
     }
 
@@ -258,37 +266,14 @@ public class GRInformation {
         totalPaints = 0;
     }
 
-    public void setStateThief(Thief thief) {
-
-        lock.lock();
-
-        ladrao[thief.getThiefId()].stat = thief.getStateThief();
-        ladrao[thief.getThiefId()].md = Integer.toString(thief.getAgility());
-
-        lock.unlock();
-    }
-
-    public void setStateMasterThief(MasterThief masterThief) {
-
-        lock.lock();
-
-        masterThiefState = masterThief.getStateMaster();
-
-        lock.unlock();
-
-    }
-
     public void printHeader() {
 
         lock.lock();
 
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
-        //printer.printf("                            Heist to the museum - Description of the internal state%n");
-        //printer.printf("%n");
 
         formatter.format("%1$84s%n", "Heist to the museum - Description of the internal state");
-        //formatter.format("%n");
 
         printer.print(strb.toString());
         System.out.println(strb.toString());
@@ -298,15 +283,6 @@ public class GRInformation {
         printEntityStates();
         printAssaultDescription();
 
-        //formatter.format("Heist to the museum - Description of the internal state%n");
-        //formatter.format("%n");
-        //strb.append(printColumnHeader());   
-        //strb.append(printEntityStates());
-        //strb.append(printEmptyResult());
-        //System.out.print(strb);
-        //printer.print(strb);
-        //printer.flush();
-        //printer.close();
         lock.unlock();
     }
 
@@ -320,9 +296,7 @@ public class GRInformation {
 
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
-        //formatter.format("%4$2s %3$2s %2$2s %1$2s", "a", "b", "c", "d");
-        //formatter.format("%1$84s%n","Heist to the museum - Description of the internal state");
-        //formatter.format("%n");
+
         formatter.format("%1$4s %2$9s %3$12s %4$12s %5$12s %6$12s %7$12s%n",
                 "MstT", "Thief 1", "Thief 2", "Thief 3", "Thief 4", "Thief 5", "Thief 6");
         formatter.format("%1$4s %2$10s %3$12s %4$12s %5$12s %6$12s %7$12s %n",
@@ -370,8 +344,6 @@ public class GRInformation {
 
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
-
-        // printer.printf(translateMasterThiefState(masterThiefState));
         formatter.format("%1$4s %2$1s", translateMasterThiefState(masterThiefState), "");
 
         for (int i = 0; i < ladrao.length; i++) {
@@ -480,24 +452,7 @@ public class GRInformation {
 
     public void printLegend() {
 
-        //StringBuilder strb = new StringBuilder();
-        //Formatter formatter = new Formatter(strb);
         lock.lock();
-        /*
-        formatter.format("Legend:%n");
-        formatter.format("MstT Stat    - state of the master thief%n");
-        formatter.format("Thief # Stat - state of the ordinary thief # (# - 1 .. 6)%n");
-        formatter.format("Thief # S    - situation of the ordinary thief # (# - 1 .. 6) either 'W' (waiting to join a party) or 'P' (in party)%n");
-        formatter.format("Thief # MD   - maximum displacement of the ordinary thief # (# - 1 .. 6) a random number between 2 and 6%n");
-        formatter.format("Assault party # RId        - assault party # (# - 1,2) elem # (# - 1 .. 3) room identification (1 .. 5)%n");
-        formatter.format("Assault party # Elem # Id  - assault party # (# - 1,2) elem # (# - 1 .. 3) member identification (1 .. 6)%n");
-        formatter.format("Assault party # Elem # Pos - assault party # (# - 1,2) elem # (# - 1 .. 3) present position (0 .. DT RId)%n");
-        formatter.format("Assault party # Elem # Cv  - assault party # (# - 1,2) elem # (# - 1 .. 3) carrying a canvas (0,1)%n");
-        formatter.format("Museum Room # NP - room identification (1 .. 5) number of paintings presently hanging on the walls%n");
-        formatter.format("Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30%n");
-        
-
-         */
 
         printer.printf("Legend:%n");
         printer.printf("MstT Stat    - state of the master thief%n");

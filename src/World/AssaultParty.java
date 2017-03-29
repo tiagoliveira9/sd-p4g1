@@ -57,7 +57,6 @@ public class AssaultParty {
             }
         } catch (Exception ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
         }
         l.unlock();
         return instances[i];
@@ -145,6 +144,7 @@ public class AssaultParty {
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
+
         }
 
         l.unlock();
@@ -184,6 +184,7 @@ public class AssaultParty {
             } catch (InterruptedException ex) {
                 Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(0);
+
             }
         } else {
             try {
@@ -396,7 +397,6 @@ public class AssaultParty {
                 teamLineup[i] = -1;
                 translatePos[i] = distance - i;
             }
-            //GRInformation.getInstance().setRoomId(this.partyId, roomId);
 
         } finally {
             l.unlock();
@@ -435,11 +435,12 @@ public class AssaultParty {
      *
      * @param elemId
      */
-    public void removeCrook(int elemId) {
+    public void removeMyself(int elemId) {
         l.lock();
         Crook c = squad[elemId];
         line[elemId] = -1;
         nCrook--;
+        GRInformation.getInstance().resetIdPartyElem(partyId, elemId);
         l.unlock();
     }
 
@@ -449,19 +450,6 @@ public class AssaultParty {
         c.canvas = true;
         l.unlock();
 
-    }
-
-    /**
-     * TODO
-     */
-    public void resetAssaultPart() {
-        l.lock();
-
-        for (int i = 0; i < Constants.N_SQUAD; i++) {
-            GRInformation.getInstance().setIdPartyElem(this.partyId, i, "-");
-        }
-
-        l.unlock();
     }
 
 }

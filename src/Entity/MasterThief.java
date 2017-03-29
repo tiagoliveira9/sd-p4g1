@@ -47,6 +47,7 @@ public class MasterThief extends Thread {
 
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
                     ConcentrationSite.getInstance().prepareAssaultParty2(pick[0], pick[1]);
+                    System.out.println("send assault");
 
                     AssaultParty.getInstance(pick[0]).sendAssaultParty();
                     break;
@@ -58,12 +59,8 @@ public class MasterThief extends Thread {
                         para o ladrao passar o canvas (vê como passo o nAssaultParty 
                         no concentration site entre os dois metodos de bloqueio)
                      */
-                    int eraseId = ControlCollectionSite.getInstance().takeARest();
-                    // reset assault party
-                    if (eraseId > -1) {
-                        AssaultParty.getInstance(eraseId).resetAssaultPart();
-                    }
-                    // do something
+                    ControlCollectionSite.getInstance().takeARest();
+
                     break;
                 default:
                     // throw exception
@@ -88,10 +85,14 @@ public class MasterThief extends Thread {
         ControlCollectionSite.getInstance().setDeciding();
 
         // + if every room is empty, return 1
-        //if (!everythingRobbed()) {
-        //  return 1;
-        if (ConcentrationSite.getInstance().checkThiefNumbers() > 2
-                && ControlCollectionSite.getInstance().anyTeamAvailable()) {
+        if (!anyRoomLeft())  {
+            return 1;
+        }
+        
+        int nThieves = ConcentrationSite.getInstance().checkThiefNumbers();
+        System.out.println("nThieves: " + nThieves);
+        if ((nThieves > 2) && ControlCollectionSite.getInstance().anyTeamAvailable()) {
+            System.out.println("x");
             return 2;
         } else {
             // + else thieves < 2, takeARest

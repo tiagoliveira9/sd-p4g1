@@ -129,6 +129,8 @@ public class ControlCollectionSite {
                 break;
             }
         }
+        
+            
         l.unlock();
         return new int[]{tempAssault, tempSala};
     }
@@ -153,13 +155,10 @@ public class ControlCollectionSite {
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
+            System.exit(0); 
         }
         restBool = false;
-        // wakes up, so moves the state
-        stateMaster = Constants.DECIDING_WHAT_TO_DO;
-        master.setStateMaster(stateMaster);
-        GRInformation.getInstance().printUpdateLine();
+       
         int temp = this.eraseParty;
         this.eraseParty = -1;
         l.unlock();
@@ -183,7 +182,7 @@ public class ControlCollectionSite {
                 handing.await();
             } catch (InterruptedException ex) {
                 Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-                System.exit(0);
+                System.exit(0); 
             }
         }
 
