@@ -167,7 +167,7 @@ public class AssaultParty {
         Thief t = (Thief) Thread.currentThread();
         Crook c = getCrook(t.getThiefId());
 
-        int myself = myPositionTeam(t.getThiefId());
+        //int myself = myPositionTeam(t.getThiefId());
         int next = selectNext(t.getThiefId());
 
         if (direction) {

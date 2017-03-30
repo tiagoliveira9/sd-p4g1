@@ -131,8 +131,9 @@ public class ConcentrationSite {
      */
     public void teamReady() {
         l.lock();
+        Thief t = (Thief) Thread.currentThread();
         try {
-            GRInformation.getInstance().printSomething("Ultimo a chegar assgrp, reseto nAssaultParty");
+            //GRInformation.getInstance().printSomething("Ultimo a chegar assgrp, reseto nAssaultParty " + (t.getThiefId()+1));
             this.nAssaultParty = -1;
             this.assembling.signal();
         } finally {
