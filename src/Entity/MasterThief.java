@@ -95,8 +95,8 @@ public class MasterThief extends Thread {
 
         ControlCollectionSite.getInstance().setDeciding();
         int nThieves = ConcentrationSite.getInstance().checkThiefNumbers();
-        GRInformation.getInstance().printSomething("nThieves: " + nThieves);
-        // + if every room is empty, return 1
+        //GRInformation.getInstance().printSomething("nThieves: " + nThieves);
+        
         if (!anyRoomLeft()) {
             return 1;
         } else if ((nThieves > 2) && ControlCollectionSite.getInstance().anyTeamAvailable()) {
