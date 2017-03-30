@@ -77,14 +77,14 @@ public class Thief extends Thread {
             AssaultParty.getInstance(partyId).waitToStartRobbing();
 
             // for synchronism, returns the room and elemId right here on crawl
-            int[] roll = AssaultParty.getInstance(partyId).crawl(true);
+            int[] roll = AssaultParty.getInstance(partyId).crawlIn();
             // roll[0] = roomId, roll[1] = elemId 
             boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
             if (painting) {
                 AssaultParty.getInstance(partyId).addCrookCanvas(roll[1]);
             }
             // ONE is for CRAWL OUT
-            AssaultParty.getInstance(partyId).crawl(false);
+            AssaultParty.getInstance(partyId).crawlOut();
             AssaultParty.getInstance(partyId).removeMyself(roll[1]);
             // bloqueia se master não estiver waiting for arrival
             // só aqui faz reset, para a equipa ficar atribuível 

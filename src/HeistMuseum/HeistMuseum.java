@@ -35,8 +35,8 @@ public class HeistMuseum {
 
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             // distance between 15 and 30
-            distance = 16;
-            //distance = ThreadLocalRandom.current().nextInt(15, 30 + 1);
+            //distance = 16;
+            distance = ThreadLocalRandom.current().nextInt(15, 30 + 1);
             // canvas between 8 and 16
             canvas = ThreadLocalRandom.current().nextInt(8, 16 + 1);
             hermitage.setUpRoom(i, distance, canvas);
@@ -47,15 +47,15 @@ public class HeistMuseum {
         int agility;
 
         // Instantiation of the Thieves 
-        /*for (int i = 0; i < Constants.N_THIEVES; i++) {
+        for (int i = 0; i < Constants.N_THIEVES; i++) {
 
             agility = ThreadLocalRandom.current().nextInt(2, 6 + 1);
             // agility = 2;
             crook[i] = new Thief(i, agility);
             GRInformation.getInstance().setStateAgility(crook[i]);
             crook[i].start();
-        }*/
-         crook[0] = new Thief(0, 4);
+        }
+        /* crook[0] = new Thief(0, 4);
          crook[1] = new Thief(1, 5);
          crook[2] = new Thief(2, 6);
          crook[3] = new Thief(3, 4);
@@ -65,7 +65,7 @@ public class HeistMuseum {
          for (int i = 0; i < Constants.N_THIEVES; i++) {
             GRInformation.getInstance().setStateAgility(crook[i]);
             crook[i].start();
-        }
+        }*/
         // Simulation starts
         master.start();
 

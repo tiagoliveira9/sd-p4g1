@@ -157,12 +157,96 @@ public class AssaultParty {
     }
 
     /**
+     *
+     * @return
+     */
+    public int[] crawlIn() {
+
+        l.lock();
+        Thief t = (Thief) Thread.currentThread();
+        Crook c = getCrook(t.getThiefId());
+
+        //int myself = myPositionTeam(t.getThiefId());
+        int next = selectNext(t.getThiefId());
+
+        try {
+            while (!crawlGo(true)) {
+                idGlobal = squad[next].id;
+                moveThief.signalAll();
+
+                while (c.id != idGlobal) {
+                    moveThief.await();
+                }
+            }
+            idGlobal = squad[next].id;
+            moveThief.signalAll();
+            l.unlock();
+            return getRoomIdToAssault(t.getThiefId());
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
+
+        }
+
+        l.unlock();
+        return getRoomIdToAssault(t.getThiefId());
+
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int[] crawlOut() {
+
+        l.lock();
+        Thief t = (Thief) Thread.currentThread();
+        Crook c = getCrook(t.getThiefId());
+
+        //int myself = myPositionTeam(t.getThiefId());
+        int next = selectNext(t.getThiefId());
+
+        try {
+            t.setStateThief(Constants.CRAWLING_OUTWARDS);
+            GRInformation.getInstance().printUpdateLine();
+
+            while (c.id != idGlobal) {
+                moveThief.await();
+            }
+            c.pos = 0;
+            while (!crawlGo(false)) {
+
+                idGlobal = squad[next].id;
+                moveThief.signalAll();
+
+                while (c.id != idGlobal) {
+                    moveThief.await();
+                }
+            }
+            idGlobal = squad[next].id;
+            moveThief.signalAll();
+            l.unlock();
+            return getRoomIdToAssault(t.getThiefId());
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
+        }
+
+        l.unlock();
+        return getRoomIdToAssault(t.getThiefId());
+
+    }
+
+    
+    /**
      * Parameter direction : 1 is for CRAWL IN, -1 is for CRAWL OUT
      *
      * @param direction
      * @return
      */
-    public int[] crawl(boolean direction) {
+    /*public int[] crawl(boolean direction) {
         l.lock();
         Thief t = (Thief) Thread.currentThread();
         Crook c = getCrook(t.getThiefId());
@@ -222,7 +306,7 @@ public class AssaultParty {
         }
         l.unlock();
         return getRoomIdToAssault(t.getThiefId());
-    }
+    }*/
 
     private boolean crawlGo(boolean way) {
         l.lock();
@@ -244,7 +328,7 @@ public class AssaultParty {
             int pos = c.pos + c.agility;
 
             if (pos <= teamHead) {
-                
+
                 while (true) {
                     if (teamLineup[pos] != -1) {
                         pos--;
