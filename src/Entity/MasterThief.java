@@ -75,11 +75,8 @@ public class MasterThief extends Thread {
                     break;
             }
         }
-        ControlCollectionSite.getInstance().printResult();
-        System.out.println("FIM");
-        ConcentrationSite.getInstance().wakeAll();
         // sumUpResults, falta acordar ladroes para eles morrerem
-        
+        ControlCollectionSite.getInstance().printResult();
     }
 
     /**

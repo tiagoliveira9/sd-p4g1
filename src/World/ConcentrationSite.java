@@ -64,9 +64,9 @@ public class ConcentrationSite {
         l.lock();
 
         Thief crook = (Thief) Thread.currentThread();
-        setOutside(); // change state to OUTSIDE
 
         this.stThief.push(crook);
+        setOutside(); // change state to OUTSIDE
         try {
             while (crook.getThiefId() != this.globalId) {
                 prepare.await();
@@ -158,12 +158,6 @@ public class ConcentrationSite {
         Thief crook = (Thief) Thread.currentThread();
         crook.setStateThief(Constants.OUTSIDE);
         GRInformation.getInstance().printUpdateLine();
-        l.unlock();
-    }
-
-    public void wakeAll() {
-        l.lock();
-  
         l.unlock();
     }
 }
