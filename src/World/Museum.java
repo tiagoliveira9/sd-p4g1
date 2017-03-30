@@ -73,6 +73,13 @@ public class Museum {
         l.unlock();
     }
 
+    /**
+     *
+     * @param roomId
+     * @param elemPos
+     * @param partyId
+     * @return
+     */
     public boolean rollACanvas(int roomId, int elemPos, int partyId) {
         l.lock();
 
@@ -95,12 +102,16 @@ public class Museum {
             t.setStateThief(Constants.AT_A_ROOM);
             GRInformation.getInstance().printUpdateLine();
         }
-        //System.out.println("roubei cenas");
         l.unlock();
 
         return flag;
     }
 
+    /**
+     *
+     * @param roomId
+     * @return
+     */
     public int getRoomDistance(int roomId) {
         if (roomId < Constants.N_ROOMS) {
             return rooms[roomId].distance;
@@ -109,6 +120,11 @@ public class Museum {
 
     }
 
+    /**
+     *
+     * @param roomId
+     * @return
+     */
     public int getRoomCanvas(int roomId) {
         if (roomId < Constants.N_ROOMS) {
             return rooms[roomId].canvas;

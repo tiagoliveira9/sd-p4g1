@@ -32,7 +32,6 @@ public class ControlCollectionSite {
     private int eraseParty;
     private int nCanvas; // number of canvas stolen
     private int stateMaster;
-
     private Sala[] salas;
 
     private class Sala {
@@ -87,6 +86,9 @@ public class ControlCollectionSite {
         }
     }
 
+    /**
+     *
+     */
     public void setDeciding() {
         l.lock();
         MasterThief master = (MasterThief) Thread.currentThread();
@@ -128,8 +130,7 @@ public class ControlCollectionSite {
                 break;
             }
         }
-        
-            
+
         l.unlock();
         return new int[]{tempAssault, tempSala};
     }
@@ -139,7 +140,7 @@ public class ControlCollectionSite {
      * canvas that he will give to her, if he has one.
      *
      */
-    public int takeARest() {
+    public void takeARest() {
         l.lock();
 
         MasterThief master = (MasterThief) Thread.currentThread();
@@ -154,15 +155,12 @@ public class ControlCollectionSite {
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0); 
+            System.exit(0);
         }
         restBool = false;
-       
-        int temp = this.eraseParty;
-        this.eraseParty = -1;
+
         l.unlock();
 
-        return temp;
     }
 
     /**
@@ -170,19 +168,22 @@ public class ControlCollectionSite {
      * Room id to identify which room is not in use. Canvas true if has canvas
      * to deliver.
      *
+     * @param canvas
      * @param boolean
+     * @param partyId
      * @param roomId
      */
     public void handACanvas(boolean canvas, int roomId, int partyId) {
 
         l.lock();
-        while (stateMaster != Constants.WAITING_FOR_ARRIVAL) {
-            try {
+
+        try {
+            while (stateMaster != Constants.WAITING_FOR_ARRIVAL) {
                 handing.await();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-                System.exit(0); 
             }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
         }
 
         boolean lastArriving = false;
@@ -190,12 +191,14 @@ public class ControlCollectionSite {
             nCanvas++;
         } else {
             salas[roomId].empty = true;
+            GRInformation.getInstance().printSomething("emptyRoomId: " + roomId);
         }
         partyIdCounter[partyId]++;
 
         if (partyIdCounter[partyId] == 3) {
             lastArriving = true;
             partyIdCounter[partyId] = 0;
+
         }
 
         if (lastArriving) {
@@ -203,10 +206,8 @@ public class ControlCollectionSite {
             salas[roomId].inUse = false;
             if (partyId == 0) {
                 assaultP1 = false;
-                this.eraseParty = 0;
             } else if (partyId == 1) {
                 assaultP2 = false;
-                this.eraseParty = 1;
             }
         }
         // seria melhor se fosse por estados..mas como mudar o estado do
@@ -234,17 +235,20 @@ public class ControlCollectionSite {
             if (!salas[i].empty) {
                 l.unlock();
                 return true;
-            } 
-            else {
+            } else {
                 temp = false;
             }
         }
-        
+
         this.sumUp = temp;
         l.unlock();
         return false;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean canIDie() {
         return this.sumUp;
     }
@@ -264,6 +268,9 @@ public class ControlCollectionSite {
         return false;
     }
 
+    /**
+     *
+     */
     public void printResult() {
         l.lock();
         GRInformation.getInstance().printResume(nCanvas);

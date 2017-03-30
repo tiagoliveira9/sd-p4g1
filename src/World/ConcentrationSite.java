@@ -24,7 +24,7 @@ public class ConcentrationSite {
     // 0 - assault party 1, 1 - assault party 2
     private int nAssaultParty;
     private int globalId;
-    private Stack stThief;
+    private final Stack<Thief> stThief;
     private int counterThief;
 
     /**
@@ -52,17 +52,21 @@ public class ConcentrationSite {
         this.assembling = l.newCondition();
         this.nAssaultParty = -1;
         this.globalId = -1;
-        this.stThief = new Stack();
+        this.stThief = new Stack<>();
         this.counterThief = 0;
     }
 
+    /**
+     *
+     * @return
+     */
     public int addThief() {
         l.lock();
 
         Thief crook = (Thief) Thread.currentThread();
 
         this.stThief.push(crook);
-        setOutside(); // change state to outside
+        setOutside(); // change state to OUTSIDE
         try {
             while (crook.getThiefId() != this.globalId) {
                 prepare.await();
@@ -70,7 +74,7 @@ public class ConcentrationSite {
 
             counterThief++;
             if (counterThief < 3) {
-                Thief c = (Thief) stThief.pop();
+                Thief c = stThief.pop();
                 this.globalId = c.getThiefId();
                 this.prepare.signalAll();
             } else {
@@ -103,7 +107,7 @@ public class ConcentrationSite {
         this.nAssaultParty = partyId;
         GRInformation.getInstance().setRoomId(partyId, roomId);
 
-        Thief c = (Thief) stThief.pop();
+        Thief c = stThief.pop();
         this.globalId = c.getThiefId();
         // signal one thread to wake one thief
         this.prepare.signalAll();
@@ -128,7 +132,7 @@ public class ConcentrationSite {
     public void teamReady() {
         l.lock();
         try {
-            System.out.println("bomba para -1");
+            GRInformation.getInstance().printSomething("Ultimo a chegar assgrp, reseto nAssaultParty");
             this.nAssaultParty = -1;
             this.assembling.signal();
         } finally {
@@ -137,10 +141,17 @@ public class ConcentrationSite {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public int checkThiefNumbers() {
         return this.stThief.size();
     }
 
+    /**
+     *
+     */
     public void setOutside() {
         l.lock();
         Thief crook = (Thief) Thread.currentThread();

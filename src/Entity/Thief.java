@@ -14,7 +14,7 @@ import World.Museum;
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
-public class Thief extends Thread implements Comparable<Thief> {
+public class Thief extends Thread {
 
     /**
      * Identification of the Thief
@@ -45,7 +45,7 @@ public class Thief extends Thread implements Comparable<Thief> {
      */
     // para criar uma thread ladrão, o que é necessário? 
     public Thief(int thiefId, int agility) {
-        // passar arg para o contrutor thread super(arg1)
+        super("Thief " + (thiefId + 1));
 
         this.thiefId = thiefId;
         this.agility = agility;
@@ -85,12 +85,13 @@ public class Thief extends Thread implements Comparable<Thief> {
             }
             // ONE is for CRAWL OUT
             AssaultParty.getInstance(partyId).crawl(false);
-            // BLOQUEIA
-            ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
             AssaultParty.getInstance(partyId).removeMyself(roll[1]);
+            // bloqueia se master não estiver waiting for arrival
+            // só aqui faz reset, para a equipa ficar atribuível 
+            ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
 
         }
-        System.out.println("morri: "+(this.thiefId+1));
+        GRInformation.getInstance().printSomething("Morri "+(this.thiefId + 1));
     }
 
     /**
@@ -103,35 +104,36 @@ public class Thief extends Thread implements Comparable<Thief> {
         return !ControlCollectionSite.getInstance().canIDie();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getThiefId() {
         return thiefId;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getStateThief() {
         return stateThief;
     }
 
+    /**
+     *
+     * @param stateThief
+     */
     public void setStateThief(int stateThief) {
         this.stateThief = stateThief;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getAgility() {
         return agility;
-    }
-
-    /**
-     * Compares Thief ID to use for TreeSet. Something must be comparable.
-     *
-     * @param t Thief to compare to another Thief
-     * @return ThiefID difference
-     */
-    // Pesquisar mais sobre o Set, TreeSet e Comparable
-    // tivemos que colocar esta funcao aqui para funcar o TreeSet
-    @Override
-    public int compareTo(Thief t) {
-        // gerado pelo netbeans throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        return this.thiefId - t.thiefId;
-
     }
 
 }

@@ -4,6 +4,7 @@ import HeistMuseum.Constants;
 import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
+import World.GRInformation;
 import World.Museum;
 
 /**
@@ -19,10 +20,17 @@ public class MasterThief extends Thread {
      */
     private int stateMaster;
 
+    /**
+     *
+     */
     public MasterThief() {
+        super("master");
         this.stateMaster = Constants.PLANNING_THE_HEIST;
     }
 
+    /**
+     *
+     */
     @Override
     public void run() {
         int opt; // 1 - end of operations, 2 - begin assault, 3 - take a rest
@@ -37,8 +45,8 @@ public class MasterThief extends Thread {
                     // {AssaultPartyId, tSala}
                     pick = ControlCollectionSite.getInstance().prepareAssaultParty1();
                     if (pick[1] == -1) {
-                        System.out.println("NAO CONSEGUI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                         // no rooms, go deciding what to do
+                        GRInformation.getInstance().printSomething("Master: não conseguir arranjar sala");
                         break;
                     }
                     // check distance to room to setUp AssaultParty
@@ -49,7 +57,6 @@ public class MasterThief extends Thread {
                     ConcentrationSite.getInstance().prepareAssaultParty2(pick[0], pick[1]);
 
                     AssaultParty.getInstance(pick[0]).sendAssaultParty();
-                    System.out.println("send assault, ASG: " + pick[0] + " SALA: " + pick[1]);
 
                     break;
                 case 3:
@@ -72,6 +79,9 @@ public class MasterThief extends Thread {
         ControlCollectionSite.getInstance().printResult();
     }
 
+    /**
+     *
+     */
     public void startOperations() {
         ControlCollectionSite.getInstance().setDeciding();
     }
@@ -85,13 +95,11 @@ public class MasterThief extends Thread {
 
         ControlCollectionSite.getInstance().setDeciding();
         int nThieves = ConcentrationSite.getInstance().checkThiefNumbers();
-        System.out.println("nThieves: " + nThieves+"cenas"+ControlCollectionSite.getInstance().anyRoomLeft());
-
+        GRInformation.getInstance().printSomething("nThieves: " + nThieves);
         // + if every room is empty, return 1
         if (!anyRoomLeft()) {
             return 1;
         } else if ((nThieves > 2) && ControlCollectionSite.getInstance().anyTeamAvailable()) {
-            System.out.println("x");
             return 2;
         } else {
             // + else thieves < 2, takeARest
@@ -110,10 +118,18 @@ public class MasterThief extends Thread {
         return ControlCollectionSite.getInstance().anyRoomLeft();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getStateMaster() {
         return stateMaster;
     }
 
+    /**
+     *
+     * @param stateMaster
+     */
     public void setStateMaster(int stateMaster) {
         this.stateMaster = stateMaster;
     }

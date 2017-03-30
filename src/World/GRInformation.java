@@ -27,6 +27,9 @@ public class GRInformation {
 
     private PrintWriter printer;
 
+    /**
+     *
+     */
     public static String log = "test.log";
 
     private int masterThiefState;
@@ -35,6 +38,10 @@ public class GRInformation {
 
     private int totalPaints;
 
+    /**
+     *
+     * @param thief
+     */
     public void setStateThief(Thief thief) {
 
         lock.lock();
@@ -42,6 +49,10 @@ public class GRInformation {
         lock.unlock();
     }
 
+    /**
+     *
+     * @param thief
+     */
     public void setStateAgility(Thief thief) {
 
         lock.lock();
@@ -49,6 +60,10 @@ public class GRInformation {
         lock.unlock();
     }
 
+    /**
+     *
+     * @param masterThief
+     */
     public void setStateMasterThief(MasterThief masterThief) {
 
         lock.lock();
@@ -76,6 +91,7 @@ public class GRInformation {
      *
      * @param partyId
      * @param elemId
+     * @param cv
      * @param pos
      */
     public void setCanvasElem(int partyId, int elemId, int cv) {
@@ -89,6 +105,7 @@ public class GRInformation {
      * Set targeted Room on Assault Party #, #-1,2
      *
      * @param partyId
+     * @param roomId
      * @param elemId
      * @param pos
      */
@@ -115,6 +132,11 @@ public class GRInformation {
         lock.unlock();
     }
 
+    /**
+     *
+     * @param partyId
+     * @param elemId
+     */
     public void resetIdPartyElem(int partyId, int elemId) {
         lock.lock();
 
@@ -125,6 +147,10 @@ public class GRInformation {
         lock.unlock();
     }
 
+    /**
+     *
+     * @param partyId
+     */
     public void resetIdPartyRoom(int partyId) {
         lock.lock();
         party[partyId].roomId = "-";
@@ -223,6 +249,10 @@ public class GRInformation {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public static GRInformation getInstance() {
         lock.lock();
         try {
@@ -266,6 +296,9 @@ public class GRInformation {
         totalPaints = 0;
     }
 
+    /**
+     *
+     */
     public void printHeader() {
 
         lock.lock();
@@ -317,6 +350,9 @@ public class GRInformation {
 
     }
 
+    /**
+     *
+     */
     public void printUpdateLine() {
         lock.lock();
 
@@ -332,6 +368,9 @@ public class GRInformation {
         lock.unlock();
     }
 
+    /**
+     *
+     */
     public void printDoubleLine() {
         lock.lock();
         printEntityStates();
@@ -339,6 +378,9 @@ public class GRInformation {
         lock.unlock();
     }
 
+    /**
+     *
+     */
     public void printEntityStates() {
         lock.lock();
 
@@ -360,6 +402,9 @@ public class GRInformation {
         lock.unlock();
     }
 
+    /**
+     *
+     */
     public void printAssaultDescription() {
         lock.lock();
 
@@ -392,6 +437,11 @@ public class GRInformation {
         lock.unlock();
     }
 
+    /**
+     *
+     * @param thiefState
+     * @return
+     */
     public String translateThiefState(int thiefState) {
 
         switch (thiefState) {
@@ -408,6 +458,11 @@ public class GRInformation {
         }
     }
 
+    /**
+     *
+     * @param masterThiefState
+     * @return
+     */
     public String translateMasterThiefState(int masterThiefState) {
 
         switch (masterThiefState) {
@@ -426,6 +481,11 @@ public class GRInformation {
         }
     }
 
+    /**
+     *
+     * @param thiefSit
+     * @return
+     */
     public String translateThiefSituation(int thiefSit) {
         switch (thiefSit) {
             case Constants.OUTSIDE:
@@ -442,6 +502,10 @@ public class GRInformation {
 
     }
 
+    /**
+     *
+     * @param totalPaints
+     */
     public void printResume(int totalPaints) {
         lock.lock();
 
@@ -450,6 +514,9 @@ public class GRInformation {
         lock.unlock();
     }
 
+    /**
+     *
+     */
     public void printLegend() {
 
         lock.lock();
@@ -470,6 +537,15 @@ public class GRInformation {
 
     }
 
+    public void printSomething(String s) {
+        lock.lock();
+        System.out.println(s);
+        lock.unlock();
+    }
+
+    /**
+     *
+     */
     public void close() {
 
         lock.lock();

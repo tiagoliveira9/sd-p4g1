@@ -48,6 +48,11 @@ public class AssaultParty {
 
     // canvas devia estar aqui? fazemos um total e cada vez que um ladrao
     // entrega decrementa o sum, no ultimo hand a canvas, limpa assault party
+    /**
+     *
+     * @param i
+     * @return
+     */
     public static AssaultParty getInstance(int i) {
         l.lock();
 
@@ -237,9 +242,9 @@ public class AssaultParty {
 
         do {
             int pos = c.pos + c.agility;
-            //System.out.println("T: " + partyId + "Head: " + teamHead);
 
             if (pos <= teamHead) {
+                
                 while (true) {
                     if (teamLineup[pos] != -1) {
                         pos--;
@@ -308,6 +313,11 @@ public class AssaultParty {
         return flagI;
     }
 
+    /**
+     *
+     * @param thiefId
+     * @return
+     */
     public Crook getCrook(int thiefId) {
         l.lock();
         int i;
@@ -344,6 +354,11 @@ public class AssaultParty {
         return nextThiefLine;
     }
 
+    /**
+     *
+     * @param myThiefId
+     * @return
+     */
     public int myPositionTeam(int myThiefId) {
         l.lock();
         int myPosition = -1;
@@ -413,10 +428,18 @@ public class AssaultParty {
         return new int[]{this.roomId, myPositionTeam(thiefId)};
     }
 
+    /**
+     *
+     * @return
+     */
     public int getRoomId() {
         return roomId;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getDistance() {
         return distance;
     }
@@ -448,6 +471,10 @@ public class AssaultParty {
         l.unlock();
     }
 
+    /**
+     *
+     * @param elemId
+     */
     public void addCrookCanvas(int elemId) {
         l.lock();
         Crook c = squad[elemId];
