@@ -45,8 +45,7 @@ public class MasterThief extends Thread {
                     // {AssaultPartyId, tSala}
                     pick = ControlCollectionSite.getInstance().prepareAssaultParty1();
                     if (pick[1] == -1) {
-                        // no rooms, go deciding what to do
-                        GRInformation.getInstance().printSomething("Master: não conseguir arranjar sala");
+                        // no rooms available, go deciding what to do
                         break;
                     }
                     // check distance to room to setUp AssaultParty
@@ -60,13 +59,6 @@ public class MasterThief extends Thread {
 
                     break;
                 case 3:
-                    /* dois metodos necessarios para o master bloquear no Control
-                     1 metodo é chamado pelo master e bloqueia
-                     2 metodo é chamado pelo thief para sinalizar(acordar) o master. 
-                        tem que ter um parametro de entrada booleano
-                        para o ladrao passar o canvas (vê como passo o nAssaultParty 
-                        no concentration site entre os dois metodos de bloqueio)
-                     */
                     ControlCollectionSite.getInstance().takeARest();
 
                     break;

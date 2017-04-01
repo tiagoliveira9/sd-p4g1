@@ -28,7 +28,6 @@ public class ControlCollectionSite {
     private boolean assaultP1;
     private boolean assaultP2;
     private int[] partyIdCounter; // to count from each party, how many handed a Canvas 
-    private int eraseParty;
     private int nCanvas; // number of canvas stolen
     private int stateMaster;
     private Sala[] salas;
@@ -77,7 +76,6 @@ public class ControlCollectionSite {
         this.nCanvas = 0;
         this.partyIdCounter = new int[Constants.N_ASSAULT_PARTY];
         this.partyIdCounter[0] = this.partyIdCounter[1] = 0;
-        this.eraseParty = -1;
         this.stateMaster = -1;
         salas = new Sala[Constants.N_ROOMS];
         for (int i = 0; i < Constants.N_ROOMS; i++) {

@@ -27,6 +27,7 @@ public class ConcentrationSite {
     private final Stack<Thief> stThief;
     private int counterThief;
     private boolean die;
+    private int countDie;
 
     /**
      * The method returns ConcentrationSite object.
@@ -56,6 +57,7 @@ public class ConcentrationSite {
         this.stThief = new Stack<>();
         this.counterThief = 0;
         this.die = false;
+        this.countDie = 0;
     }
 
     /**
@@ -75,6 +77,8 @@ public class ConcentrationSite {
             }
 
             if (die) {
+                countDie++;
+                assembling.signal();
                 l.unlock();
                 return -1;
             }
@@ -172,6 +176,16 @@ public class ConcentrationSite {
         l.lock();
         this.die = true;
         prepare.signalAll();
+        
+        try {
+            while (countDie < 6) {
+                assembling.await();
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(0);
+
+        }
         l.unlock();
     }
 }
