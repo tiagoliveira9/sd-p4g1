@@ -18,7 +18,7 @@ public class AssaultParty {
     // Doubleton containing 2 assault parties
     private static final AssaultParty[] instances = new AssaultParty[Constants.N_ASSAULT_PARTY];
     private final int partyId;
-    private final static Lock l = new ReentrantLock();
+    private final static Lock l = new ReentrantLock(true);
     private final Condition moveThief;
     private int[] line; // order that thieves blocks for the first time awaiting orders
     private Crook[] squad;

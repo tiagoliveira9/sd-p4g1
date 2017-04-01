@@ -87,11 +87,7 @@ public class Thief extends Thread {
             }
             // ONE is for CRAWL OUT
             AssaultParty.getInstance(partyId).crawlOut();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Thief.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            
             AssaultParty.getInstance(partyId).removeMyself(roll[1]);
             // bloqueia se master não estiver waiting for arrival
             // só aqui faz reset, para a equipa ficar atribuível 
