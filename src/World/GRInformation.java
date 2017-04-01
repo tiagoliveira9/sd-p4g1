@@ -268,8 +268,7 @@ public class GRInformation {
 
     private GRInformation() {
         // to not overwrite logs (within minutes)
-        //date = new SimpleDateFormat("yyyy'-'MMdd'-'HHmm"); yyyy-MM-dd HH:mm:ss.SSS
-        date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
+        date = new SimpleDateFormat("yyyy'-'MMdd'-'HHmm");
         dateString = (date.format(new Date()));
         this.masterThiefState = Constants.PLANNING_THE_HEIST;
 
