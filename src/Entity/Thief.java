@@ -65,10 +65,7 @@ public class Thief extends Thread {
         // conc.amINeeded() actua sobre o concentration site
         while ((partyId = amINeeded()) != -1) {
 
-            // If he is needed, adds himself to 'FIFO'(Stack)
-            // thief block here, wakes when called by Master
-            //int partyId = ConcentrationSite.getInstance().addThief();
-            // adds this thief to the squad
+            // goes to team ordered by master
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
 
             if (last) {
@@ -76,7 +73,7 @@ public class Thief extends Thread {
                 ConcentrationSite.getInstance().teamReady();
             }
 
-            // back to assault party to block and get in line
+            // back to assault party to block and Get in line
             AssaultParty.getInstance(partyId).waitToStartRobbing();
 
             // for synchronism, returns the room and elemId right here on crawl
