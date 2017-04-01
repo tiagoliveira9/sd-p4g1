@@ -75,11 +75,9 @@ public class MasterThief extends Thread {
                     break;
             }
         }
-        ControlCollectionSite.getInstance().printResult();
-        System.out.println("FIM");
         ConcentrationSite.getInstance().wakeAll();
-        // sumUpResults, falta acordar ladroes para eles morrerem
-        
+        ControlCollectionSite.getInstance().printResult();
+
     }
 
     /**
@@ -99,7 +97,7 @@ public class MasterThief extends Thread {
         ControlCollectionSite.getInstance().setDeciding();
         int nThieves = ConcentrationSite.getInstance().checkThiefNumbers();
         //GRInformation.getInstance().printSomething("nThieves: " + nThieves);
-        
+
         if (!anyRoomLeft()) {
             return 1;
         } else if ((nThieves > 2) && ControlCollectionSite.getInstance().anyTeamAvailable()) {

@@ -453,6 +453,8 @@ public class GRInformation {
                 return "ATAR";
             case Constants.CRAWLING_OUTWARDS:
                 return "CRAO";
+            case Constants.DEAD:
+                return "DEAD";
             default:
                 return "----";
         }
@@ -496,22 +498,12 @@ public class GRInformation {
                 return "P";
             case Constants.CRAWLING_OUTWARDS:
                 return "P";
+            case Constants.DEAD:
+                return "W";
             default:
                 return "-";
         }
 
-    }
-
-    /**
-     *
-     * @param totalPaints
-     */
-    public void printResume(int totalPaints) {
-        lock.lock();
-        printEntityStates();
-        printer.printf("My friends, tonight's effort producced " + totalPaints + " priceless paintings!%n");
-        printer.flush();
-        lock.unlock();
     }
 
     /**
@@ -535,6 +527,18 @@ public class GRInformation {
 
         lock.unlock();
 
+    }
+
+    /**
+     *
+     * @param totalPaints
+     */
+    public void printResume(int totalPaints) {
+        lock.lock();
+        printEntityStates();
+        printer.printf("My friends, tonight's effort producced " + totalPaints + " priceless paintings!%n");
+        printer.flush();
+        lock.unlock();
     }
 
     public void printSomething(String s) {

@@ -26,6 +26,7 @@ public class ConcentrationSite {
     private int globalId;
     private final Stack<Thief> stThief;
     private int counterThief;
+    private boolean die;
 
     /**
      * The method returns ConcentrationSite object.
@@ -54,6 +55,7 @@ public class ConcentrationSite {
         this.globalId = -1;
         this.stThief = new Stack<>();
         this.counterThief = 0;
+        this.die = false;
     }
 
     /**
@@ -68,8 +70,13 @@ public class ConcentrationSite {
 
         this.stThief.push(crook);
         try {
-            while (crook.getThiefId() != this.globalId) {
+            while (crook.getThiefId() != this.globalId && !die) {
                 prepare.await();
+            }
+
+            if (die) {
+                l.unlock();
+                return -1;
             }
 
             counterThief++;
@@ -163,7 +170,8 @@ public class ConcentrationSite {
 
     public void wakeAll() {
         l.lock();
-  
+        this.die = true;
+        prepare.signalAll();
         l.unlock();
     }
 }

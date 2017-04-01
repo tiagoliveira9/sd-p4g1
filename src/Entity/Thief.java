@@ -60,13 +60,14 @@ public class Thief extends Thread {
     @Override
     public void run() {
 
+        int partyId;
+
         // conc.amINeeded() actua sobre o concentration site
-        while (amINeeded()) {
+        while ((partyId = amINeeded()) != -1) {
 
             // If he is needed, adds himself to 'FIFO'(Stack)
             // thief block here, wakes when called by Master
-            int partyId = ConcentrationSite.getInstance().addThief();
-
+            //int partyId = ConcentrationSite.getInstance().addThief();
             // adds this thief to the squad
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
 
@@ -87,14 +88,15 @@ public class Thief extends Thread {
             }
             // ONE is for CRAWL OUT
             AssaultParty.getInstance(partyId).crawlOut();
-            
+
             AssaultParty.getInstance(partyId).removeMyself(roll[1]);
             // bloqueia se master não estiver waiting for arrival
             // só aqui faz reset, para a equipa ficar atribuível 
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
 
         }
-        GRInformation.getInstance().printSomething("Morri " + (this.thiefId + 1));
+        this.stateThief = Constants.DEAD;
+        GRInformation.getInstance().setStateThief(this);
     }
 
     /**
@@ -102,9 +104,10 @@ public class Thief extends Thread {
      *
      * @return needed. True if is needed.
      */
-    private boolean amINeeded() {
+    private int amINeeded() {
         // if you can't die, then invert bool ! -> you are needed
-        return !ControlCollectionSite.getInstance().canIDie();
+        //return !ControlCollectionSite.getInstance().canIDie();
+        return ConcentrationSite.getInstance().addThief();
     }
 
     /**

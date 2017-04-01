@@ -44,6 +44,11 @@ public class Constants {
      * crawlOut of a fellow party member
      */
     public static final int CRAWLING_OUTWARDS = 4;
+    
+    /**
+     * New state of Thief to acknowledge his death
+     */
+    public static final int DEAD = 5;
 
     
     /**

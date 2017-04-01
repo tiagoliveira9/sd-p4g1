@@ -190,7 +190,6 @@ public class ControlCollectionSite {
             nCanvas++;
         } else {
             salas[roomId].empty = true;
-            GRInformation.getInstance().printSomething("emptyRoomId: " + roomId);
         }
         partyIdCounter[partyId]++;
 
@@ -273,7 +272,6 @@ public class ControlCollectionSite {
     public void printResult() {
         l.lock();
         MasterThief m = (MasterThief) Thread.currentThread();
-        //System.out.println("My friends, tonight's effort producced " + nCanvas + " priceless paintings!"); 
         m.setStateMaster(Constants.PRESENTING_THE_REPORT);
         GRInformation.getInstance().setStateMasterThief(m);
         GRInformation.getInstance().printResume(nCanvas);
