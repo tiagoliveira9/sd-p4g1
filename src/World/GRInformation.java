@@ -508,9 +508,9 @@ public class GRInformation {
      */
     public void printResume(int totalPaints) {
         lock.lock();
-
+        printEntityStates();
         printer.printf("My friends, tonight's effort producced " + totalPaints + " priceless paintings!%n");
-
+        printer.flush();
         lock.unlock();
     }
 

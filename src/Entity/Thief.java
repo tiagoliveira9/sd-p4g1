@@ -6,6 +6,8 @@ import World.ConcentrationSite;
 import World.ControlCollectionSite;
 import World.GRInformation;
 import World.Museum;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // import das areas with which the thief will interact
 /**
@@ -85,13 +87,18 @@ public class Thief extends Thread {
             }
             // ONE is for CRAWL OUT
             AssaultParty.getInstance(partyId).crawlOut();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Thief.class.getName()).log(Level.SEVERE, null, ex);
+            }
             AssaultParty.getInstance(partyId).removeMyself(roll[1]);
             // bloqueia se master não estiver waiting for arrival
             // só aqui faz reset, para a equipa ficar atribuível 
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
 
         }
-        GRInformation.getInstance().printSomething("Morri "+(this.thiefId + 1));
+        GRInformation.getInstance().printSomething("Morri " + (this.thiefId + 1));
     }
 
     /**

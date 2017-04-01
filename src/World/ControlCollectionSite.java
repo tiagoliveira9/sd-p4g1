@@ -1,7 +1,6 @@
 package World;
 
 import Entity.MasterThief;
-import Entity.Thief;
 import HeistMuseum.Constants;
 
 import java.util.concurrent.locks.Condition;
@@ -273,6 +272,10 @@ public class ControlCollectionSite {
      */
     public void printResult() {
         l.lock();
+        MasterThief m = (MasterThief) Thread.currentThread();
+        //System.out.println("My friends, tonight's effort producced " + nCanvas + " priceless paintings!"); 
+        m.setStateMaster(Constants.PRESENTING_THE_REPORT);
+        GRInformation.getInstance().setStateMasterThief(m);
         GRInformation.getInstance().printResume(nCanvas);
         l.unlock();
     }
