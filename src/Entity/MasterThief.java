@@ -22,7 +22,8 @@ public class MasterThief extends Thread {
     /**
      *
      */
-    public MasterThief() {
+    public MasterThief()
+    {
         super("master");
         this.stateMaster = Constants.PLANNING_THE_HEIST;
     }
@@ -31,19 +32,23 @@ public class MasterThief extends Thread {
      *
      */
     @Override
-    public void run() {
+    public void run()
+    {
         int opt; // 1 - end of operations, 2 - begin assault, 3 - take a rest
         int[] pick;    // pick[0]=assaultPartyId, pick[1]=RoomId
         int dist;
 
         startOperations();
-        while ((opt = appraiseSit()) != 1) {
-            switch (opt) {
+        while ((opt = appraiseSit()) != 1)
+        {
+            switch (opt)
+            {
                 case 2:
                     // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
                     // {AssaultPartyId, tSala}
                     pick = ControlCollectionSite.getInstance().prepareAssaultParty1();
-                    if (pick[1] == -1) {
+                    if (pick[1] == -1)
+                    {
                         // no rooms available, go deciding what to do
                         break;
                     }
@@ -74,7 +79,8 @@ public class MasterThief extends Thread {
     /**
      *
      */
-    public void startOperations() {
+    public void startOperations()
+    {
         ControlCollectionSite.getInstance().setDeciding();
     }
 
@@ -83,17 +89,21 @@ public class MasterThief extends Thread {
      *
      * @return x if y, z if w etc..
      */
-    public int appraiseSit() {
+    public int appraiseSit()
+    {
 
         ControlCollectionSite.getInstance().setDeciding();
         int nThieves = ConcentrationSite.getInstance().checkThiefNumbers();
         //GRInformation.getInstance().printSomething("nThieves: " + nThieves);
 
-        if (!anyRoomLeft()) {
+        if (!anyRoomLeft() && ControlCollectionSite.getInstance().noThiefHanding())
+        {
             return 1;
-        } else if ((nThieves > 2) && ControlCollectionSite.getInstance().anyTeamAvailable()) {
+        } else if ((nThieves > 2) && ControlCollectionSite.getInstance().anyTeamAvailable())
+        {
             return 2;
-        } else {
+        } else
+        {
             // + else thieves < 2, takeARest
             return 3;
         }
@@ -105,7 +115,8 @@ public class MasterThief extends Thread {
      *
      * @return True if exists a Room to sack, False if every room is empty
      */
-    public boolean anyRoomLeft() {
+    public boolean anyRoomLeft()
+    {
 
         return ControlCollectionSite.getInstance().anyRoomLeft();
     }
@@ -114,7 +125,8 @@ public class MasterThief extends Thread {
      *
      * @return
      */
-    public int getStateMaster() {
+    public int getStateMaster()
+    {
         return stateMaster;
     }
 
@@ -122,7 +134,8 @@ public class MasterThief extends Thread {
      *
      * @param stateMaster
      */
-    public void setStateMaster(int stateMaster) {
+    public void setStateMaster(int stateMaster)
+    {
         this.stateMaster = stateMaster;
     }
 

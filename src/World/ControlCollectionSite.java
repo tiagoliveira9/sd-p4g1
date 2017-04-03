@@ -34,6 +34,7 @@ public class ControlCollectionSite {
     private Sala[] salas;
     private int[] handBuffer;
     private int handGlobal;
+    private int handCounter;
     private int takePtr;
     private int putPtr;
 
@@ -96,6 +97,7 @@ public class ControlCollectionSite {
         this.handBuffer = new int[6];
         this.putPtr = this.takePtr = 0;
         this.handGlobal = -1;
+        this.handCounter = 0;
     }
 
     /**
@@ -173,11 +175,16 @@ public class ControlCollectionSite {
         if (takePtr != putPtr)
         {
             handGlobal = handBuffer[takePtr];
-            if (++takePtr == Constants.N_THIEVES - 1)
+            if (takePtr == Constants.N_THIEVES - 1)
             {
+                System.out.println("take: " + takePtr + " put: " + putPtr);
+
                 takePtr = 0;
+            } else
+            {
+                takePtr++;
             }
-            handing.signal();
+            handing.signalAll();
         }
 
         try
@@ -212,12 +219,15 @@ public class ControlCollectionSite {
 
         l.lock();
         Thief t = (Thief) Thread.currentThread();
-
+        handCounter++;
         // adds to line to deliver canvas
         handBuffer[putPtr] = t.getThiefId();
-        if (++putPtr == Constants.N_THIEVES - 1)
+        if (putPtr == Constants.N_THIEVES - 1)
         {
             putPtr = 0;
+        } else
+        {
+            putPtr++;
         }
 
         try
@@ -227,7 +237,6 @@ public class ControlCollectionSite {
                 handing.await();
             }
             handGlobal = -1;
-
         } catch (InterruptedException ex)
         {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
@@ -265,6 +274,7 @@ public class ControlCollectionSite {
         }
         // seria melhor se fosse por estados..mas como mudar o estado do
         // master se não sei que thread é?
+        handCounter--;
         restBool = true;
         this.rest.signal();
 
@@ -329,6 +339,14 @@ public class ControlCollectionSite {
         return false;
     }
 
+    public boolean noThiefHanding()
+    {
+
+        //System.out.println("take: " + takePtr + " put: " + putPtr);
+        //return (takePtr == putPtr);
+        return (handCounter == 0);
+    }
+
     /**
      *
      */
@@ -341,4 +359,5 @@ public class ControlCollectionSite {
         GRInformation.getInstance().printResume(nCanvas);
         l.unlock();
     }
+
 }

@@ -34,13 +34,17 @@ public class ConcentrationSite {
      *
      * @return ConcentrationSite object to be used.
      */
-    public static ConcentrationSite getInstance() {
+    public static ConcentrationSite getInstance()
+    {
         l.lock();
-        try {
-            if (instance == null) {
+        try
+        {
+            if (instance == null)
+            {
                 instance = new ConcentrationSite();
             }
-        } finally {
+        } finally
+        {
             l.unlock();
         }
         return instance;
@@ -49,7 +53,8 @@ public class ConcentrationSite {
     /**
      * Singleton needs private constructor.
      */
-    private ConcentrationSite() {
+    private ConcentrationSite()
+    {
         this.prepare = l.newCondition();
         this.assembling = l.newCondition();
         this.nAssaultParty = -1;
@@ -64,19 +69,23 @@ public class ConcentrationSite {
      *
      * @return
      */
-    public int addThief() {
+    public int addThief()
+    {
         l.lock();
 
         Thief crook = (Thief) Thread.currentThread();
         setOutside(); // change state to OUTSIDE
 
         this.stThief.push(crook);
-        try {
-            while (crook.getThiefId() != this.globalId && !die) {
+        try
+        {
+            while (crook.getThiefId() != this.globalId && !die)
+            {
                 prepare.await();
             }
 
-            if (die) {
+            if (die)
+            {
                 countDie++;
                 assembling.signal();
                 l.unlock();
@@ -84,16 +93,19 @@ public class ConcentrationSite {
             }
 
             counterThief++;
-            if (counterThief < 3) {
+            if (counterThief < 3)
+            {
                 Thief c = stThief.pop();
                 this.globalId = c.getThiefId();
                 this.prepare.signalAll();
-            } else {
+            } else
+            {
                 this.globalId = -1;
                 counterThief = 0;
             }
 
-        } catch (InterruptedException ex) {
+        } catch (InterruptedException ex)
+        {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
@@ -111,7 +123,8 @@ public class ConcentrationSite {
      * @param partyId
      * @param roomId
      */
-    public void prepareAssaultParty2(int partyId, int roomId) {
+    public void prepareAssaultParty2(int partyId, int roomId)
+    {
         l.lock();
         MasterThief master = (MasterThief) Thread.currentThread();
 
@@ -123,12 +136,15 @@ public class ConcentrationSite {
         // signal one thread to wake one thief
         this.prepare.signalAll();
 
-        try {
+        try
+        {
             // Master blocks, wakes up when team is ready
-            while (nAssaultParty != -1) {
+            while (nAssaultParty != -1)
+            {
                 this.assembling.await();
             }
-        } catch (InterruptedException ex) {
+        } catch (InterruptedException ex)
+        {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
@@ -140,14 +156,17 @@ public class ConcentrationSite {
      * The method prepareExcursion. The last Thief to enter the assault party,
      * wakes up the Master
      */
-    public void teamReady() {
+    public void teamReady()
+    {
         l.lock();
         Thief t = (Thief) Thread.currentThread();
-        try {
+        try
+        {
             //GRInformation.getInstance().printSomething("Ultimo a chegar assgrp, reseto nAssaultParty " + (t.getThiefId()+1));
             this.nAssaultParty = -1;
             this.assembling.signal();
-        } finally {
+        } finally
+        {
             l.unlock();
         }
 
@@ -157,14 +176,16 @@ public class ConcentrationSite {
      *
      * @return
      */
-    public int checkThiefNumbers() {
+    public int checkThiefNumbers()
+    {
         return this.stThief.size();
     }
 
     /**
      *
      */
-    public void setOutside() {
+    public void setOutside()
+    {
         l.lock();
         Thief crook = (Thief) Thread.currentThread();
         crook.setStateThief(Constants.OUTSIDE);
@@ -172,20 +193,29 @@ public class ConcentrationSite {
         l.unlock();
     }
 
-    public void wakeAll() {
+    public void wakeAll()
+    {
         l.lock();
         this.die = true;
         prepare.signalAll();
-        
-        try {
-            while (countDie < 6) {
+
+        try
+        {
+            while (countDie < 6)
+            {
                 assembling.await();
             }
-        } catch (InterruptedException ex) {
+        } catch (InterruptedException ex)
+        {
             Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
 
         }
         l.unlock();
+    }
+
+    public boolean canIDie()
+    {
+        return this.die;
     }
 }

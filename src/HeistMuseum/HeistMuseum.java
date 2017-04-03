@@ -55,17 +55,7 @@ public class HeistMuseum {
             GRInformation.getInstance().setStateAgility(crook[i]);
             crook[i].start();
         }
-        /* crook[0] = new Thief(0, 4);
-         crook[1] = new Thief(1, 5);
-         crook[2] = new Thief(2, 6);
-         crook[3] = new Thief(3, 4);
-         crook[4] = new Thief(4, 5);
-         crook[5] = new Thief(5, 6);
-
-         for (int i = 0; i < Constants.N_THIEVES; i++) {
-            GRInformation.getInstance().setStateAgility(crook[i]);
-            crook[i].start();
-        }*/
+        
         // Simulation starts
         master.start();
 
