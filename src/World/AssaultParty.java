@@ -180,7 +180,7 @@ public class AssaultParty {
             }
             idGlobal = squad[next].id;
             moveThief.signalAll();
-            l.unlock();
+            //l.unlock();
             return getRoomIdToAssault(t.getThiefId());
 
         } catch (InterruptedException ex) {
@@ -189,7 +189,7 @@ public class AssaultParty {
 
         }
 
-        l.unlock();
+        //l.unlock();
         return getRoomIdToAssault(t.getThiefId());
 
     }
@@ -200,7 +200,7 @@ public class AssaultParty {
      */
     public int[] crawlOut() {
 
-        l.lock();
+        //l.lock();
         Thief t = (Thief) Thread.currentThread();
         Crook c = getCrook(t.getThiefId());
 
