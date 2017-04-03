@@ -544,6 +544,8 @@ public class GRInformation {
     public void printSomething(String s) {
         lock.lock();
         System.out.println(s);
+        printer.printf(s+"%n");
+        printer.flush();
         lock.unlock();
     }
 

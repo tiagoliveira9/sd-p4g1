@@ -171,13 +171,13 @@ public class ControlCollectionSite {
         stateMaster = Constants.WAITING_FOR_ARRIVAL;
         master.setStateMaster(stateMaster);
         GRInformation.getInstance().printUpdateLine();
+        System.out.println("take: " + takePtr + " put: " + putPtr);
 
         if (takePtr != putPtr)
         {
             handGlobal = handBuffer[takePtr];
             if (takePtr == Constants.N_THIEVES - 1)
             {
-                System.out.println("take: " + takePtr + " put: " + putPtr);
 
                 takePtr = 0;
             } else
@@ -219,19 +219,23 @@ public class ControlCollectionSite {
 
         l.lock();
         Thief t = (Thief) Thread.currentThread();
-        handCounter++;
-        // adds to line to deliver canvas
-        handBuffer[putPtr] = t.getThiefId();
-        if (putPtr == Constants.N_THIEVES - 1)
-        {
-            putPtr = 0;
-        } else
-        {
-            putPtr++;
-        }
 
         try
         {
+            if (stateMaster != Constants.WAITING_FOR_ARRIVAL)
+            {
+                handCounter++;
+                // adds to line to deliver canvas
+                handBuffer[putPtr] = t.getThiefId();
+                if (putPtr == Constants.N_THIEVES - 1)
+                {
+                    putPtr = 0;
+                } else
+                {
+                    putPtr++;
+                }
+            }
+
             while (stateMaster != Constants.WAITING_FOR_ARRIVAL && handGlobal != t.getThiefId())
             {
                 handing.await();
@@ -277,6 +281,7 @@ public class ControlCollectionSite {
         handCounter--;
         restBool = true;
         this.rest.signal();
+        GRInformation.getInstance().printSomething("entreguei "+(t.getThiefId()+1));
 
         l.unlock();
     }
@@ -343,8 +348,8 @@ public class ControlCollectionSite {
     {
 
         //System.out.println("take: " + takePtr + " put: " + putPtr);
-        //return (takePtr == putPtr);
-        return (handCounter == 0);
+        return (takePtr == putPtr);
+        //return (handCounter == 0);
     }
 
     /**

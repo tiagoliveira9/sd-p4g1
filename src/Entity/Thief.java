@@ -88,7 +88,6 @@ public class Thief extends Thread {
             }
             // ONE is for CRAWL OUT
             AssaultParty.getInstance(partyId).crawlOut();
-            GRInformation.getInstance().printSomething("sai"+(thiefId+1));
             // bloqueia se master não estiver waiting for arrival
             // só aqui faz reset, para a equipa ficar atribuível 
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
