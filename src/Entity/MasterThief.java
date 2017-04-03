@@ -4,7 +4,6 @@ import HeistMuseum.Constants;
 import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
-import World.GRInformation;
 import World.Museum;
 
 /**

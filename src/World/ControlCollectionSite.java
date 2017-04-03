@@ -1,6 +1,7 @@
 package World;
 
 import Entity.MasterThief;
+import Entity.Thief;
 import HeistMuseum.Constants;
 
 import java.util.concurrent.locks.Condition;
@@ -31,6 +32,10 @@ public class ControlCollectionSite {
     private int nCanvas; // number of canvas stolen
     private int stateMaster;
     private Sala[] salas;
+    private int[] handBuffer;
+    private int handGlobal;
+    private int takePtr;
+    private int putPtr;
 
     private class Sala {
 
@@ -38,7 +43,8 @@ public class ControlCollectionSite {
         private boolean empty;
         private boolean inUse;
 
-        public Sala(int salaId) {
+        public Sala(int salaId)
+        {
             this.salaId = salaId;
             this.empty = false;
             this.inUse = false;
@@ -50,13 +56,17 @@ public class ControlCollectionSite {
      *
      * @return ConcentrationSite object to be used.
      */
-    public static ControlCollectionSite getInstance() {
+    public static ControlCollectionSite getInstance()
+    {
         l.lock();
-        try {
-            if (instance == null) {
+        try
+        {
+            if (instance == null)
+            {
                 instance = new ControlCollectionSite();
             }
-        } finally {
+        } finally
+        {
             l.unlock();
         }
         return instance;
@@ -65,7 +75,8 @@ public class ControlCollectionSite {
     /**
      * Singleton needs private constructor
      */
-    private ControlCollectionSite() {
+    private ControlCollectionSite()
+    {
         // bind lock with a condition
         this.rest = l.newCondition();
         this.handing = l.newCondition();
@@ -78,15 +89,20 @@ public class ControlCollectionSite {
         this.partyIdCounter[0] = this.partyIdCounter[1] = 0;
         this.stateMaster = -1;
         salas = new Sala[Constants.N_ROOMS];
-        for (int i = 0; i < Constants.N_ROOMS; i++) {
+        for (int i = 0; i < Constants.N_ROOMS; i++)
+        {
             salas[i] = new Sala(i);
         }
+        this.handBuffer = new int[6];
+        this.putPtr = this.takePtr = 0;
+        this.handGlobal = -1;
     }
 
     /**
      *
      */
-    public void setDeciding() {
+    public void setDeciding()
+    {
         l.lock();
         MasterThief master = (MasterThief) Thread.currentThread();
         master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
@@ -100,7 +116,8 @@ public class ControlCollectionSite {
      *
      * @return {AssaultPartyId, tSala}
      */
-    public int[] prepareAssaultParty1() {
+    public int[] prepareAssaultParty1()
+    {
         l.lock();
 
         MasterThief master = (MasterThief) Thread.currentThread();
@@ -111,17 +128,21 @@ public class ControlCollectionSite {
         master.setStateMaster(stateMaster);
         GRInformation.getInstance().printUpdateLine();
 
-        if (!assaultP1) {
+        if (!assaultP1)
+        {
             tempAssault = 0;
             assaultP1 = true;
-        } else if (!assaultP2) {
+        } else if (!assaultP2)
+        {
             tempAssault = 1;
             assaultP2 = true;
         }
 
-        for (int i = 0; i < Constants.N_ROOMS; i++) {
+        for (int i = 0; i < Constants.N_ROOMS; i++)
+        {
             // if is empty, choose
-            if (salas[i].empty == false && salas[i].inUse == false) {
+            if (salas[i].empty == false && salas[i].inUse == false)
+            {
                 tempSala = i;
                 salas[i].inUse = true;
                 break;
@@ -129,7 +150,10 @@ public class ControlCollectionSite {
         }
 
         l.unlock();
-        return new int[]{tempAssault, tempSala};
+        return new int[]
+        {
+            tempAssault, tempSala
+        };
     }
 
     /**
@@ -137,20 +161,33 @@ public class ControlCollectionSite {
      * canvas that he will give to her, if he has one.
      *
      */
-    public void takeARest() {
+    public void takeARest()
+    {
         l.lock();
-
         MasterThief master = (MasterThief) Thread.currentThread();
+
         stateMaster = Constants.WAITING_FOR_ARRIVAL;
         master.setStateMaster(stateMaster);
         GRInformation.getInstance().printUpdateLine();
-        handing.signal();
 
-        try {
-            while (!restBool) {
+        if (takePtr != putPtr)
+        {
+            handGlobal = handBuffer[takePtr];
+            if (++takePtr == Constants.N_THIEVES - 1)
+            {
+                takePtr = 0;
+            }
+            handing.signal();
+        }
+
+        try
+        {
+            while (!restBool)
+            {
                 rest.await();
             }
-        } catch (InterruptedException ex) {
+        } catch (InterruptedException ex)
+        {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
@@ -170,39 +207,59 @@ public class ControlCollectionSite {
      * @param partyId
      * @param roomId
      */
-    public void handACanvas(boolean canvas, int roomId, int partyId) {
+    public void handACanvas(boolean canvas, int roomId, int partyId)
+    {
 
         l.lock();
+        Thief t = (Thief) Thread.currentThread();
 
-        try {
-            while (stateMaster != Constants.WAITING_FOR_ARRIVAL) {
+        // adds to line to deliver canvas
+        handBuffer[putPtr] = t.getThiefId();
+        if (++putPtr == Constants.N_THIEVES - 1)
+        {
+            putPtr = 0;
+        }
+
+        try
+        {
+            while (stateMaster != Constants.WAITING_FOR_ARRIVAL && handGlobal != t.getThiefId())
+            {
                 handing.await();
             }
-        } catch (InterruptedException ex) {
+            handGlobal = -1;
+
+        } catch (InterruptedException ex)
+        {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
 
         boolean lastArriving = false;
-        if (canvas) {
+        if (canvas)
+        {
             nCanvas++;
-        } else {
+        } else
+        {
             salas[roomId].empty = true;
         }
         partyIdCounter[partyId]++;
 
-        if (partyIdCounter[partyId] == 3) {
+        if (partyIdCounter[partyId] == 3)
+        {
             lastArriving = true;
             partyIdCounter[partyId] = 0;
 
         }
 
-        if (lastArriving) {
+        if (lastArriving)
+        {
             GRInformation.getInstance().resetIdPartyRoom(partyId);
             salas[roomId].inUse = false;
-            if (partyId == 0) {
+            if (partyId == 0)
+            {
                 assaultP1 = false;
-            } else if (partyId == 1) {
+            } else if (partyId == 1)
+            {
                 assaultP2 = false;
             }
         }
@@ -219,19 +276,23 @@ public class ControlCollectionSite {
      *
      * @return True if exists a Room to sack, False if every room is empty
      */
-    public boolean anyRoomLeft() {
+    public boolean anyRoomLeft()
+    {
 
         l.lock();
 
         // trying to find if every thief can die.
         boolean temp = true;
 
-        for (int i = 0; i < Constants.N_ROOMS; i++) {
+        for (int i = 0; i < Constants.N_ROOMS; i++)
+        {
             // if is empty, choose (empty = false on creation)
-            if (!salas[i].empty) {
+            if (!salas[i].empty)
+            {
                 l.unlock();
                 return true;
-            } else {
+            } else
+            {
                 temp = false;
             }
         }
@@ -245,7 +306,8 @@ public class ControlCollectionSite {
      *
      * @return
      */
-    public boolean canIDie() {
+    public boolean canIDie()
+    {
         return this.sumUp;
     }
 
@@ -255,10 +317,13 @@ public class ControlCollectionSite {
      *
      * @return availability
      */
-    public boolean anyTeamAvailable() {
-        if (!assaultP1) {
+    public boolean anyTeamAvailable()
+    {
+        if (!assaultP1)
+        {
             return true;
-        } else if (!assaultP2) {
+        } else if (!assaultP2)
+        {
             return true;
         }
         return false;
@@ -267,7 +332,8 @@ public class ControlCollectionSite {
     /**
      *
      */
-    public void printResult() {
+    public void printResult()
+    {
         l.lock();
         MasterThief m = (MasterThief) Thread.currentThread();
         m.setStateMaster(Constants.PRESENTING_THE_REPORT);

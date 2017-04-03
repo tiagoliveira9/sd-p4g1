@@ -11,7 +11,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author João Cravo joao.cravo@ua.pt n.:63784
@@ -143,7 +142,7 @@ public class GRInformation {
         party[partyId].elements[elemId].id = "-";
         party[partyId].elements[elemId].pos = "-";
         party[partyId].elements[elemId].cv = "-";
-
+        
         lock.unlock();
     }
 

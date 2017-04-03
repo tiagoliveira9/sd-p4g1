@@ -6,8 +6,6 @@ import World.ConcentrationSite;
 import World.ControlCollectionSite;
 import World.GRInformation;
 import World.Museum;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 // import das areas with which the thief will interact
 /**
@@ -46,7 +44,8 @@ public class Thief extends Thread {
      * @param agility Thief agility
      */
     // para criar uma thread ladrão, o que é necessário? 
-    public Thief(int thiefId, int agility) {
+    public Thief(int thiefId, int agility)
+    {
         super("Thief " + (thiefId + 1));
 
         this.thiefId = thiefId;
@@ -58,17 +57,20 @@ public class Thief extends Thread {
      * Run this thread -> Life cycle of the Thief.
      */
     @Override
-    public void run() {
+    public void run()
+    {
 
         int partyId;
 
         // conc.amINeeded() actua sobre o concentration site
-        while ((partyId = amINeeded()) != -1) {
+        while ((partyId = amINeeded()) != -1)
+        {
 
             // goes to team ordered by master
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
 
-            if (last) {
+            if (last)
+            {
                 // wakes master, team is ready for sendAssaultParty
                 ConcentrationSite.getInstance().teamReady();
             }
@@ -80,17 +82,18 @@ public class Thief extends Thread {
             int[] roll = AssaultParty.getInstance(partyId).crawlIn();
             // roll[0] = roomId, roll[1] = elemId 
             boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
-            if (painting) {
+            if (painting)
+            {
                 AssaultParty.getInstance(partyId).addCrookCanvas(roll[1]);
             }
             // ONE is for CRAWL OUT
             AssaultParty.getInstance(partyId).crawlOut();
 
-            AssaultParty.getInstance(partyId).removeMyself(roll[1]);
             // bloqueia se master não estiver waiting for arrival
             // só aqui faz reset, para a equipa ficar atribuível 
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
-
+            
+            //AssaultParty.getInstance(partyId).removeMyself(roll[1]);
         }
         this.stateThief = Constants.DEAD;
         GRInformation.getInstance().setStateThief(this);
@@ -101,7 +104,8 @@ public class Thief extends Thread {
      *
      * @return needed. True if is needed.
      */
-    private int amINeeded() {
+    private int amINeeded()
+    {
         // if you can't die, then invert bool ! -> you are needed
         //return !ControlCollectionSite.getInstance().canIDie();
         return ConcentrationSite.getInstance().addThief();
@@ -111,7 +115,8 @@ public class Thief extends Thread {
      *
      * @return
      */
-    public int getThiefId() {
+    public int getThiefId()
+    {
         return thiefId;
     }
 
@@ -119,7 +124,8 @@ public class Thief extends Thread {
      *
      * @return
      */
-    public int getStateThief() {
+    public int getStateThief()
+    {
         return stateThief;
     }
 
@@ -127,7 +133,8 @@ public class Thief extends Thread {
      *
      * @param stateThief
      */
-    public void setStateThief(int stateThief) {
+    public void setStateThief(int stateThief)
+    {
         this.stateThief = stateThief;
     }
 
@@ -135,7 +142,8 @@ public class Thief extends Thread {
      *
      * @return
      */
-    public int getAgility() {
+    public int getAgility()
+    {
         return agility;
     }
 
