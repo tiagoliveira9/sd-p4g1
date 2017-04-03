@@ -296,6 +296,21 @@ public class AssaultParty {
 
             if (pos <= teamHead)
             {
+                if (teamHead == distance)
+                {
+                    c.pos = distance;
+                    if (way)
+                    {
+                        GRInformation.getInstance().setPosElem(partyId,
+                                elemId, c.pos);
+                    } else
+                    {
+                        GRInformation.getInstance().setPosElem(partyId,
+                                elemId, translatePos[c.pos]);
+                    }
+                    flagI = true;
+                    break;
+                }
                 while (true)
                 {
                     if (teamLineup[pos] != -1)
