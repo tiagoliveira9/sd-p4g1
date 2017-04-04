@@ -65,19 +65,25 @@ public class ConcentrationSite {
         countDie = 0;
     }
 
+    public void addThief()
+    {
+        l.lock();
+        Thief crook = (Thief) Thread.currentThread();
+        crook.setStateThief(Constants.OUTSIDE);
+        GRInformation.getInstance().printUpdateLine();
+        stThief.push(crook);
+        l.unlock();
+    }
+
     /**
      *
      * @return
      */
-    public int addThief()
+    public int waitForCall()
     {
         l.lock();
 
         Thief crook = (Thief) Thread.currentThread();
-        setOutside(); // change state to OUTSIDE
-
-        stThief.push(crook);
-
         try
         {
             while (crook.getThiefId() != globalId && !die)
@@ -168,7 +174,6 @@ public class ConcentrationSite {
         {
             l.unlock();
         }
-
     }
 
     /**
@@ -178,18 +183,6 @@ public class ConcentrationSite {
     public int checkThiefNumbers()
     {
         return this.stThief.size();
-    }
-
-    /**
-     *
-     */
-    public void setOutside()
-    {
-        l.lock();
-        Thief crook = (Thief) Thread.currentThread();
-        crook.setStateThief(Constants.OUTSIDE);
-        GRInformation.getInstance().printUpdateLine();
-        l.unlock();
     }
 
     public void wakeAll()

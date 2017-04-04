@@ -32,7 +32,7 @@ public class ControlCollectionSite {
     private int nCanvas; // number of canvas stolen
     private int stateMaster;
     private Sala[] salas;
-    
+
     private class Sala {
 
         private final int salaId;
@@ -230,13 +230,17 @@ public class ControlCollectionSite {
         l.unlock();
     }
 
-    public void goCollect()
+    public void goCollectMaster()
     {
         l.lock();
-        restBool = true;
-        rest.signal();
-        l.unlock();
-
+        try
+        {
+            restBool = true;
+            rest.signal();
+        } finally
+        {
+            l.unlock();
+        }
     }
 
     /**

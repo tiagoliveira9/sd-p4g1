@@ -107,13 +107,12 @@ public class Thief extends Thread {
      */
     private int amINeeded()
     {
-        // if you can't die, then invert bool ! -> you are needed
-      
-        if (justHanded && ConcentrationSite.getInstance().checkThiefNumbers() > 1)
-        {
-            ControlCollectionSite.getInstance().goCollect();
-        }
-        return ConcentrationSite.getInstance().addThief();
+        ConcentrationSite.getInstance().addThief();
+        //if (justHanded && ConcentrationSite.getInstance().checkThiefNumbers() > 1)
+
+        ControlCollectionSite.getInstance().goCollectMaster();
+
+        return ConcentrationSite.getInstance().waitForCall();
     }
 
     /**

@@ -335,7 +335,6 @@ public class AssaultParty {
                     if (pos >= distance)
                     {
                         c.pos = distance;
-                        //teamLineup[c.pos] = elemId;
                         if (way)
                         {
                             GRInformation.getInstance().setPosElem(partyId,
@@ -362,7 +361,7 @@ public class AssaultParty {
             }
         } while (c.pos - teamHead != 3);
 
-        // register new yellow shirt
+        // register the new yellow shirt
         if (way)
         {
             teamHeadIn = c.pos;
@@ -370,7 +369,7 @@ public class AssaultParty {
         {
             teamHeadOut = c.pos;
         }
-        // he will be always 3 positions ahead or at room
+        // here he will be always 3 positions ahead or at room
         l.unlock();
         return flagI;
     }
