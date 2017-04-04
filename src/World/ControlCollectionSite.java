@@ -237,7 +237,7 @@ public class ControlCollectionSite {
 
         restBool = true;
         this.rest.signal();
-        GRInformation.getInstance().printSomething("entreguei "+(t.getThiefId()+1));
+        //GRInformation.getInstance().printSomething("entreguei "+(t.getThiefId()+1));
 
         l.unlock();
     }
@@ -300,13 +300,6 @@ public class ControlCollectionSite {
         return false;
     }
 
-    public boolean noThiefHanding()
-    {
-
-        //System.out.println("take: " + takePtr + " put: " + putPtr);
-        return (takePtr == putPtr);
-        //return (handCounter == 0);
-    }
 
     /**
      *

@@ -15,14 +15,10 @@ import java.util.logging.Logger;
  */
 public class AssaultParty {
 
-    // Doubleton instantiating at the most 2 assault parties simultanues
-    // static portion
-    private final static Lock lStatic = new ReentrantLock();
-    private static int nSimulInst = 0;
-    private static Condition waitForInst = lStatic.newCondition();
-
-    // instantiation portion
-    private Lock lInstance;
+    // Doubleton containing 2 assault parties
+    private static final AssaultParty[] instances = new AssaultParty[Constants.N_ASSAULT_PARTY];
+    private final int partyId;
+    private final Lock l ;
     private final Condition moveThief;
     private int[] line; // order that thieves blocks for the first time awaiting orders
     private Crook[] squad;
@@ -51,31 +47,6 @@ public class AssaultParty {
         }
     }
 
-    /**
-     * Private constructor for Doubleton.
-     *
-     * @param party Party identifier.
-     */
-    private AssaultParty()
-    {
-        roomId = -1;
-        distance = -1;
-        nCrook = 0;
-        teamHeadIn = 0;
-        teamHeadOut = 0;
-
-        line = new int[Constants.N_SQUAD];
-        squad = new Crook[Constants.N_SQUAD];
-        for (int i = 0; i < Constants.N_SQUAD; i++)
-        {
-            line[i] = -1;
-        }
-        idGlobal = -1;
-        lInstance = new ReentrantLock();
-        moveThief = lInstance.newCondition();
-
-    }
-
     // canvas devia estar aqui? fazemos um total e cada vez que um ladrao
     // entrega decrementa o sum, no ultimo hand a canvas, limpa assault party
     /**
@@ -83,31 +54,44 @@ public class AssaultParty {
      * @param i
      * @return
      */
-    public static AssaultParty getInstance()
+    public static synchronized AssaultParty getInstance(int i)
     {
-        lStatic.lock();
-        while (nSimulInst >= 2)
+        try
         {
-            try
+            if (instances[i] == null)
             {
-                waitForInst.await();
-            } catch (InterruptedException ex)
-            {
+                instances[i] = new AssaultParty(i);
             }
+        } catch (Exception ex)
+        {
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
         }
-        nSimulInst++;
-        lStatic.unlock();
-
-        return new AssaultParty();
+        return instances[i];
     }
 
-    public static void releaseInstance(AssaultParty asp)
+    /**
+     * Private constructor for Doubleton.
+     *
+     * @param party Party identifier.
+     */
+    private AssaultParty(int partyId)
     {
+        this.partyId = partyId;
+        this.roomId = -1;
+        this.distance = -1;
+        this.nCrook = 0;
+        this.teamHeadIn = 0;
+        this.teamHeadOut = 0;
 
-        lStatic.lock();
-        nSimulInst--;
-        waitForInst.signal();
-        lStatic.unlock();
+        line = new int[Constants.N_SQUAD];
+        squad = new Crook[Constants.N_SQUAD];
+        for (int i = 0; i < Constants.N_SQUAD; i++)
+        {
+            line[i] = -1;
+        }
+        l = new ReentrantLock();
+        moveThief = l.newCondition();
+        idGlobal = -1;
     }
 
     /**
@@ -118,7 +102,7 @@ public class AssaultParty {
      */
     public boolean addToSquad()
     {
-        lInstance.lock();
+        l.lock();
         Thief t = (Thief) Thread.currentThread();
         boolean flag = false;
 
@@ -148,7 +132,7 @@ public class AssaultParty {
             }
         } finally
         {
-            lInstance.unlock();
+            l.unlock();
         }
 
         return flag;
