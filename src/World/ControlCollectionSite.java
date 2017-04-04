@@ -203,7 +203,7 @@ public class ControlCollectionSite {
     {
 
         l.lock();
-        Thief t = (Thief) Thread.currentThread();
+        //Thief t = (Thief) Thread.currentThread();
 
         boolean lastArriving = false;
         if (canvas)
@@ -235,11 +235,17 @@ public class ControlCollectionSite {
             }
         }
 
+        //GRInformation.getInstance().printSomething("entreguei "+(t.getThiefId()+1));
+        l.unlock();
+    }
+
+    public void acordaCaralho()
+    {
+        l.lock();
         restBool = true;
         this.rest.signal();
-        //GRInformation.getInstance().printSomething("entreguei "+(t.getThiefId()+1));
-
         l.unlock();
+
     }
 
     /**
@@ -299,7 +305,6 @@ public class ControlCollectionSite {
         }
         return false;
     }
-
 
     /**
      *

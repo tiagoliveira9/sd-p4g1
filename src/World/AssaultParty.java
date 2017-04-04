@@ -18,7 +18,7 @@ public class AssaultParty {
     // Doubleton containing 2 assault parties
     private static final AssaultParty[] instances = new AssaultParty[Constants.N_ASSAULT_PARTY];
     private final int partyId;
-    private final Lock l ;
+    private final Lock l;
     private final Condition moveThief;
     private int[] line; // order that thieves blocks for the first time awaiting orders
     private Crook[] squad;
@@ -204,7 +204,7 @@ public class AssaultParty {
 
         }
 
-        // >>> l.unlock(); 
+        //l.unlock();
         // this is done to prevent thieves to be in the room at the same time
         // we're extending our critical area to crawlOut
         // if the thread is in await state, the lock can be obtained by another
@@ -220,7 +220,6 @@ public class AssaultParty {
      */
     public int[] crawlOut()
     {
-
         Thief t = (Thief) Thread.currentThread();
         int id = t.getThiefId();
         Crook c = getCrook(id);
@@ -498,23 +497,6 @@ public class AssaultParty {
         {
             l.unlock();
         }
-    }
-
-    /**
-     * This method returns the canvas of the Thief and removes himself from the
-     * team.
-     *
-     * @param elemId
-     */
-    public void removeMyself(int elemId)
-    {
-        l.lock();
-        // Crook c = squad[elemId];
-        line[elemId] = -1;
-
-        nCrook--;
-        GRInformation.getInstance().resetIdPartyElem(partyId, elemId);
-        l.unlock();
     }
 
     /**

@@ -74,9 +74,12 @@ public class ConcentrationSite {
         l.lock();
 
         Thief crook = (Thief) Thread.currentThread();
+        GRInformation.getInstance().printSomething("Eu quero " + (crook.getThiefId() + 1));
         setOutside(); // change state to OUTSIDE
 
         this.stThief.push(crook);
+        GRInformation.getInstance().printSomething("Eu adicionei-me à stack " + (crook.getThiefId() + 1));
+
         try
         {
             while (crook.getThiefId() != this.globalId && !die)

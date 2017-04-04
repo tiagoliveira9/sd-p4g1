@@ -20,20 +20,23 @@ public class HeistMuseum {
      * @param args the command line arguments
      * @throws java.lang.InterruptedException
      */
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException
+    {
 
         // Instanciation of the World
         ConcentrationSite.getInstance();
         ControlCollectionSite.getInstance();
         GRInformation.getInstance().printHeader();
-        for (int i = 0; i < Constants.N_ASSAULT_PARTY; i++) {
+        for (int i = 0; i < Constants.N_ASSAULT_PARTY; i++)
+        {
             AssaultParty.getInstance(i);
         }
 
         Museum hermitage = Museum.getInstance();
         int distance, canvas;
 
-        for (int i = 0; i < Constants.N_ROOMS; i++) {
+        for (int i = 0; i < Constants.N_ROOMS; i++)
+        {
             // distance between 15 and 30
             //distance = 16;
             distance = ThreadLocalRandom.current().nextInt(15, 30 + 1);
@@ -47,7 +50,8 @@ public class HeistMuseum {
         int agility;
 
         // Instantiation of the Thieves 
-        for (int i = 0; i < Constants.N_THIEVES; i++) {
+        for (int i = 0; i < Constants.N_THIEVES; i++)
+        {
 
             agility = ThreadLocalRandom.current().nextInt(2, 6 + 1);
             // agility = 2;
@@ -55,10 +59,18 @@ public class HeistMuseum {
             GRInformation.getInstance().setStateAgility(crook[i]);
             crook[i].start();
         }
-        
+
         // Simulation starts
         master.start();
 
+        // waiting for end of simulation
+        for (int i = 0; i < Constants.N_THIEVES; i++)
+        {
+            crook[i].join();
+        }
+
+        master.join();
+        
     }
 
 }

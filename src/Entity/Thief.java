@@ -91,8 +91,7 @@ public class Thief extends Thread {
             // bloqueia se master não estiver waiting for arrival
             // só aqui faz reset, para a equipa ficar atribuível 
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
-            //GRInformation.getInstance().printSomething("depoissai"+(thiefId+1));
-            //AssaultParty.getInstance(partyId).removeMyself(roll[1]);
+            GRInformation.getInstance().printSomething("after handing"+(thiefId+1));
         }
         this.stateThief = Constants.DEAD;
         GRInformation.getInstance().setStateThief(this);
@@ -107,6 +106,7 @@ public class Thief extends Thread {
     {
         // if you can't die, then invert bool ! -> you are needed
         //return !ControlCollectionSite.getInstance().canIDie();
+        ControlCollectionSite.getInstance().acordaCaralho();
         return ConcentrationSite.getInstance().addThief();
     }
 
