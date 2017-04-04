@@ -26,16 +26,10 @@ public class GRInformation {
 
     private PrintWriter printer;
 
-    /**
-     *
-     */
-    public static String log = "test.log";
 
     private int masterThiefState;
     private nThief[] ladrao;
     private AssParty[] party;
-
-    private int totalPaints;
 
     /**
      *
@@ -291,8 +285,6 @@ public class GRInformation {
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             sala[i] = new Room(i);
         }
-
-        totalPaints = 0;
     }
 
     /**

@@ -93,7 +93,7 @@ public class Thief extends Thread {
             // bloqueia se master não estiver waiting for arrival
             // só aqui faz reset, para a equipa ficar atribuível 
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
-            GRInformation.getInstance().printSomething("Entreguei canvas " + (thiefId + 1));
+            //GRInformation.getInstance().printSomething("Entreguei canvas " + (thiefId + 1));
             justHanded = true;
         }
         stateThief = Constants.DEAD;
