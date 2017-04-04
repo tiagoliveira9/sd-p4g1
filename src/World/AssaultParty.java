@@ -17,7 +17,7 @@ public class AssaultParty {
 
     private static final AssaultParty[] instances = new AssaultParty[Constants.N_ASSAULT_PARTY];
     private final int partyId;
-    private final Lock l;
+    private final static Lock l = new ReentrantLock();
     private final Condition moveThief;
     private int[] line; // order that thieves blocks for the first time awaiting orders
     private Crook[] squad;
@@ -43,7 +43,7 @@ public class AssaultParty {
             this.agility = agility;
             pos = 0;
             canvas = false; // esta variavel talvez não seja necessária
-            
+
         }
     }
 
@@ -54,8 +54,9 @@ public class AssaultParty {
      * @param i
      * @return
      */
-    public static synchronized AssaultParty getInstance(int i)
+    public static AssaultParty getInstance(int i)
     {
+        l.lock();
         try
         {
             if (instances[i] == null)
@@ -66,6 +67,7 @@ public class AssaultParty {
         {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
         }
+        l.unlock();
         return instances[i];
     }
 
@@ -89,7 +91,6 @@ public class AssaultParty {
         {
             line[i] = -1;
         }
-        l = new ReentrantLock();
         moveThief = l.newCondition();
         idGlobal = -1;
     }
@@ -158,9 +159,6 @@ public class AssaultParty {
 
         } catch (InterruptedException ex)
         {
-            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
-
         }
         t.setStateThief(Constants.CRAWLING_INWARDS);
         GRInformation.getInstance().printUpdateLine();
