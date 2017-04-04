@@ -55,14 +55,14 @@ public class ConcentrationSite {
      */
     private ConcentrationSite()
     {
-        this.prepare = l.newCondition();
-        this.assembling = l.newCondition();
-        this.nAssaultParty = -1;
-        this.globalId = -1;
-        this.stThief = new Stack<>();
-        this.counterThief = 0;
-        this.die = false;
-        this.countDie = 0;
+        prepare = l.newCondition();
+        assembling = l.newCondition();
+        nAssaultParty = -1;
+        globalId = -1;
+        stThief = new Stack<>();
+        counterThief = 0;
+        die = false;
+        countDie = 0;
     }
 
     /**
@@ -74,15 +74,13 @@ public class ConcentrationSite {
         l.lock();
 
         Thief crook = (Thief) Thread.currentThread();
-        GRInformation.getInstance().printSomething("Eu quero " + (crook.getThiefId() + 1));
         setOutside(); // change state to OUTSIDE
 
-        this.stThief.push(crook);
-        GRInformation.getInstance().printSomething("Eu adicionei-me à stack " + (crook.getThiefId() + 1));
+        stThief.push(crook);
 
         try
         {
-            while (crook.getThiefId() != this.globalId && !die)
+            while (crook.getThiefId() != globalId && !die)
             {
                 prepare.await();
             }
@@ -99,11 +97,11 @@ public class ConcentrationSite {
             if (counterThief < 3)
             {
                 Thief c = stThief.pop();
-                this.globalId = c.getThiefId();
-                this.prepare.signalAll();
+                globalId = c.getThiefId();
+                prepare.signalAll();
             } else
             {
-                this.globalId = -1;
+                globalId = -1;
                 counterThief = 0;
             }
 
@@ -131,25 +129,23 @@ public class ConcentrationSite {
         l.lock();
         MasterThief master = (MasterThief) Thread.currentThread();
 
-        this.nAssaultParty = partyId;
+        nAssaultParty = partyId;
         GRInformation.getInstance().setRoomId(partyId, roomId);
 
         Thief c = stThief.pop();
-        this.globalId = c.getThiefId();
+        globalId = c.getThiefId();
         // signal one thread to wake one thief
-        this.prepare.signalAll();
+        prepare.signalAll();
 
         try
         {
             // Master blocks, wakes up when team is ready
             while (nAssaultParty != -1)
             {
-                this.assembling.await();
+                assembling.await();
             }
         } catch (InterruptedException ex)
         {
-            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
         }
 
         l.unlock();
@@ -166,8 +162,8 @@ public class ConcentrationSite {
         try
         {
             //GRInformation.getInstance().printSomething("Ultimo a chegar assgrp, reseto nAssaultParty " + (t.getThiefId()+1));
-            this.nAssaultParty = -1;
-            this.assembling.signal();
+            nAssaultParty = -1;
+            assembling.signal();
         } finally
         {
             l.unlock();

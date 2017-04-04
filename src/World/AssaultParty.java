@@ -15,7 +15,6 @@ import java.util.logging.Logger;
  */
 public class AssaultParty {
 
-    // Doubleton containing 2 assault parties
     private static final AssaultParty[] instances = new AssaultParty[Constants.N_ASSAULT_PARTY];
     private final int partyId;
     private final Lock l;
@@ -41,9 +40,10 @@ public class AssaultParty {
         public Crook(int id, int agility)
         {
             this.id = id;
-            this.pos = 0;
-            this.canvas = false; // esta variavel talvez não seja necessária
-            this.agility = agility; // not sure if I need this here
+            this.agility = agility;
+            pos = 0;
+            canvas = false; // esta variavel talvez não seja necessária
+            
         }
     }
 
@@ -77,11 +77,11 @@ public class AssaultParty {
     private AssaultParty(int partyId)
     {
         this.partyId = partyId;
-        this.roomId = -1;
-        this.distance = -1;
-        this.nCrook = 0;
-        this.teamHeadIn = 0;
-        this.teamHeadOut = 0;
+        roomId = -1;
+        distance = -1;
+        nCrook = 0;
+        teamHeadIn = 0;
+        teamHeadOut = 0;
 
         line = new int[Constants.N_SQUAD];
         squad = new Crook[Constants.N_SQUAD];
@@ -119,7 +119,7 @@ public class AssaultParty {
                     {
                         line[i] = t.getThiefId();
                         String a = Integer.toString(t.getThiefId() + 1);
-                        GRInformation.getInstance().setIdPartyElem(this.partyId,
+                        GRInformation.getInstance().setIdPartyElem(partyId,
                                 i, a);
                         break;
                     }
@@ -481,9 +481,9 @@ public class AssaultParty {
         {
             this.distance = distance;
             this.roomId = roomId;
-            this.teamHeadIn = 0;
-            this.teamHeadOut = 0;
-            this.idGlobal = -1;
+            teamHeadIn = 0;
+            teamHeadOut = 0;
+            idGlobal = -1;
             // thief are in position zero that doesn't count, so +1
             teamLineup = new int[distance + 1];
             translatePos = new int[distance + 1];
@@ -521,7 +521,7 @@ public class AssaultParty {
     {
         return new int[]
         {
-            this.roomId, myPositionTeam(thiefId)
+            roomId, myPositionTeam(thiefId)
         };
     }
 
@@ -550,7 +550,7 @@ public class AssaultParty {
      */
     public int getPartyId()
     {
-        return this.partyId;
+        return partyId;
     }
 
 }

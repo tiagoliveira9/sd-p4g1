@@ -25,7 +25,7 @@ public class MasterThief extends Thread {
     public MasterThief()
     {
         super("master");
-        this.stateMaster = Constants.PLANNING_THE_HEIST;
+        stateMaster = Constants.PLANNING_THE_HEIST;
     }
 
     /**

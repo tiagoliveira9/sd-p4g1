@@ -196,29 +196,28 @@ public class GRInformation {
 
         public nThief(int thiefId) {
             this.thiefId = thiefId;
-            this.stat = Constants.OUTSIDE;
-            this.s = '-';
-            this.md = "-";
+            stat = Constants.OUTSIDE;
+            s = '-';
+            md = "-";
         }
     }
 
     private class AssParty {
 
-        private int partyId;
+        private final int partyId;
         private String roomId;
         private Elem[] elements;
 
         public AssParty(int partyId) {
             this.partyId = partyId;
-            this.roomId = "-"; // não esquecer de incrementar 1 para visualmente corresponder à sala correcta;
-            this.elements = new Elem[Constants.N_SQUAD];
+            roomId = "-"; // não esquecer de incrementar 1 para visualmente corresponder à sala correcta;
+            elements = new Elem[Constants.N_SQUAD];
 
             for (int i = 0; i < Constants.N_SQUAD; i++) {
                 elements[i] = new Elem();
 
             }
         }
-
         private class Elem {
 
             private String id;
@@ -226,9 +225,9 @@ public class GRInformation {
             private String cv;
 
             public Elem() {
-                this.id = "-";
-                this.pos = "--";
-                this.cv = "-";
+                id = "-";
+                pos = "--";
+                cv = "-";
             }
         }
     }
@@ -243,8 +242,8 @@ public class GRInformation {
 
         public Room(int roomId) {
             this.roomId = roomId; //ao imprimir acrescentar 1
-            this.distance = "--";
-            this.canvas = "-";
+            distance = "--";
+            canvas = "-";
         }
     }
 
@@ -268,9 +267,9 @@ public class GRInformation {
     private GRInformation() {
         // to not overwrite logs (within minutes)
         //date = new SimpleDateFormat("yyyy'-'MMdd'-'HHmm"); yyyy-MM-dd HH:mm:ss.SSS
-        date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
+        date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
         dateString = (date.format(new Date()));
-        this.masterThiefState = Constants.PLANNING_THE_HEIST;
+        masterThiefState = Constants.PLANNING_THE_HEIST;
 
         try {
             printer = new PrintWriter("LOG-" + dateString + ".txt");

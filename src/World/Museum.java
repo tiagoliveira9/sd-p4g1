@@ -25,8 +25,8 @@ public class Museum {
 
         public Room(int roomId) {
             this.roomId = roomId;
-            this.distance = -1;
-            this.canvas = -1;
+            distance = -1;
+            canvas = -1;
         }
     }
 

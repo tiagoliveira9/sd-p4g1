@@ -32,12 +32,7 @@ public class ControlCollectionSite {
     private int nCanvas; // number of canvas stolen
     private int stateMaster;
     private Sala[] salas;
-    private int[] handBuffer;
-    private int handGlobal;
-    private int handCounter;
-    private int takePtr;
-    private int putPtr;
-
+    
     private class Sala {
 
         private final int salaId;
@@ -47,8 +42,8 @@ public class ControlCollectionSite {
         public Sala(int salaId)
         {
             this.salaId = salaId;
-            this.empty = false;
-            this.inUse = false;
+            empty = false;
+            inUse = false;
         }
     }
 
@@ -79,25 +74,21 @@ public class ControlCollectionSite {
     private ControlCollectionSite()
     {
         // bind lock with a condition
-        this.rest = l.newCondition();
-        this.handing = l.newCondition();
-        this.restBool = false;
-        this.sumUp = false;
-        this.assaultP1 = false;
-        this.assaultP2 = false;
-        this.nCanvas = 0;
-        this.partyIdCounter = new int[Constants.N_ASSAULT_PARTY];
-        this.partyIdCounter[0] = this.partyIdCounter[1] = 0;
-        this.stateMaster = -1;
+        rest = l.newCondition();
+        handing = l.newCondition();
+        restBool = false;
+        sumUp = false;
+        assaultP1 = false;
+        assaultP2 = false;
+        nCanvas = 0;
+        partyIdCounter = new int[Constants.N_ASSAULT_PARTY];
+        partyIdCounter[0] = partyIdCounter[1] = 0;
+        stateMaster = -1;
         salas = new Sala[Constants.N_ROOMS];
         for (int i = 0; i < Constants.N_ROOMS; i++)
         {
             salas[i] = new Sala(i);
         }
-        this.handBuffer = new int[6];
-        this.putPtr = this.takePtr = 0;
-        this.handGlobal = -1;
-        this.handCounter = 0;
     }
 
     /**
@@ -239,11 +230,11 @@ public class ControlCollectionSite {
         l.unlock();
     }
 
-    public void acordaCaralho()
+    public void goCollect()
     {
         l.lock();
         restBool = true;
-        this.rest.signal();
+        rest.signal();
         l.unlock();
 
     }
@@ -274,7 +265,7 @@ public class ControlCollectionSite {
             }
         }
 
-        this.sumUp = temp;
+        sumUp = temp;
         l.unlock();
         return false;
     }
@@ -285,7 +276,7 @@ public class ControlCollectionSite {
      */
     public boolean canIDie()
     {
-        return this.sumUp;
+        return sumUp;
     }
 
     /**

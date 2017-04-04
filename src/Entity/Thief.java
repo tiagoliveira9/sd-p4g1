@@ -22,6 +22,7 @@ public class Thief extends Thread {
      * @serialField thiefId
      */
     private final int thiefId;
+    private boolean justHanded;
 
     /**
      * State of the Thief
@@ -50,7 +51,8 @@ public class Thief extends Thread {
 
         this.thiefId = thiefId;
         this.agility = agility;
-        this.stateThief = Constants.OUTSIDE;
+        stateThief = Constants.OUTSIDE;
+        justHanded = false;
     }
 
     /**
@@ -65,7 +67,7 @@ public class Thief extends Thread {
         // conc.amINeeded() actua sobre o concentration site
         while ((partyId = amINeeded()) != -1)
         {
-
+            justHanded = false;
             // goes to team ordered by master
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
 
@@ -91,9 +93,10 @@ public class Thief extends Thread {
             // bloqueia se master não estiver waiting for arrival
             // só aqui faz reset, para a equipa ficar atribuível 
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
-            GRInformation.getInstance().printSomething("after handing"+(thiefId+1));
+            GRInformation.getInstance().printSomething("Entreguei canvas " + (thiefId + 1));
+            justHanded = true;
         }
-        this.stateThief = Constants.DEAD;
+        stateThief = Constants.DEAD;
         GRInformation.getInstance().setStateThief(this);
     }
 
@@ -105,8 +108,11 @@ public class Thief extends Thread {
     private int amINeeded()
     {
         // if you can't die, then invert bool ! -> you are needed
-        //return !ControlCollectionSite.getInstance().canIDie();
-        ControlCollectionSite.getInstance().acordaCaralho();
+      
+        if (justHanded && ConcentrationSite.getInstance().checkThiefNumbers() > 1)
+        {
+            ControlCollectionSite.getInstance().goCollect();
+        }
         return ConcentrationSite.getInstance().addThief();
     }
 
