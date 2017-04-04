@@ -64,6 +64,9 @@ public class ConcentrationSite {
         countDie = 0;
     }
 
+    /**
+     *
+     */
     public void addThief()
     {
         l.lock();
@@ -175,6 +178,9 @@ public class ConcentrationSite {
         return this.stThief.size();
     }
 
+    /**
+     *
+     */
     public void wakeAll()
     {
         l.lock();
@@ -193,11 +199,18 @@ public class ConcentrationSite {
         l.unlock();
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean canIDie()
     {
         return this.die;
     }
 
+    /**
+     *
+     */
     public void setDeadState()
     {
         l.lock();

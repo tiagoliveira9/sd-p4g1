@@ -7,6 +7,8 @@ import World.ControlCollectionSite;
 import World.Museum;
 
 /**
+ * This data type implements a Master Thief thread.
+ *
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
@@ -20,7 +22,7 @@ public class MasterThief extends Thread {
     private int stateMaster;
 
     /**
-     *
+     * Constructor.
      */
     public MasterThief()
     {
@@ -29,7 +31,7 @@ public class MasterThief extends Thread {
     }
 
     /**
-     *
+     * Run this thread -> Life cycle of the Thief.
      */
     @Override
     public void run()
@@ -64,7 +66,6 @@ public class MasterThief extends Thread {
                     break;
                 case 3:
                     ControlCollectionSite.getInstance().takeARest();
-
                     break;
                 default:
                     // throw exception
@@ -76,7 +77,7 @@ public class MasterThief extends Thread {
     }
 
     /**
-     *
+     * Change Master state to "Deciding what to do".
      */
     public void startOperations()
     {
@@ -84,9 +85,12 @@ public class MasterThief extends Thread {
     }
 
     /**
-     * The method appraiseSit.
+     * This method evaluates what the Master should do next. If every room is
+     * clean, returns 1. If exists at least 3 thieves and a team is available to
+     * fill, returns 2. If none of the past conditions verify, then the next
+     * move is to take a rest, returns 3.
      *
-     * @return x if y, z if w etc..
+     * @return Option for next step to take.
      */
     public int appraiseSit()
     {
@@ -108,9 +112,9 @@ public class MasterThief extends Thread {
     }
 
     /**
-     * The method everythingRobbed.
+     * This method verifies if every room is empty.
      *
-     * @return True if exists a Room to sack, False if every room is empty
+     * @return True if exists a room to sack, False if every room is empty.
      */
     public boolean anyRoomLeft()
     {
@@ -119,8 +123,9 @@ public class MasterThief extends Thread {
     }
 
     /**
+     * Get Master state.
      *
-     * @return
+     * @return stateMaster
      */
     public int getStateMaster()
     {
@@ -128,6 +133,7 @@ public class MasterThief extends Thread {
     }
 
     /**
+     * Set Master state.
      *
      * @param stateMaster
      */

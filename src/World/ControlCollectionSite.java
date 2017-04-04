@@ -216,6 +216,9 @@ public class ControlCollectionSite {
         l.unlock();
     }
 
+    /**
+     *
+     */
     public void goCollectMaster()
     {
         l.lock();

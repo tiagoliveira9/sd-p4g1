@@ -4,12 +4,10 @@ import HeistMuseum.Constants;
 import World.AssaultParty;
 import World.ConcentrationSite;
 import World.ControlCollectionSite;
-import World.GRInformation;
 import World.Museum;
 
-// import das areas with which the thief will interact
 /**
- * Explanation of what this class does or provides
+ * This data type implements a Thief thread. (in the future explain more)
  *
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
@@ -17,34 +15,36 @@ import World.Museum;
 public class Thief extends Thread {
 
     /**
-     * Identification of the Thief
+     * Identification of the Thief.
      *
      * @serialField thiefId
      */
     private final int thiefId;
-    private boolean justHanded;
-
     /**
      * State of the Thief
      *
      * @serialField stateThief
      */
     private int stateThief;
-
     /**
-     * State of the Thief
+     * Agility of the Thief.
      *
      * @serialField agility
      */
     private final int agility;
+    /**
+     * Used to verify if the Thief comes from handing a canvas.
+     *
+     * @serialField justHanded
+     */
+    private boolean justHanded;
 
     /**
-     * Thief thread instantiation
+     * Thief instantiation.
      *
      * @param thiefId Thief identification
      * @param agility Thief agility
      */
-    // para criar uma thread ladrão, o que é necessário? 
     public Thief(int thiefId, int agility)
     {
         super("Thief " + (thiefId + 1));
@@ -61,10 +61,8 @@ public class Thief extends Thread {
     @Override
     public void run()
     {
-
         int partyId;
 
-        // conc.amINeeded() actua sobre o concentration site
         while ((partyId = amINeeded()) != -1)
         {
             // goes to team ordered by master
@@ -95,9 +93,11 @@ public class Thief extends Thread {
     }
 
     /**
-     * Thief checks if is needed.
+     * Thief checks if is needed. If is needed, adds himself to the Thief Stack
+     * on Concentration Site. If not, returns -1 and thief dies.
      *
-     * @return needed. True if is needed.
+     * @return Returns partyId that the Thief should go or -1 if is supposed to
+     * die.
      */
     private int amINeeded()
     {
@@ -110,8 +110,9 @@ public class Thief extends Thread {
     }
 
     /**
+     * Get thief identification
      *
-     * @return
+     * @return Thief Id
      */
     public int getThiefId()
     {
@@ -119,8 +120,9 @@ public class Thief extends Thread {
     }
 
     /**
+     * Get thief state
      *
-     * @return
+     * @return Thief State
      */
     public int getStateThief()
     {
@@ -128,6 +130,7 @@ public class Thief extends Thread {
     }
 
     /**
+     * Set thief state
      *
      * @param stateThief
      */
@@ -137,8 +140,9 @@ public class Thief extends Thread {
     }
 
     /**
+     * Get thief agility
      *
-     * @return
+     * @return Thief agility
      */
     public int getAgility()
     {
