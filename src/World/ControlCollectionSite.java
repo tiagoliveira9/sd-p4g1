@@ -171,21 +171,6 @@ public class ControlCollectionSite {
         stateMaster = Constants.WAITING_FOR_ARRIVAL;
         master.setStateMaster(stateMaster);
         GRInformation.getInstance().printUpdateLine();
-        System.out.println("take: " + takePtr + " put: " + putPtr);
-
-        if (takePtr != putPtr)
-        {
-            handGlobal = handBuffer[takePtr];
-            if (takePtr == Constants.N_THIEVES - 1)
-            {
-
-                takePtr = 0;
-            } else
-            {
-                takePtr++;
-            }
-            handing.signalAll();
-        }
 
         try
         {
@@ -220,33 +205,6 @@ public class ControlCollectionSite {
         l.lock();
         Thief t = (Thief) Thread.currentThread();
 
-        try
-        {
-            if (stateMaster != Constants.WAITING_FOR_ARRIVAL)
-            {
-                handCounter++;
-                // adds to line to deliver canvas
-                handBuffer[putPtr] = t.getThiefId();
-                if (putPtr == Constants.N_THIEVES - 1)
-                {
-                    putPtr = 0;
-                } else
-                {
-                    putPtr++;
-                }
-            }
-
-            while (stateMaster != Constants.WAITING_FOR_ARRIVAL && handGlobal != t.getThiefId())
-            {
-                handing.await();
-            }
-            handGlobal = -1;
-        } catch (InterruptedException ex)
-        {
-            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
-        }
-
         boolean lastArriving = false;
         if (canvas)
         {
@@ -276,9 +234,7 @@ public class ControlCollectionSite {
                 assaultP2 = false;
             }
         }
-        // seria melhor se fosse por estados..mas como mudar o estado do
-        // master se não sei que thread é?
-        handCounter--;
+
         restBool = true;
         this.rest.signal();
         GRInformation.getInstance().printSomething("entreguei "+(t.getThiefId()+1));
