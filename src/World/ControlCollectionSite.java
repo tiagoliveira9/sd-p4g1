@@ -1,7 +1,6 @@
 package World;
 
 import Entity.MasterThief;
-import Entity.Thief;
 import HeistMuseum.Constants;
 
 import java.util.concurrent.locks.Condition;
@@ -22,8 +21,6 @@ public class ControlCollectionSite {
     private final static Lock l = new ReentrantLock();
     // condition that verifies if block on state Deciding What to Do
     private final Condition rest;
-    private final Condition handing; // thief ca block to deliver
-
     private boolean restBool;
     private boolean sumUp;
     private boolean assaultP1;
@@ -75,7 +72,6 @@ public class ControlCollectionSite {
     {
         // bind lock with a condition
         rest = l.newCondition();
-        handing = l.newCondition();
         restBool = false;
         sumUp = false;
         assaultP1 = false;
@@ -141,7 +137,6 @@ public class ControlCollectionSite {
                 break;
             }
         }
-
         l.unlock();
         return new int[]
         {
@@ -171,13 +166,10 @@ public class ControlCollectionSite {
             }
         } catch (InterruptedException ex)
         {
-            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
         }
         restBool = false;
 
         l.unlock();
-
     }
 
     /**
@@ -186,7 +178,6 @@ public class ControlCollectionSite {
      * to deliver.
      *
      * @param canvas
-     * @param boolean
      * @param partyId
      * @param roomId
      */
@@ -194,8 +185,6 @@ public class ControlCollectionSite {
     {
 
         l.lock();
-        //Thief t = (Thief) Thread.currentThread();
-
         boolean lastArriving = false;
         if (canvas)
         {
@@ -212,7 +201,6 @@ public class ControlCollectionSite {
             partyIdCounter[partyId] = 0;
 
         }
-
         if (lastArriving)
         {
             GRInformation.getInstance().resetIdPartyRoom(partyId);
@@ -225,8 +213,6 @@ public class ControlCollectionSite {
                 assaultP2 = false;
             }
         }
-
-        //GRInformation.getInstance().printSomething("entreguei "+(t.getThiefId()+1));
         l.unlock();
     }
 
@@ -252,7 +238,6 @@ public class ControlCollectionSite {
     {
 
         l.lock();
-
         // trying to find if every thief can die.
         boolean temp = true;
 
@@ -268,7 +253,6 @@ public class ControlCollectionSite {
                 temp = false;
             }
         }
-
         sumUp = temp;
         l.unlock();
         return false;

@@ -3,7 +3,6 @@ package World;
 import Entity.Thief;
 import HeistMuseum.Constants;
 
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -48,12 +47,10 @@ public class Museum {
      * Singleton needs private constructor.
      */
     private Museum() {
-        // exists 5 rooms on the museum
         rooms = new Room[Constants.N_ROOMS];
         for (int i = 0; i < Constants.N_ROOMS; i++) {
             rooms[i] = new Room(i);
         }
-
     }
 
     /**
@@ -82,7 +79,6 @@ public class Museum {
      */
     public boolean rollACanvas(int roomId, int elemPos, int partyId) {
         l.lock();
-
         Thief t = (Thief) Thread.currentThread();
 
         boolean flag = false;
@@ -98,12 +94,10 @@ public class Museum {
             GRInformation.getInstance().printUpdateLine();
 
         } else {
-            // change in Repository
             t.setStateThief(Constants.AT_A_ROOM);
             GRInformation.getInstance().printUpdateLine();
         }
         l.unlock();
-
         return flag;
     }
 

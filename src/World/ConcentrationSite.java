@@ -21,8 +21,7 @@ public class ConcentrationSite {
     private final static Lock l = new ReentrantLock();
     private final Condition prepare;
     private final Condition assembling;
-    // 0 - assault party 1, 1 - assault party 2
-    private int nAssaultParty;
+    private int nAssaultParty;     // 0 - assaultParty: 1 || 1 - assaultParty: 2
     private int globalId;
     private final Stack<Thief> stThief;
     private int counterThief;
@@ -113,11 +112,8 @@ public class ConcentrationSite {
 
         } catch (InterruptedException ex)
         {
-            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
         }
 
-        // everything fine-> unlock
         l.unlock();
         return nAssaultParty;
 
@@ -133,16 +129,13 @@ public class ConcentrationSite {
     public void prepareAssaultParty2(int partyId, int roomId)
     {
         l.lock();
-        MasterThief master = (MasterThief) Thread.currentThread();
-
         nAssaultParty = partyId;
         GRInformation.getInstance().setRoomId(partyId, roomId);
 
         Thief c = stThief.pop();
         globalId = c.getThiefId();
-        // signal one thread to wake one thief
+        // signal all but only one thief moves
         prepare.signalAll();
-
         try
         {
             // Master blocks, wakes up when team is ready
@@ -153,7 +146,6 @@ public class ConcentrationSite {
         } catch (InterruptedException ex)
         {
         }
-
         l.unlock();
     }
 
@@ -164,10 +156,8 @@ public class ConcentrationSite {
     public void teamReady()
     {
         l.lock();
-        Thief t = (Thief) Thread.currentThread();
         try
         {
-            //GRInformation.getInstance().printSomething("Ultimo a chegar assgrp, reseto nAssaultParty " + (t.getThiefId()+1));
             nAssaultParty = -1;
             assembling.signal();
         } finally
@@ -199,9 +189,6 @@ public class ConcentrationSite {
             }
         } catch (InterruptedException ex)
         {
-            Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
-
         }
         l.unlock();
     }
@@ -209,5 +196,14 @@ public class ConcentrationSite {
     public boolean canIDie()
     {
         return this.die;
+    }
+
+    public void setDeadState()
+    {
+        l.lock();
+        Thief t = (Thief) Thread.currentThread();
+        t.setStateThief(Constants.DEAD);
+        GRInformation.getInstance().setStateThief(t);
+        l.unlock();
     }
 }

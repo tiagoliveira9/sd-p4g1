@@ -20,13 +20,9 @@ public class GRInformation {
 
     private final SimpleDateFormat date;
     private final String dateString;
-
     private final static Lock lock = new ReentrantLock();
     private static GRInformation instance;
-
     private PrintWriter printer;
-
-
     private int masterThiefState;
     private nThief[] ladrao;
     private AssParty[] party;
@@ -36,7 +32,6 @@ public class GRInformation {
      * @param thief
      */
     public void setStateThief(Thief thief) {
-
         lock.lock();
         ladrao[thief.getThiefId()].stat = thief.getStateThief();
         lock.unlock();
@@ -47,7 +42,6 @@ public class GRInformation {
      * @param thief
      */
     public void setStateAgility(Thief thief) {
-
         lock.lock();
         ladrao[thief.getThiefId()].md = Integer.toString(thief.getAgility());
         lock.unlock();
@@ -58,11 +52,9 @@ public class GRInformation {
      * @param masterThief
      */
     public void setStateMasterThief(MasterThief masterThief) {
-
         lock.lock();
         masterThiefState = masterThief.getStateMaster();
         lock.unlock();
-
     }
 
     /**
@@ -88,7 +80,6 @@ public class GRInformation {
      * @param pos
      */
     public void setCanvasElem(int partyId, int elemId, int cv) {
-        Thief crook = (Thief) Thread.currentThread();
         lock.lock();
         party[partyId].elements[elemId].cv = Integer.toString(cv);
         lock.unlock();
@@ -117,11 +108,9 @@ public class GRInformation {
      */
     public void setIdPartyElem(int partyId, int elemId, String id) {
         lock.lock();
-
         party[partyId].elements[elemId].id = id;
         party[partyId].elements[elemId].pos = "0";
         party[partyId].elements[elemId].cv = "0";
-
         lock.unlock();
     }
 
@@ -132,11 +121,9 @@ public class GRInformation {
      */
     public void resetIdPartyElem(int partyId, int elemId) {
         lock.lock();
-
         party[partyId].elements[elemId].id = "-";
         party[partyId].elements[elemId].pos = "-";
         party[partyId].elements[elemId].cv = "-";
-        
         lock.unlock();
     }
 
@@ -162,7 +149,6 @@ public class GRInformation {
         lock.lock();
         sala[roomId].distance = Integer.toString(distance);
         sala[roomId].canvas = Integer.toString(canvas);
-        //printDoubleLine();
         lock.unlock();
     }
 
@@ -173,11 +159,9 @@ public class GRInformation {
      */
     public void updateMuseumRoom(int roomId) {
         lock.lock();
-
-        int a = Integer.parseInt(sala[roomId].canvas);
-        a--;
-        sala[roomId].canvas = Integer.toString(a);
-
+        int n = Integer.parseInt(sala[roomId].canvas);
+        n--;
+        sala[roomId].canvas = Integer.toString(n);
         lock.unlock();
     }
 
@@ -209,7 +193,6 @@ public class GRInformation {
 
             for (int i = 0; i < Constants.N_SQUAD; i++) {
                 elements[i] = new Elem();
-
             }
         }
         private class Elem {
@@ -259,8 +242,6 @@ public class GRInformation {
     }
 
     private GRInformation() {
-        // to not overwrite logs (within minutes)
-        //date = new SimpleDateFormat("yyyy'-'MMdd'-'HHmm"); yyyy-MM-dd HH:mm:ss.SSS
         date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
         dateString = (date.format(new Date()));
         masterThiefState = Constants.PLANNING_THE_HEIST;
@@ -293,20 +274,15 @@ public class GRInformation {
     public void printHeader() {
 
         lock.lock();
-
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
-
         formatter.format("%1$84s%n", "Heist to the museum - Description of the internal state");
-
         printer.print(strb.toString());
         System.out.println(strb.toString());
         printer.flush();
-
         printColumnHeader();
         printEntityStates();
         printAssaultDescription();
-
         lock.unlock();
     }
 
@@ -317,7 +293,6 @@ public class GRInformation {
      */
     public void printColumnHeader() {
         lock.lock();
-
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
 
@@ -338,7 +313,6 @@ public class GRInformation {
         System.out.println(strb.toString());
         printer.flush();
         lock.unlock();
-
     }
 
     /**
@@ -346,16 +320,13 @@ public class GRInformation {
      */
     public void printUpdateLine() {
         lock.lock();
-
         Thread thread = Thread.currentThread();
         if (thread.getClass() == Thief.class) {
             setStateThief((Thief) thread);
         } else if (thread.getClass() == MasterThief.class) {
             setStateMasterThief((MasterThief) thread);
         }
-
         printDoubleLine();
-
         lock.unlock();
     }
 
@@ -374,7 +345,6 @@ public class GRInformation {
      */
     public void printEntityStates() {
         lock.lock();
-
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
         formatter.format("%1$4s %2$1s", translateMasterThiefState(masterThiefState), "");
@@ -389,7 +359,6 @@ public class GRInformation {
         printer.print(strb.toString());
         System.out.println(strb.toString());
         printer.flush();
-
         lock.unlock();
     }
 
@@ -398,7 +367,6 @@ public class GRInformation {
      */
     public void printAssaultDescription() {
         lock.lock();
-
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
 
@@ -424,7 +392,6 @@ public class GRInformation {
         System.out.println(strb.toString());
 
         printer.flush();
-
         lock.unlock();
     }
 
@@ -434,7 +401,6 @@ public class GRInformation {
      * @return
      */
     public String translateThiefState(int thiefState) {
-
         switch (thiefState) {
             case Constants.OUTSIDE:
                 return "OUTS";
@@ -457,7 +423,6 @@ public class GRInformation {
      * @return
      */
     public String translateMasterThiefState(int masterThiefState) {
-
         switch (masterThiefState) {
             case Constants.PLANNING_THE_HEIST:
                 return "PLAN";
@@ -503,7 +468,6 @@ public class GRInformation {
     public void printLegend() {
 
         lock.lock();
-
         printer.printf("Legend:%n");
         printer.printf("MstT Stat    - state of the master thief%n");
         printer.printf("Thief # Stat - state of the ordinary thief # (# - 1 .. 6)%n");
@@ -515,7 +479,6 @@ public class GRInformation {
         printer.printf("Assault party # Elem # Cv  - assault party # (# - 1,2) elem # (# - 1 .. 3) carrying a canvas (0,1)%n");
         printer.printf("Museum Room # NP - room identification (1 .. 5) number of paintings presently hanging on the walls%n");
         printer.printf("Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30%n");
-
         lock.unlock();
 
     }
@@ -544,12 +507,9 @@ public class GRInformation {
      *
      */
     public void close() {
-
         lock.lock();
-
         printer.flush();
         printer.close();
-
         lock.unlock();
     }
 }

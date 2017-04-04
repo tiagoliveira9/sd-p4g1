@@ -73,7 +73,6 @@ public class MasterThief extends Thread {
         }
         ConcentrationSite.getInstance().wakeAll();
         ControlCollectionSite.getInstance().printResult();
-
     }
 
     /**
@@ -94,7 +93,6 @@ public class MasterThief extends Thread {
 
         ControlCollectionSite.getInstance().setDeciding();
         int nThieves = ConcentrationSite.getInstance().checkThiefNumbers();
-        //GRInformation.getInstance().printSomething("nThieves: " + nThieves);
 
         if (!anyRoomLeft())
         {
@@ -104,7 +102,6 @@ public class MasterThief extends Thread {
             return 2;
         } else
         {
-            // + else thieves < 2, takeARest
             return 3;
         }
 

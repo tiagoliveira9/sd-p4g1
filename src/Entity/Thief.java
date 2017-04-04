@@ -67,7 +67,6 @@ public class Thief extends Thread {
         // conc.amINeeded() actua sobre o concentration site
         while ((partyId = amINeeded()) != -1)
         {
-            justHanded = false;
             // goes to team ordered by master
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
 
@@ -80,24 +79,19 @@ public class Thief extends Thread {
             // back to assault party to block and Get in line
             AssaultParty.getInstance(partyId).waitToStartRobbing();
 
-            // for synchronism, returns the room and elemId right here on crawl
-            int[] roll = AssaultParty.getInstance(partyId).crawlIn();
             // roll[0] = roomId, roll[1] = elemId 
+            int[] roll = AssaultParty.getInstance(partyId).crawlIn();
+
             boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
             if (painting)
             {
                 AssaultParty.getInstance(partyId).addCrookCanvas(roll[1]);
             }
-            // ONE is for CRAWL OUT
             AssaultParty.getInstance(partyId).crawlOut();
-            // bloqueia se master não estiver waiting for arrival
-            // só aqui faz reset, para a equipa ficar atribuível 
             ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
-            //GRInformation.getInstance().printSomething("Entreguei canvas " + (thiefId + 1));
-            justHanded = true;
+            justHanded = true; // to avoid wrong, first time signal
         }
-        stateThief = Constants.DEAD;
-        GRInformation.getInstance().setStateThief(this);
+        ConcentrationSite.getInstance().setDeadState();
     }
 
     /**
@@ -108,10 +102,10 @@ public class Thief extends Thread {
     private int amINeeded()
     {
         ConcentrationSite.getInstance().addThief();
-        //if (justHanded && ConcentrationSite.getInstance().checkThiefNumbers() > 1)
-
-        ControlCollectionSite.getInstance().goCollectMaster();
-
+        if (justHanded)
+        {
+            ControlCollectionSite.getInstance().goCollectMaster();
+        }
         return ConcentrationSite.getInstance().waitForCall();
     }
 
