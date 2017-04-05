@@ -30,7 +30,7 @@ public class Museum {
     }
 
     /**
-     * The method returns ControlCollectionSite object.
+     * The method returns Museum object.
      *
      * @return ConcentrationSite object to be used.
      */
@@ -71,10 +71,11 @@ public class Museum {
     }
 
     /**
-     *
-     * @param roomId
-     * @param elemPos
-     * @param partyId
+     * Thief roll a canvas in the room he is in.
+     * 
+     * @param roomId room identification
+     * @param elemPos element position
+     * @param partyId assault party identification
      * @return
      */
     public boolean rollACanvas(int roomId, int elemPos, int partyId) {
@@ -102,9 +103,10 @@ public class Museum {
     }
 
     /**
-     *
-     * @param roomId
-     * @return
+     * This method get the distance of the room.
+     * 
+     * @param roomId 
+     * @return default
      */
     public int getRoomDistance(int roomId) {
         if (roomId < Constants.N_ROOMS) {
@@ -115,9 +117,10 @@ public class Museum {
     }
 
     /**
-     *
+     * This method get the number of canvas in a room.
+     * 
      * @param roomId
-     * @return
+     * @return default
      */
     public int getRoomCanvas(int roomId) {
         if (roomId < Constants.N_ROOMS) {

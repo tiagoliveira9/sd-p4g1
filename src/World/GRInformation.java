@@ -246,7 +246,7 @@ public class GRInformation {
     }
 
     /**
-     *
+     * The method returns General Repository Information object.
      * @return
      */
     public static GRInformation getInstance()
@@ -300,7 +300,8 @@ public class GRInformation {
     }
 
     /**
-     *
+     * This method print the header of the log.
+     *  
      */
     public void printHeader()
     {
@@ -319,7 +320,7 @@ public class GRInformation {
     }
 
     /**
-     * Prints game column header
+     * Prints game column header.
      *
      */
     public void printColumnHeader()
@@ -348,6 +349,7 @@ public class GRInformation {
     }
 
     /**
+     * Print 2 lines of a thread.
      *
      */
     public void printUpdateLine()
@@ -377,6 +379,7 @@ public class GRInformation {
     }
 
     /**
+     * Print the states of the entities. The first line.
      *
      */
     public void printEntityStates()
@@ -401,6 +404,7 @@ public class GRInformation {
     }
 
     /**
+     * Print the assault party description. The second line.
      *
      */
     public void printAssaultDescription()
@@ -435,6 +439,7 @@ public class GRInformation {
     }
 
     /**
+     * Translate the state of the thief to a 4 letter word.
      *
      * @param thiefState
      * @return
@@ -459,7 +464,8 @@ public class GRInformation {
     }
 
     /**
-     *
+     * Translate the state of the master thief to a 4 letter word.
+     * 
      * @param masterThiefState
      * @return
      */
@@ -483,6 +489,7 @@ public class GRInformation {
     }
 
     /**
+     * Translate the thief situation to a 1 letter word.
      *
      * @param thiefSit
      * @return
@@ -508,6 +515,7 @@ public class GRInformation {
     }
 
     /**
+     * Print the legend of the program.
      *
      */
     public void printLegend()
@@ -530,6 +538,7 @@ public class GRInformation {
     }
 
     /**
+     * Print the end of the program.
      *
      * @param totalPaints
      */
@@ -543,6 +552,7 @@ public class GRInformation {
     }
 
     /**
+     * Test method.
      *
      * @param s, Some string to print.
      */
@@ -556,7 +566,8 @@ public class GRInformation {
     }
 
     /**
-     *
+     * Close the printer file.
+     *  
      */
     public void close()
     {
