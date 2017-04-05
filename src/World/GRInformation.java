@@ -20,13 +20,55 @@ import java.text.SimpleDateFormat;
  */
 public class GRInformation {
 
+    /**
+     * Date to create a timestamp on logs name
+     *
+     * @serialField date
+     */
     private final SimpleDateFormat date;
+
+    /**
+     * String to construct logs name
+     *
+     * @serialField dateString
+     */
     private final String dateString;
+    /**
+     * Lock of ReentrantLock type
+     *
+     * @serialField lock
+     */
     private final static Lock lock = new ReentrantLock();
+    /**
+     * Instance of GRInformation
+     *
+     * @serialField instance
+     */
     private static GRInformation instance;
+    /**
+     * Used to print to file
+     *
+     * @serialField printer
+     */
     private PrintWriter printer;
+    /**
+     * Master thief state
+     *
+     * @serialField masterThiefState
+     */
     private int masterThiefState;
+    /**
+     * Array of nThief objects, that store info on every thief
+     *
+     * @serialField ladrao
+     */
     private nThief[] ladrao;
+    /**
+     * Array of AssParty objects, that contain all the info needed to describe
+     * an Assault Party
+     *
+     * @serialField party
+     */
     private AssParty[] party;
 
     /**
@@ -205,7 +247,7 @@ public class GRInformation {
         public AssParty(int partyId)
         {
             this.partyId = partyId;
-            roomId = "-"; 
+            roomId = "-";
             elements = new Elem[Constants.N_SQUAD];
 
             for (int i = 0; i < Constants.N_SQUAD; i++)
@@ -247,6 +289,7 @@ public class GRInformation {
 
     /**
      * The method returns General Repository Information object.
+     *
      * @return
      */
     public static GRInformation getInstance()
@@ -301,7 +344,7 @@ public class GRInformation {
 
     /**
      * This method print the header of the log.
-     *  
+     *
      */
     public void printHeader()
     {
@@ -442,7 +485,7 @@ public class GRInformation {
      * Translate the state of the thief to a 4 letter word.
      *
      * @param thiefState
-     * @return
+     * @return string with abbreviation
      */
     public String translateThiefState(int thiefState)
     {
@@ -465,9 +508,9 @@ public class GRInformation {
 
     /**
      * Translate the state of the master thief to a 4 letter word.
-     * 
+     *
      * @param masterThiefState
-     * @return
+     * @return string with abbreviation
      */
     public String translateMasterThiefState(int masterThiefState)
     {
@@ -492,7 +535,7 @@ public class GRInformation {
      * Translate the thief situation to a 1 letter word.
      *
      * @param thiefSit
-     * @return
+     * @return string with abbreviation
      */
     public String translateThiefSituation(int thiefSit)
     {
@@ -567,7 +610,7 @@ public class GRInformation {
 
     /**
      * Close the printer file.
-     *  
+     *
      */
     public void close()
     {

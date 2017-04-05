@@ -1,6 +1,5 @@
 package World;
 
-import Entity.MasterThief;
 import Entity.Thief;
 import HeistMuseum.Constants;
 import java.util.Stack;
@@ -8,24 +7,86 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
+ * This data type implements a Concentration Site of the Ordinary Thieves. (in
+ * the future explain more)
+ *
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
 public class ConcentrationSite {
 
+    /**
+     * Instance of Concentration Site
+     *
+     * @serialField instance
+     */
     private static ConcentrationSite instance;
+    /**
+     * Lock of ReentrantLock type
+     *
+     * @serialField l
+     */
     private final static Lock l = new ReentrantLock();
+    /**
+     * Condition associated with lock l. This condition is used to block a Thief
+     * after he added himself to the stack, awaiting for the Master Thief to
+     * wake him up.
+     *
+     * @serialField prepare
+     */
     private final Condition prepare;
+    /**
+     * Condition associated with lock l. This condition is used to block the
+     * Master Thief when she's assembling a group waiting for the last Thief
+     * joining the Assault Party to wake her up. Also is used to block Master
+     * Thief when she wants to wake up all of the Thieves to kill them. The last
+     * thief to arrive wakes her.
+     *
+     * @serialField assembling
+     */
     private final Condition assembling;
-    private int nAssaultParty;     // 0 - assaultParty: 1 || 1 - assaultParty: 2
+    /**
+     * Variable used to store the Assault Party id. The value is implicit
+     * changed when Master Thief wants to wake one thief to make a Assault
+     * Party. Takes value 0 if Assault Party id number 1 and value 1 if is
+     * Assault Party id number 2.
+     *
+     * @serialField nAssaultParty
+     */
+    private int nAssaultParty;
+    /**
+     * Global id stores the next thief id to wake.
+     *
+     * @serialField globalId
+     */
     private int globalId;
+    /**
+     * Stack that store Thieves objects.
+     *
+     * @serialField stThief
+     */
     private final Stack<Thief> stThief;
+    /**
+     * Counter used to control the call of the next thieves to wake. First thief
+     * is waken by Master Thief and then two thieves are awaken sequentially by
+     * the previous
+     *
+     * @serialField counterThief
+     */
     private int counterThief;
+    /**
+     * Boolean used to flag if the Thief to die.
+     *
+     * @serialField die
+     */
     private boolean die;
+    /**
+     * Counter to control how much thieve have died, so Master Thief can be
+     * awaken by the last to die.
+     *
+     * @serialField die
+     */
     private int countDie;
 
     /**
@@ -65,7 +126,7 @@ public class ConcentrationSite {
     }
 
     /**
-     *
+     * Adds thief to stack and changes state to Outside.
      */
     public void addThief()
     {
@@ -78,6 +139,11 @@ public class ConcentrationSite {
     }
 
     /**
+     * Waits for Master Thief to wake. On this method the thief can be awaken to
+     * be killed or to wake to add himself to an Assault Party. The Thief awaken
+     * by the Master Thief is responsible to wake up the next thief. The next
+     * thief is responsible to wake the third thief. After is awaken, he removes
+     * himself from the stack or dies.
      *
      * @return
      */
@@ -123,8 +189,9 @@ public class ConcentrationSite {
     }
 
     /**
-     * The method prepareAssaultPart stage 2. Wakes thieves to go to AssaultPart
-     * #. PartyID. To inform what party thief must go
+     * The method prepareAssaultPart stage 2. Master Thief wakes one thief to go
+     * to AssaultPart #. nAssaultParty is changed here so when Thief wakes up,
+     * returns the update value to life cycle.
      *
      * @param partyId
      * @param roomId
@@ -154,7 +221,7 @@ public class ConcentrationSite {
 
     /**
      * The method prepareExcursion. The last Thief to enter the assault party,
-     * wakes up the Master
+     * wakes up the Master Thief and resets the nAssaultParty variable.
      */
     public void teamReady()
     {
@@ -170,8 +237,9 @@ public class ConcentrationSite {
     }
 
     /**
+     * This method returns the size of the thieves stack.
      *
-     * @return
+     * @return size of thieves stack
      */
     public int checkThiefNumbers()
     {
@@ -179,7 +247,8 @@ public class ConcentrationSite {
     }
 
     /**
-     *
+     * Master Thief uses this method to wake every thief and awaits for the last
+     * thief to wake her up.
      */
     public void wakeAll()
     {
@@ -200,16 +269,7 @@ public class ConcentrationSite {
     }
 
     /**
-     *
-     * @return
-     */
-    public boolean canIDie()
-    {
-        return this.die;
-    }
-
-    /**
-     *
+     * Change thief state to DEAD.
      */
     public void setDeadState()
     {
