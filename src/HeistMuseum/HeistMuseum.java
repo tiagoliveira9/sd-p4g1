@@ -12,11 +12,17 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
+ * This data type simulates the Heist of the Museum problem. The concurrent
+ * solution is based on explicit monitors. The entities that are controlled by
+ * the monitors are the Thieves and the crazy Master Thief.
+ *
+ * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
 public class HeistMuseum {
 
     /**
+     *
      * @param args the command line arguments
      * @throws java.lang.InterruptedException
      */
@@ -70,7 +76,7 @@ public class HeistMuseum {
         }
 
         master.join();
-        
+
     }
 
 }

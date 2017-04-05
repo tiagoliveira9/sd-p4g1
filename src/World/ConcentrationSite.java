@@ -23,7 +23,7 @@ public class ConcentrationSite {
      */
     private static ConcentrationSite instance;
     /**
-     * Lock of ReentrantLock type
+     * Lock of ReentrantLock type to implement a explicit monitor
      *
      * @serialField l
      */

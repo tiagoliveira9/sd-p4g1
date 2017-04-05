@@ -7,19 +7,35 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
+ * This data type implements a Master Thief Control and Collection Site. (in the
+ * future explain more)
+ *
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
 public class ControlCollectionSite {
 
+    /**
+     * Instance of Control and Collection Site
+     *
+     * @serialField instance
+     */
     private static ControlCollectionSite instance;
-    // ReentrantLock means that several threads can lock on the same location
+    /**
+     * Lock of ReentrantLock type to implement a explicit monitor
+     *
+     * @serialField l
+     */
     private final static Lock l = new ReentrantLock();
-    // condition that verifies if block on state Deciding What to Do
+    /**
+     * Condition associated with lock l. This condition is used to block the
+     * Master Thief while she awaits for canvas to be delivered. Thief uses this
+     * condition to wake her and deliver a canvas.
+     *
+     *
+     * @serialField rest
+     */
     private final Condition rest;
     private boolean restBool;
     private boolean sumUp;
@@ -88,7 +104,7 @@ public class ControlCollectionSite {
     }
 
     /**
-     *
+     * This method changes the Thief state to Deciding what to do. 
      */
     public void setDeciding()
     {
@@ -217,7 +233,8 @@ public class ControlCollectionSite {
     }
 
     /**
-     *
+     * This method is used by the Thief to signal the Master Thief to wake up
+     * from the waiting for arrival and collect canvas.
      */
     public void goCollectMaster()
     {
@@ -233,7 +250,7 @@ public class ControlCollectionSite {
     }
 
     /**
-     * The method anyRoomLeft
+     * The method anyRoomLeft verifies if there are any room left to sack.
      *
      * @return True if exists a Room to sack, False if every room is empty
      */
@@ -262,15 +279,6 @@ public class ControlCollectionSite {
     }
 
     /**
-     *
-     * @return
-     */
-    public boolean canIDie()
-    {
-        return sumUp;
-    }
-
-    /**
      * This method checks Assault Parties availability. Return true if exists at
      * least one, returns false if every team is occupied
      *
@@ -289,7 +297,7 @@ public class ControlCollectionSite {
     }
 
     /**
-     *
+     * Master Thief uses this method to print the summary results.
      */
     public void printResult()
     {
