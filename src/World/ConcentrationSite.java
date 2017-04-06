@@ -2,6 +2,8 @@ package World;
 
 import Entity.Thief;
 import HeistMuseum.Constants;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -61,12 +63,14 @@ public class ConcentrationSite {
      * @serialField globalId
      */
     private int globalId;
+    
     /**
      * Stack that store Thieves objects.
      *
      * @serialField stThief
      */
-    private final Stack<Thief> stThief;
+    //private final Stack<Thief> stThief;
+    private final Queue<Thief> queueThieves;
     /**
      * Counter used to control the call of the next thieves to wake. First thief
      * is waken by Master Thief and then two thieves are awaken sequentially by
@@ -119,7 +123,8 @@ public class ConcentrationSite {
         assembling = l.newCondition();
         nAssaultParty = -1;
         globalId = -1;
-        stThief = new Stack<>();
+        //stThief = new Stack<>();
+        queueThieves = new ArrayDeque<>();
         counterThief = 0;
         die = false;
         countDie = 0;
@@ -134,7 +139,8 @@ public class ConcentrationSite {
         Thief crook = (Thief) Thread.currentThread();
         crook.setStateThief(Constants.OUTSIDE);
         GRInformation.getInstance().printUpdateLine();
-        stThief.push(crook);
+        //stThief.push(crook);
+        queueThieves.add(crook);
         l.unlock();
     }
 
@@ -170,7 +176,8 @@ public class ConcentrationSite {
             counterThief++;
             if (counterThief < 3)
             {
-                Thief c = stThief.pop();
+                //Thief c = stThief.pop();
+                Thief c = queueThieves.remove();
                 globalId = c.getThiefId();
                 prepare.signalAll();
             } else
@@ -202,7 +209,8 @@ public class ConcentrationSite {
         nAssaultParty = partyId;
         GRInformation.getInstance().setRoomId(partyId, roomId);
 
-        Thief c = stThief.pop();
+        //Thief c = stThief.pop();
+        Thief c = queueThieves.remove();
         globalId = c.getThiefId();
         // signal all but only one thief moves
         prepare.signalAll();
@@ -243,7 +251,8 @@ public class ConcentrationSite {
      */
     public int checkThiefNumbers()
     {
-        return this.stThief.size();
+        //return this.stThief.size();
+        return queueThieves.size();
     }
 
     /**

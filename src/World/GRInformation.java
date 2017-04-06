@@ -50,7 +50,7 @@ public class GRInformation {
      *
      * @serialField printer
      */
-    private PrintWriter printer;
+    private PrintWriter log;
     /**
      * Master thief state
      *
@@ -162,6 +162,7 @@ public class GRInformation {
         party[partyId].elements[elemId].id = id;
         party[partyId].elements[elemId].pos = "0";
         party[partyId].elements[elemId].cv = "0";
+        printDoubleLine();
         lock.unlock();
     }
 
@@ -317,10 +318,10 @@ public class GRInformation {
 
         try
         {
-            printer = new PrintWriter("LOG-" + dateString + ".txt");
+            log = new PrintWriter("LOG-" + dateString + ".txt");
         } catch (FileNotFoundException ex)
         {
-            printer = null;
+            log = null;
         }
 
         ladrao = new nThief[Constants.N_THIEVES];
@@ -353,9 +354,9 @@ public class GRInformation {
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
         formatter.format("%1$84s%n", "Heist to the museum - Description of the internal state");
-        printer.print(strb.toString());
+        log.print(strb.toString());
         System.out.println(strb.toString());
-        printer.flush();
+        log.flush();
         printColumnHeader();
         printEntityStates();
         printAssaultDescription();
@@ -385,9 +386,9 @@ public class GRInformation {
         formatter.format("%1$7s %2$10s %3$10s %4$10s %5$4s %6$10s %7$10s %8$10s %9$7s %10$8s %11$8s %12$8s %13$8s %n",
                 "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "NP DT", "NP DT", "NP DT", "ND DP", "ND DP");
 
-        printer.print(strb.toString());
+        log.print(strb.toString());
         System.out.println(strb.toString());
-        printer.flush();
+        log.flush();
         lock.unlock();
     }
 
@@ -440,9 +441,9 @@ public class GRInformation {
         }
 
         formatter.format("%n");
-        printer.print(strb.toString());
+        log.print(strb.toString());
         System.out.println(strb.toString());
-        printer.flush();
+        log.flush();
         lock.unlock();
     }
 
@@ -474,10 +475,10 @@ public class GRInformation {
                 sala[4].canvas, sala[4].distance);
 
         formatter.format("%n");
-        printer.print(strb.toString());
+        log.print(strb.toString());
         System.out.println(strb.toString());
 
-        printer.flush();
+        log.flush();
         lock.unlock();
     }
 
@@ -565,17 +566,17 @@ public class GRInformation {
     {
 
         lock.lock();
-        printer.printf("Legend:%n");
-        printer.printf("MstT Stat    - state of the master thief%n");
-        printer.printf("Thief # Stat - state of the ordinary thief # (# - 1 .. 6)%n");
-        printer.printf("Thief # S    - situation of the ordinary thief # (# - 1 .. 6) either 'W' (waiting to join a party) or 'P' (in party)%n");
-        printer.printf("Thief # MD   - maximum displacement of the ordinary thief # (# - 1 .. 6) a random number between 2 and 6%n");
-        printer.printf("Assault party # RId        - assault party # (# - 1,2) elem # (# - 1 .. 3) room identification (1 .. 5)%n");
-        printer.printf("Assault party # Elem # Id  - assault party # (# - 1,2) elem # (# - 1 .. 3) member identification (1 .. 6)%n");
-        printer.printf("Assault party # Elem # Pos - assault party # (# - 1,2) elem # (# - 1 .. 3) present position (0 .. DT RId)%n");
-        printer.printf("Assault party # Elem # Cv  - assault party # (# - 1,2) elem # (# - 1 .. 3) carrying a canvas (0,1)%n");
-        printer.printf("Museum Room # NP - room identification (1 .. 5) number of paintings presently hanging on the walls%n");
-        printer.printf("Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30%n");
+        log.printf("Legend:%n");
+        log.printf("MstT Stat    - state of the master thief%n");
+        log.printf("Thief # Stat - state of the ordinary thief # (# - 1 .. 6)%n");
+        log.printf("Thief # S    - situation of the ordinary thief # (# - 1 .. 6) either 'W' (waiting to join a party) or 'P' (in party)%n");
+        log.printf("Thief # MD   - maximum displacement of the ordinary thief # (# - 1 .. 6) a random number between 2 and 6%n");
+        log.printf("Assault party # RId        - assault party # (# - 1,2) elem # (# - 1 .. 3) room identification (1 .. 5)%n");
+        log.printf("Assault party # Elem # Id  - assault party # (# - 1,2) elem # (# - 1 .. 3) member identification (1 .. 6)%n");
+        log.printf("Assault party # Elem # Pos - assault party # (# - 1,2) elem # (# - 1 .. 3) present position (0 .. DT RId)%n");
+        log.printf("Assault party # Elem # Cv  - assault party # (# - 1,2) elem # (# - 1 .. 3) carrying a canvas (0,1)%n");
+        log.printf("Museum Room # NP - room identification (1 .. 5) number of paintings presently hanging on the walls%n");
+        log.printf("Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30%n");
         lock.unlock();
 
     }
@@ -589,8 +590,8 @@ public class GRInformation {
     {
         lock.lock();
         printEntityStates();
-        printer.printf("My friends, tonight's effort producced " + totalPaints + " priceless paintings!%n");
-        printer.flush();
+        log.printf("My friends, tonight's effort producced " + totalPaints + " priceless paintings!%n");
+        log.flush();
         lock.unlock();
     }
 
@@ -603,8 +604,8 @@ public class GRInformation {
     {
         lock.lock();
         System.out.println(s);
-        printer.printf(s + "%n");
-        printer.flush();
+        log.printf(s + "%n");
+        log.flush();
         lock.unlock();
     }
 
@@ -615,8 +616,8 @@ public class GRInformation {
     public void close()
     {
         lock.lock();
-        printer.flush();
-        printer.close();
+        log.flush();
+        log.close();
         lock.unlock();
     }
 }
