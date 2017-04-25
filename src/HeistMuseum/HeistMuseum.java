@@ -1,13 +1,13 @@
 package HeistMuseum;
 
-import World.ConcentrationSite;
-import World.ControlCollectionSite;
-import World.AssaultParty;
-import World.Museum;
-import World.GRInformation;
+import ServerSide.ConcentrationSite;
+import ServerSide.ControlCollectionSite;
+import ServerSide.AssaultParty;
+import ServerSide.Museum;
+import ServerSide.GRInformation;
 
-import Entity.Thief;
-import Entity.MasterThief;
+import ClientSide.Thief;
+import ClientSide.MasterThief;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**

@@ -1,10 +1,10 @@
-package Entity;
+package ClientSide;
 
 import HeistMuseum.Constants;
-import World.AssaultParty;
-import World.ConcentrationSite;
-import World.ControlCollectionSite;
-import World.Museum;
+import ServerSide.AssaultParty;
+import ServerSide.ConcentrationSite;
+import ServerSide.ControlCollectionSite;
+import ServerSide.Museum;
 
 /**
  * This data type implements a Thief thread. (in the future explain more)

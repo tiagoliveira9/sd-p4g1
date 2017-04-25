@@ -1,6 +1,6 @@
-package World;
+package ServerSide;
 
-import Entity.MasterThief;
+import ClientSide.MasterThief;
 import HeistMuseum.Constants;
 
 import java.util.concurrent.locks.Condition;

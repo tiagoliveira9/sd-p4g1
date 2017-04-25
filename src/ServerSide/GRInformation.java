@@ -1,7 +1,7 @@
-package World;
+package ServerSide;
 
-import Entity.MasterThief;
-import Entity.Thief;
+import ClientSide.MasterThief;
+import ClientSide.Thief;
 import HeistMuseum.Constants;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

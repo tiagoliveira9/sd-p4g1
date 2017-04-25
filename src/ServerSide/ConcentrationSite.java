@@ -1,10 +1,9 @@
-package World;
+package ServerSide;
 
-import Entity.Thief;
+import ClientSide.Thief;
 import HeistMuseum.Constants;
 import java.util.ArrayDeque;
 import java.util.Queue;
-import java.util.Stack;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
