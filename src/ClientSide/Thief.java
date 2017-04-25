@@ -1,13 +1,12 @@
 package ClientSide;
 
+import Auxiliary.InterfaceMuseum;
 import Auxiliary.InterfaceThief;
 import HeistMuseum.Constants;
 import ServerSide.AssaultParty;
 import ServerSide.ConcentrationSite;
 import ServerSide.ControlCollectionSite;
 import ServerSide.Museum;
-
-import Auxiliary.InterfaceAssaultParty;
 
 /**
  * This data type implements a Thief thread. (in the future explain more)
@@ -41,7 +40,8 @@ public class Thief extends Thread implements InterfaceThief {
      * @serialField justHanded
      */
     private boolean justHanded;
-    private final InterfaceAssaultParty team;
+
+    private final InterfaceMuseum museum;
 
     /**
      * Thief instantiation.
@@ -57,9 +57,8 @@ public class Thief extends Thread implements InterfaceThief {
         this.agility = agility;
         stateThief = Constants.OUTSIDE;
         justHanded = false;
+        museum = new MuseumStub();
 
-        // instanciamos o Stub
-        team = new AssaultPartyStub();
     }
 
     /**
@@ -73,7 +72,6 @@ public class Thief extends Thread implements InterfaceThief {
         while ((partyId = amINeeded()) != -1)
         {
             // goes to team ordered by master
-            team.addToSquad();
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
 
             if (last)
@@ -88,7 +86,8 @@ public class Thief extends Thread implements InterfaceThief {
             // roll[0] = roomId, roll[1] = elemId 
             int[] roll = AssaultParty.getInstance(partyId).crawlIn();
 
-            boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
+            //boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
+            boolean painting = museum.rollACanvas(roll[0], roll[1], partyId);
             if (painting)
             {
                 AssaultParty.getInstance(partyId).addCrookCanvas(roll[1]);

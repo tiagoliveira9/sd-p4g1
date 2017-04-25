@@ -38,7 +38,8 @@ public class HeistMuseum {
             AssaultParty.getInstance(i);
         }
 
-        Museum hermitage = Museum.getInstance();
+        /*Museum hermitage = Museum.getInstance();
+       
         int distance, canvas;
 
         for (int i = 0; i < Constants.N_ROOMS; i++)
@@ -48,7 +49,7 @@ public class HeistMuseum {
             // canvas between 8 and 16
             canvas = ThreadLocalRandom.current().nextInt(8, 16 + 1);
             hermitage.setUpRoom(i, distance, canvas);
-        }
+        }*/
 
         Thief[] thieves = new Thief[Constants.N_THIEVES];
         MasterThief masterThief = new MasterThief();

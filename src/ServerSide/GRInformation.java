@@ -312,7 +312,7 @@ public class GRInformation {
 
     private GRInformation()
     {
-        date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssSS");
         dateString = (date.format(new Date()));
         masterThiefState = Constants.PLANNING_THE_HEIST;
 

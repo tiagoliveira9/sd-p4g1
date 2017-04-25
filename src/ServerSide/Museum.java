@@ -1,6 +1,7 @@
 package ServerSide;
 
 import Auxiliary.InterfaceMuseum;
+import Auxiliary.InterfaceThief;
 import ClientSide.Thief;
 import HeistMuseum.Constants;
 
@@ -23,7 +24,8 @@ public class Museum implements InterfaceMuseum {
         private int distance;
         private int canvas;
 
-        public Room(int roomId) {
+        public Room(int roomId)
+        {
             this.roomId = roomId;
             distance = -1;
             canvas = -1;
@@ -35,9 +37,11 @@ public class Museum implements InterfaceMuseum {
      *
      * @return ConcentrationSite object to be used.
      */
-    public static Museum getInstance() {
+    public static Museum getInstance()
+    {
         l.lock();
-        if (instance == null) {
+        if (instance == null)
+        {
             instance = new Museum();
         }
         l.unlock();
@@ -47,9 +51,11 @@ public class Museum implements InterfaceMuseum {
     /**
      * Singleton needs private constructor.
      */
-    private Museum() {
+    private Museum()
+    {
         rooms = new Room[Constants.N_ROOMS];
-        for (int i = 0; i < Constants.N_ROOMS; i++) {
+        for (int i = 0; i < Constants.N_ROOMS; i++)
+        {
             rooms[i] = new Room(i);
         }
     }
@@ -61,9 +67,11 @@ public class Museum implements InterfaceMuseum {
      * @param distance Room distance from outside
      * @param canvas How much paintings exists on this Room
      */
-    public void setUpRoom(int roomId, int distance, int canvas) {
+    public void setUpRoom(int roomId, int distance, int canvas)
+    {
         l.lock();
-        if (roomId < Constants.N_ROOMS) {
+        if (roomId < Constants.N_ROOMS)
+        {
             rooms[roomId].distance = distance;
             rooms[roomId].canvas = canvas;
             GRInformation.getInstance().setUpMuseumRoom(roomId, distance, canvas);
@@ -73,31 +81,34 @@ public class Museum implements InterfaceMuseum {
 
     /**
      * Thief roll a canvas in the room he is in.
-     * 
+     *
      * @param roomId room identification
      * @param elemPos element position
      * @param partyId assault party identification
      * @return
      */
     @Override
-    public boolean rollACanvas(int roomId, int elemPos, int partyId) {
+    public boolean rollACanvas(int roomId, int elemPos, int partyId)
+    {
         l.lock();
-        Thief t = (Thief) Thread.currentThread();
+        //Thief t = (Thief) Thread.currentThread();
 
         boolean flag = false;
         int number = rooms[roomId].canvas;
-        if (number >= 1) {
+        if (number >= 1)
+        {
             // change in museum
             rooms[roomId].canvas--;
             flag = true;
-            
+
             GRInformation.getInstance().setCanvasElem(partyId, elemPos, 1);
             GRInformation.getInstance().updateMuseumRoom(roomId);
-            t.setStateThief(Constants.AT_A_ROOM);
+            //t.setStateThief(Constants.AT_A_ROOM);
             GRInformation.getInstance().printUpdateLine();
 
-        } else {
-            t.setStateThief(Constants.AT_A_ROOM);
+        } else
+        {
+            //t.setStateThief(Constants.AT_A_ROOM);
             GRInformation.getInstance().printUpdateLine();
         }
         l.unlock();
@@ -106,13 +117,15 @@ public class Museum implements InterfaceMuseum {
 
     /**
      * This method get the distance of the room.
-     * 
-     * @param roomId 
+     *
+     * @param roomId
      * @return default
      */
     @Override
-    public int getRoomDistance(int roomId) {
-        if (roomId < Constants.N_ROOMS) {
+    public int getRoomDistance(int roomId)
+    {
+        if (roomId < Constants.N_ROOMS)
+        {
             return rooms[roomId].distance;
         }
         return -1;
@@ -121,14 +134,19 @@ public class Museum implements InterfaceMuseum {
 
     /**
      * This method get the number of canvas in a room.
-     * 
+     *
      * @param roomId
      * @return default
      */
-    public int getRoomCanvas(int roomId) {
-        if (roomId < Constants.N_ROOMS) {
+    public int getRoomCanvas(int roomId)
+    {
+        if (roomId < Constants.N_ROOMS)
+        {
             return rooms[roomId].canvas;
         }
         return -1;
     }
+
+    // é possivel que precisemos de fazer uma verificao
+    // de shutdown
 }

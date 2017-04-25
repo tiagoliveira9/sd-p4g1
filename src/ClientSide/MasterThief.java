@@ -1,6 +1,8 @@
 package ClientSide;
 
 import Auxiliary.InterfaceMasterThief;
+import Auxiliary.InterfaceMuseum;
+
 import HeistMuseum.Constants;
 import ServerSide.AssaultParty;
 import ServerSide.ConcentrationSite;
@@ -21,7 +23,8 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      * @serialField stateMaster
      */
     private int stateMaster;
-
+    
+    private final InterfaceMuseum museum;
     /**
      * Constructor.
      */
@@ -29,6 +32,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
     {
         super("master");
         stateMaster = Constants.PLANNING_THE_HEIST;
+        museum = new MuseumStub();
     }
 
     /**
@@ -56,7 +60,8 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
                         break;
                     }
                     // check distance to room to setUp AssaultParty
-                    dist = Museum.getInstance().getRoomDistance(pick[1]);
+                    //dist = Museum.getInstance().getRoomDistance(pick[1]);
+                    dist = museum.getRoomDistance(pick[1]);
                     AssaultParty.getInstance(pick[0]).setUpRoom(dist, pick[1]);
 
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
