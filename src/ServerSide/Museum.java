@@ -1,5 +1,6 @@
 package ServerSide;
 
+import Auxiliary.InterfaceMuseum;
 import ClientSide.Thief;
 import HeistMuseum.Constants;
 
@@ -10,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
-public class Museum {
+public class Museum implements InterfaceMuseum {
 
     private static Museum instance;
     private final static Lock l = new ReentrantLock();
@@ -78,6 +79,7 @@ public class Museum {
      * @param partyId assault party identification
      * @return
      */
+    @Override
     public boolean rollACanvas(int roomId, int elemPos, int partyId) {
         l.lock();
         Thief t = (Thief) Thread.currentThread();
@@ -108,6 +110,7 @@ public class Museum {
      * @param roomId 
      * @return default
      */
+    @Override
     public int getRoomDistance(int roomId) {
         if (roomId < Constants.N_ROOMS) {
             return rooms[roomId].distance;

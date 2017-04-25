@@ -1,5 +1,6 @@
 package ClientSide;
 
+import Auxiliary.InterfaceMasterThief;
 import HeistMuseum.Constants;
 import ServerSide.AssaultParty;
 import ServerSide.ConcentrationSite;
@@ -12,7 +13,7 @@ import ServerSide.Museum;
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
-public class MasterThief extends Thread {
+public class MasterThief extends Thread implements InterfaceMasterThief {
 
     /**
      * State of the Master Thief
@@ -127,6 +128,7 @@ public class MasterThief extends Thread {
      *
      * @return stateMaster
      */
+    @Override
     public int getStateMaster()
     {
         return stateMaster;
@@ -137,6 +139,7 @@ public class MasterThief extends Thread {
      *
      * @param stateMaster
      */
+    @Override
     public void setStateMaster(int stateMaster)
     {
         this.stateMaster = stateMaster;

@@ -1,5 +1,6 @@
 package ServerSide;
 
+import Auxiliary.InterfaceControlCollectionSite;
 import ClientSide.MasterThief;
 import HeistMuseum.Constants;
 
@@ -14,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
-public class ControlCollectionSite {
+public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
     /**
      * Instance of Control and Collection Site
@@ -106,6 +107,7 @@ public class ControlCollectionSite {
     /**
      * This method changes the Thief state to Deciding what to do. 
      */
+    @Override
     public void setDeciding()
     {
         l.lock();
@@ -121,6 +123,7 @@ public class ControlCollectionSite {
      *
      * @return {AssaultPartyId, tSala}
      */
+    @Override
     public int[] prepareAssaultParty1()
     {
         l.lock();
@@ -165,6 +168,7 @@ public class ControlCollectionSite {
      * canvas that he will give to her, if he has one.
      *
      */
+    @Override
     public void takeARest()
     {
         l.lock();
@@ -197,6 +201,7 @@ public class ControlCollectionSite {
      * @param partyId
      * @param roomId
      */
+    @Override
     public void handACanvas(boolean canvas, int roomId, int partyId)
     {
 
@@ -236,6 +241,7 @@ public class ControlCollectionSite {
      * This method is used by the Thief to signal the Master Thief to wake up
      * from the waiting for arrival and collect canvas.
      */
+    @Override
     public void goCollectMaster()
     {
         l.lock();
@@ -254,6 +260,7 @@ public class ControlCollectionSite {
      *
      * @return True if exists a Room to sack, False if every room is empty
      */
+    @Override
     public boolean anyRoomLeft()
     {
 
@@ -284,6 +291,7 @@ public class ControlCollectionSite {
      *
      * @return availability
      */
+    @Override
     public boolean anyTeamAvailable()
     {
         if (!assaultP1)
@@ -299,6 +307,7 @@ public class ControlCollectionSite {
     /**
      * Master Thief uses this method to print the summary results.
      */
+    @Override
     public void printResult()
     {
         l.lock();

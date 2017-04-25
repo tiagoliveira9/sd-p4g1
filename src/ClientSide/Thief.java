@@ -1,10 +1,13 @@
 package ClientSide;
 
+import Auxiliary.InterfaceThief;
 import HeistMuseum.Constants;
 import ServerSide.AssaultParty;
 import ServerSide.ConcentrationSite;
 import ServerSide.ControlCollectionSite;
 import ServerSide.Museum;
+
+import Auxiliary.InterfaceAssaultParty;
 
 /**
  * This data type implements a Thief thread. (in the future explain more)
@@ -12,7 +15,7 @@ import ServerSide.Museum;
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
-public class Thief extends Thread {
+public class Thief extends Thread implements InterfaceThief {
 
     /**
      * Identification of the Thief.
@@ -38,6 +41,7 @@ public class Thief extends Thread {
      * @serialField justHanded
      */
     private boolean justHanded;
+    private final InterfaceAssaultParty team;
 
     /**
      * Thief instantiation.
@@ -53,6 +57,9 @@ public class Thief extends Thread {
         this.agility = agility;
         stateThief = Constants.OUTSIDE;
         justHanded = false;
+
+        // instanciamos o Stub
+        team = new AssaultPartyStub();
     }
 
     /**
@@ -66,6 +73,7 @@ public class Thief extends Thread {
         while ((partyId = amINeeded()) != -1)
         {
             // goes to team ordered by master
+            team.addToSquad();
             boolean last = AssaultParty.getInstance(partyId).addToSquad();
 
             if (last)
@@ -114,6 +122,7 @@ public class Thief extends Thread {
      *
      * @return Thief Id
      */
+    @Override
     public int getThiefId()
     {
         return thiefId;
@@ -124,6 +133,7 @@ public class Thief extends Thread {
      *
      * @return Thief State
      */
+    @Override
     public int getStateThief()
     {
         return stateThief;
@@ -134,6 +144,7 @@ public class Thief extends Thread {
      *
      * @param stateThief
      */
+    @Override
     public void setStateThief(int stateThief)
     {
         this.stateThief = stateThief;
@@ -144,6 +155,7 @@ public class Thief extends Thread {
      *
      * @return Thief agility
      */
+    @Override
     public int getAgility()
     {
         return agility;

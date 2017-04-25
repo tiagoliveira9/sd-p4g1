@@ -1,5 +1,6 @@
 package ServerSide;
 
+import Auxiliary.InterfaceAssaultParty;
 import ClientSide.MasterThief;
 import ClientSide.Thief;
 import HeistMuseum.Constants;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
-public class AssaultParty {
+public class AssaultParty implements InterfaceAssaultParty {
 
     private static final AssaultParty[] instances = new AssaultParty[Constants.N_ASSAULT_PARTY];
     private final int partyId;
@@ -101,6 +102,7 @@ public class AssaultParty {
      *
      * @return boolean. True if is the last Thief, false otherwise.
      */
+    @Override
     public boolean addToSquad()
     {
         l.lock();
@@ -144,6 +146,7 @@ public class AssaultParty {
      * others will be by there fellow teammates.
      *
      */
+    @Override
     public void waitToStartRobbing()
     {
         l.lock();
@@ -170,6 +173,7 @@ public class AssaultParty {
      *
      * @return
      */
+    @Override
     public int[] crawlIn()
     {
         l.lock();
@@ -216,6 +220,7 @@ public class AssaultParty {
      *
      * @return
      */
+    @Override
     public int[] crawlOut()
     {
         Thief t = (Thief) Thread.currentThread();
@@ -446,6 +451,7 @@ public class AssaultParty {
      * Activates Assault Party. Wakes up the first Thief to block on the assault
      * party and changes the state of the Master
      */
+    @Override
     public void sendAssaultParty()
     {
         MasterThief master = (MasterThief) Thread.currentThread();
@@ -471,6 +477,7 @@ public class AssaultParty {
      * @param distance
      * @param roomId
      */
+    @Override
     public void setUpRoom(int distance, int roomId)
     {
         l.lock();
@@ -500,6 +507,7 @@ public class AssaultParty {
      *
      * @param elemId
      */
+    @Override
     public void addCrookCanvas(int elemId)
     {
         l.lock();

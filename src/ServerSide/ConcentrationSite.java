@@ -1,5 +1,6 @@
 package ServerSide;
 
+import Auxiliary.InterfaceConcentrationSite;
 import ClientSide.Thief;
 import HeistMuseum.Constants;
 import java.util.ArrayDeque;
@@ -15,7 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
-public class ConcentrationSite {
+public class ConcentrationSite implements InterfaceConcentrationSite {
 
     /**
      * Instance of Concentration Site
@@ -122,7 +123,6 @@ public class ConcentrationSite {
         assembling = l.newCondition();
         nAssaultParty = -1;
         globalId = -1;
-        //stThief = new Stack<>();
         queueThieves = new ArrayDeque<>();
         counterThief = 0;
         die = false;
@@ -132,6 +132,7 @@ public class ConcentrationSite {
     /**
      * Adds thief to stack and changes state to Outside.
      */
+    @Override
     public void addThief()
     {
         l.lock();
@@ -152,6 +153,7 @@ public class ConcentrationSite {
      *
      * @return
      */
+    @Override
     public int waitForCall()
     {
         l.lock();
@@ -202,6 +204,7 @@ public class ConcentrationSite {
      * @param partyId
      * @param roomId
      */
+    @Override
     public void prepareAssaultParty2(int partyId, int roomId)
     {
         l.lock();
@@ -230,6 +233,7 @@ public class ConcentrationSite {
      * The method prepareExcursion. The last Thief to enter the assault party,
      * wakes up the Master Thief and resets the nAssaultParty variable.
      */
+    @Override
     public void teamReady()
     {
         l.lock();
@@ -248,6 +252,7 @@ public class ConcentrationSite {
      *
      * @return size of thieves stack
      */
+    @Override
     public int checkThiefNumbers()
     {
         //return this.stThief.size();
@@ -258,6 +263,7 @@ public class ConcentrationSite {
      * Master Thief uses this method to wake every thief and awaits for the last
      * thief to wake her up.
      */
+    @Override
     public void wakeAll()
     {
         l.lock();
@@ -279,6 +285,7 @@ public class ConcentrationSite {
     /**
      * Change thief state to DEAD.
      */
+    @Override
     public void setDeadState()
     {
         l.lock();
