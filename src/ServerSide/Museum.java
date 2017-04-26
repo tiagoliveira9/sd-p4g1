@@ -104,12 +104,12 @@ public class Museum implements InterfaceMuseum {
             GRInformation.getInstance().setCanvasElem(partyId, elemPos, 1);
             GRInformation.getInstance().updateMuseumRoom(roomId);
             //t.setStateThief(Constants.AT_A_ROOM);
-            GRInformation.getInstance().printUpdateLine();
+            //GRInformation.getInstance().printUpdateLine();
 
         } else
         {
             //t.setStateThief(Constants.AT_A_ROOM);
-            GRInformation.getInstance().printUpdateLine();
+            //GRInformation.getInstance().printUpdateLine();
         }
         l.unlock();
         return flag;

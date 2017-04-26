@@ -63,7 +63,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * @serialField globalId
      */
     private int globalId;
-    
+
     /**
      * Stack that store Thieves objects.
      *
@@ -138,8 +138,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         l.lock();
         Thief crook = (Thief) Thread.currentThread();
         crook.setStateThief(Constants.OUTSIDE);
-        GRInformation.getInstance().printUpdateLine();
-        //stThief.push(crook);
+        GRInformation.getInstance().setStateThief(crook.getStateThief(), crook.getThiefId());        
         queueThieves.add(crook);
         l.unlock();
     }
@@ -291,7 +290,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         l.lock();
         Thief t = (Thief) Thread.currentThread();
         t.setStateThief(Constants.DEAD);
-        GRInformation.getInstance().setStateThief(t);
+        GRInformation.getInstance().setStateThief(t.getStateThief(), t.getThiefId());
         l.unlock();
     }
 }

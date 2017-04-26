@@ -6,7 +6,7 @@ import HeistMuseum.Constants;
 import ServerSide.AssaultParty;
 import ServerSide.ConcentrationSite;
 import ServerSide.ControlCollectionSite;
-import ServerSide.Museum;
+//import ServerSide.Museum;
 
 /**
  * This data type implements a Thief thread. (in the future explain more)

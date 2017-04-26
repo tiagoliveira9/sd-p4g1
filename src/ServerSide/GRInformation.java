@@ -1,5 +1,6 @@
 package ServerSide;
 
+import Auxiliary.InterfaceGRInformation;
 import ClientSide.MasterThief;
 import ClientSide.Thief;
 import HeistMuseum.Constants;
@@ -18,7 +19,7 @@ import java.text.SimpleDateFormat;
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
-public class GRInformation {
+public class GRInformation implements InterfaceGRInformation {
 
     /**
      * Date to create a timestamp on logs name
@@ -76,10 +77,12 @@ public class GRInformation {
      *
      * @param thief
      */
-    public void setStateThief(Thief thief)
+    @Override
+    public void setStateThief(int thief, int thiefId)
     {
         lock.lock();
-        ladrao[thief.getThiefId()].stat = thief.getStateThief();
+        ladrao[thiefId].stat = thief;
+        printDoubleLine();
         lock.unlock();
     }
 
@@ -88,6 +91,7 @@ public class GRInformation {
      *
      * @param thief
      */
+    @Override
     public void setStateAgility(Thief thief)
     {
         lock.lock();
@@ -100,10 +104,12 @@ public class GRInformation {
      *
      * @param masterThief
      */
-    public void setStateMasterThief(MasterThief masterThief)
+    @Override
+    public void setStateMasterThief(int masterThief)
     {
         lock.lock();
-        masterThiefState = masterThief.getStateMaster();
+        masterThiefState = masterThief;
+        printDoubleLine();
         lock.unlock();
     }
 
@@ -114,6 +120,7 @@ public class GRInformation {
      * @param elemId
      * @param pos
      */
+    @Override
     public void setPosElem(int partyId, int elemId, int pos)
     {
         lock.lock();
@@ -129,6 +136,7 @@ public class GRInformation {
      * @param elemId
      * @param cv
      */
+    @Override
     public void setCanvasElem(int partyId, int elemId, int cv)
     {
         lock.lock();
@@ -142,6 +150,7 @@ public class GRInformation {
      * @param partyId
      * @param roomId
      */
+    @Override
     public void setRoomId(int partyId, int roomId)
     {
         lock.lock();
@@ -156,10 +165,11 @@ public class GRInformation {
      * @param elemId
      * @param id
      */
-    public void setIdPartyElem(int partyId, int elemId, String id)
+    @Override
+    public void setIdPartyElem(int partyId, int elemId, int id)
     {
         lock.lock();
-        party[partyId].elements[elemId].id = id;
+        party[partyId].elements[elemId].id = Integer.toString(id);
         party[partyId].elements[elemId].pos = "0";
         party[partyId].elements[elemId].cv = "0";
         printDoubleLine();
@@ -172,6 +182,7 @@ public class GRInformation {
      * @param partyId
      * @param elemId
      */
+    @Override
     public void resetIdPartyElem(int partyId, int elemId)
     {
         lock.lock();
@@ -186,6 +197,7 @@ public class GRInformation {
      *
      * @param partyId
      */
+    @Override
     public void resetIdPartyRoom(int partyId)
     {
         lock.lock();
@@ -201,6 +213,7 @@ public class GRInformation {
      * @param canvas
      *
      */
+    @Override
     public void setUpMuseumRoom(int roomId, int distance, int canvas)
     {
         lock.lock();
@@ -214,12 +227,14 @@ public class GRInformation {
      *
      * @param roomId
      */
+    @Override
     public void updateMuseumRoom(int roomId)
     {
         lock.lock();
         int n = Integer.parseInt(sala[roomId].canvas);
         n--;
         sala[roomId].canvas = Integer.toString(n);
+        printDoubleLine();
         lock.unlock();
     }
 
@@ -347,6 +362,7 @@ public class GRInformation {
      * This method print the header of the log.
      *
      */
+    @Override
     public void printHeader()
     {
 
@@ -367,6 +383,7 @@ public class GRInformation {
      * Prints game column header.
      *
      */
+    @Override
     public void printColumnHeader()
     {
         lock.lock();
@@ -393,25 +410,6 @@ public class GRInformation {
     }
 
     /**
-     * Print 2 lines of a thread.
-     *
-     */
-    public void printUpdateLine()
-    {
-        lock.lock();
-        Thread thread = Thread.currentThread();
-        if (thread.getClass() == Thief.class)
-        {
-            setStateThief((Thief) thread);
-        } else if (thread.getClass() == MasterThief.class)
-        {
-            setStateMasterThief((MasterThief) thread);
-        }
-        printDoubleLine();
-        lock.unlock();
-    }
-
-    /**
      *
      */
     public void printDoubleLine()
@@ -426,6 +424,7 @@ public class GRInformation {
      * Print the states of the entities. The first line.
      *
      */
+    @Override
     public void printEntityStates()
     {
         lock.lock();
@@ -451,6 +450,7 @@ public class GRInformation {
      * Print the assault party description. The second line.
      *
      */
+    @Override
     public void printAssaultDescription()
     {
         lock.lock();
@@ -562,6 +562,7 @@ public class GRInformation {
      * Print the legend of the program.
      *
      */
+    @Override
     public void printLegend()
     {
 
@@ -586,6 +587,7 @@ public class GRInformation {
      *
      * @param totalPaints
      */
+    @Override
     public void printResume(int totalPaints)
     {
         lock.lock();
@@ -613,6 +615,7 @@ public class GRInformation {
      * Close the printer file.
      *
      */
+    @Override
     public void close()
     {
         lock.lock();

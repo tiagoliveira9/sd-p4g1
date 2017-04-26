@@ -113,7 +113,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         l.lock();
         MasterThief master = (MasterThief) Thread.currentThread();
         master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
-        GRInformation.getInstance().printUpdateLine();
+        GRInformation.getInstance().setStateMasterThief(stateMaster);
         l.unlock();
     }
 
@@ -134,7 +134,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
         stateMaster = Constants.ASSEMBLING_A_GROUP;
         master.setStateMaster(stateMaster);
-        GRInformation.getInstance().printUpdateLine();
+        GRInformation.getInstance().setStateMasterThief(stateMaster);
 
         if (!assaultP1)
         {
@@ -176,8 +176,9 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
         stateMaster = Constants.WAITING_FOR_ARRIVAL;
         master.setStateMaster(stateMaster);
-        GRInformation.getInstance().printUpdateLine();
-
+        // set statemaster
+        GRInformation.getInstance().setStateMasterThief(stateMaster);
+        
         try
         {
             while (!restBool)
@@ -313,7 +314,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         l.lock();
         MasterThief m = (MasterThief) Thread.currentThread();
         m.setStateMaster(Constants.PRESENTING_THE_REPORT);
-        GRInformation.getInstance().setStateMasterThief(m);
+        GRInformation.getInstance().setStateMasterThief(m.getStateMaster());
         GRInformation.getInstance().printResume(nCanvas);
         l.unlock();
     }

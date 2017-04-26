@@ -121,9 +121,8 @@ public class AssaultParty implements InterfaceAssaultParty {
                     if (line[i] == -1)
                     {
                         line[i] = t.getThiefId();
-                        String a = Integer.toString(t.getThiefId() + 1);
-                        GRInformation.getInstance().setIdPartyElem(partyId,
-                                i, a);
+                        int id = t.getThiefId() + 1;
+                        GRInformation.getInstance().setIdPartyElem(partyId, i, id);
                         break;
                     }
                 }
@@ -164,7 +163,8 @@ public class AssaultParty implements InterfaceAssaultParty {
         {
         }
         t.setStateThief(Constants.CRAWLING_INWARDS);
-        GRInformation.getInstance().printUpdateLine();
+
+        GRInformation.getInstance().setStateThief(t.getStateThief(), t.getThiefId());
 
         l.unlock();
     }
@@ -232,7 +232,7 @@ public class AssaultParty implements InterfaceAssaultParty {
         try
         {
             t.setStateThief(Constants.CRAWLING_OUTWARDS);
-            GRInformation.getInstance().printUpdateLine();
+            GRInformation.getInstance().setStateThief(t.getStateThief(), t.getThiefId());
 
             while (c.id != idGlobal)
             {
