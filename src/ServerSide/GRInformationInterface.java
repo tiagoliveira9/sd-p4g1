@@ -94,7 +94,7 @@ public class GRInformationInterface implements InterfaceServer {
     @Override
     public boolean shutingDown()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return repo.shutdown();
     }
 
 }

@@ -1,13 +1,14 @@
 package HeistMuseum;
 
 import Auxiliary.InterfaceGRInformation;
+import Auxiliary.InterfaceMuseum;
 import ServerSide.ConcentrationSite;
 import ServerSide.ControlCollectionSite;
 import ServerSide.AssaultParty;
-import ServerSide.GRInformation;
 
 import ClientSide.Thief;
 import ClientSide.MasterThief;
+import ClientSide.MuseumStub;
 import ServerSide.GRInformationStub;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -27,8 +28,9 @@ public class HeistMuseum {
      * @param args the command line arguments
      * @throws java.lang.InterruptedException
      */
-    private final static InterfaceGRInformation repo= new GRInformationStub();
+    private final static InterfaceGRInformation repo = new GRInformationStub();
 
+    private final static InterfaceMuseum mus = new MuseumStub();
 
     public static void main(String[] args) throws InterruptedException
     {
@@ -80,6 +82,11 @@ public class HeistMuseum {
         }
 
         masterThief.join();
+
+        // quando o master morre, posso matar todos os servicos
+        System.out.println("Morri");
+        repo.shutdown();
+        mus.shutdown();
 
     }
 

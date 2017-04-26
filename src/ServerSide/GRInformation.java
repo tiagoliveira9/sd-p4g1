@@ -621,4 +621,10 @@ public class GRInformation implements InterfaceGRInformation {
         log.close();
         lock.unlock();
     }
+
+    @Override
+    public boolean shutdown()
+    {
+        return true;
+    }
 }

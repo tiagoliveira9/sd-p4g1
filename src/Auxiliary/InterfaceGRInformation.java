@@ -117,4 +117,6 @@ public interface InterfaceGRInformation {
      */
     void updateMuseumRoom(int roomId);
     
+    boolean shutdown();
+    
 }

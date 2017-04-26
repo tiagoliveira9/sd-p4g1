@@ -331,5 +331,30 @@ public class GRInformationStub implements InterfaceGRInformation {
 
         con.close();
     }
+    
+    @Override
+    public boolean shutdown(){
+    
+        
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.SHUTDOWN);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.ACK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
+        // se chegou aqui não desligou
+        return false;
+    }
 
 }

@@ -1,29 +1,18 @@
 package ServerSide;
 
-//import ClientSide.Contestant;
-import Auxiliary.InterfaceMasterThief;
-import Auxiliary.InterfaceThief;
-
-
 import Comm.Message;
 import Comm.MessageException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * This class implements all Coach, Contestant and Referee interfaces. The
- * purpose is to serve the incoming messages and forward to the right passive
- * class implementation of the InterfaceServer.
- *
- */
-public class ClientProxy extends Thread{
+
+public class ClientProxy extends Thread {
 
     private final ServerCom sconi;
     private final InterfaceServer servInterface;
 
     private static int clientProxyId = 0;  // spa initialisation counter
-
 
     /**
      * Initialisation of the server interface
@@ -31,7 +20,8 @@ public class ClientProxy extends Thread{
      * @param sconi connection accepted by the main server
      * @param servInterface server interface to be provided
      */
-    ClientProxy(ServerCom sconi, InterfaceServer servInterface) {
+    ClientProxy(ServerCom sconi, InterfaceServer servInterface)
+    {
 
         super(Integer.toString(clientProxyId++));
         this.sconi = sconi;
@@ -39,7 +29,8 @@ public class ClientProxy extends Thread{
     }
 
     @Override
-    public void run() {
+    public void run()
+    {
         Message inMessage, outMessage = null;
 
         Thread.currentThread().setName("Proxy-" + Integer.toString(clientProxyId));
@@ -48,7 +39,8 @@ public class ClientProxy extends Thread{
 
         System.out.println(Thread.currentThread().getName() + ": " + inMessage.getType());
 
-        if (inMessage.getType() == Message.SHUTDOWN) {
+        if (inMessage.getType() == Message.SHUTDOWN)
+        {
             boolean shutdown = servInterface.shutingDown();
 
             outMessage = new Message(Message.ACK);
@@ -56,14 +48,19 @@ public class ClientProxy extends Thread{
             sconi.writeObject(outMessage);
             sconi.close();
 
-            if (shutdown) {
+            if (shutdown)
+            {
+                System.out.println("Client Proxy has terminated");
                 System.exit(0);
             }
-        } else {
+        } else
+        {
             // TODO: validate message
-            try {
+            try
+            {
                 outMessage = servInterface.processAndReply(inMessage);
-            } catch (MessageException ex) {
+            } catch (MessageException ex)
+            {
                 Logger.getLogger(ClientProxy.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -155,8 +152,6 @@ public class ClientProxy extends Thread{
     public void setRefereeState(RefereeState state) {
         this.state = state;
     }
-    */
+     */
 
-   
-    
 }

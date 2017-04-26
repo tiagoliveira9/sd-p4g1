@@ -146,6 +146,10 @@ public class Museum implements InterfaceMuseum {
         return -1;
     }
 
-    // é possivel que precisemos de fazer uma verificao
-    // de shutdown
+    
+    @Override
+    public boolean shutdown()
+    {
+        return true;
+    }
 }
