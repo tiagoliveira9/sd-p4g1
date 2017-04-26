@@ -1,6 +1,7 @@
 package ServerSide;
 
 import Auxiliary.InterfaceControlCollectionSite;
+import Auxiliary.InterfaceGRInformation;
 import ClientSide.MasterThief;
 import HeistMuseum.Constants;
 
@@ -46,6 +47,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     private int nCanvas; // number of canvas stolen
     private int stateMaster;
     private Sala[] salas;
+
+    private final InterfaceGRInformation repo;
 
     private class Sala {
 
@@ -102,10 +105,12 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         {
             salas[i] = new Sala(i);
         }
+        
+        repo = new GRInformationStub();
     }
 
     /**
-     * This method changes the Thief state to Deciding what to do. 
+     * This method changes the Thief state to Deciding what to do.
      */
     @Override
     public void setDeciding()
@@ -113,7 +118,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         l.lock();
         MasterThief master = (MasterThief) Thread.currentThread();
         master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
-        GRInformation.getInstance().setStateMasterThief(stateMaster);
+        repo.setStateMasterThief(Constants.DECIDING_WHAT_TO_DO);
         l.unlock();
     }
 
@@ -134,7 +139,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
         stateMaster = Constants.ASSEMBLING_A_GROUP;
         master.setStateMaster(stateMaster);
-        GRInformation.getInstance().setStateMasterThief(stateMaster);
+        repo.setStateMasterThief(stateMaster);
 
         if (!assaultP1)
         {
@@ -177,8 +182,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         stateMaster = Constants.WAITING_FOR_ARRIVAL;
         master.setStateMaster(stateMaster);
         // set statemaster
-        GRInformation.getInstance().setStateMasterThief(stateMaster);
-        
+       repo.setStateMasterThief(stateMaster);
+
         try
         {
             while (!restBool)
@@ -225,7 +230,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         }
         if (lastArriving)
         {
-            GRInformation.getInstance().resetIdPartyRoom(partyId);
+            repo.resetIdPartyRoom(partyId);
             salas[roomId].inUse = false;
             if (partyId == 0)
             {
@@ -314,8 +319,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         l.lock();
         MasterThief m = (MasterThief) Thread.currentThread();
         m.setStateMaster(Constants.PRESENTING_THE_REPORT);
-        GRInformation.getInstance().setStateMasterThief(m.getStateMaster());
-        GRInformation.getInstance().printResume(nCanvas);
+        repo.setStateMasterThief(m.getStateMaster());
+        repo.printResume(nCanvas);
         l.unlock();
     }
 

@@ -1,8 +1,7 @@
 package ServerSide;
 
+import Auxiliary.InterfaceGRInformation;
 import Auxiliary.InterfaceMuseum;
-import Auxiliary.InterfaceThief;
-import ClientSide.Thief;
 import HeistMuseum.Constants;
 
 import java.util.concurrent.locks.Lock;
@@ -17,6 +16,7 @@ public class Museum implements InterfaceMuseum {
     private static Museum instance;
     private final static Lock l = new ReentrantLock();
     private Room[] rooms;
+    private final InterfaceGRInformation repo;
 
     private class Room {
 
@@ -58,6 +58,7 @@ public class Museum implements InterfaceMuseum {
         {
             rooms[i] = new Room(i);
         }
+        repo = new GRInformationStub();
     }
 
     /**
@@ -74,7 +75,7 @@ public class Museum implements InterfaceMuseum {
         {
             rooms[roomId].distance = distance;
             rooms[roomId].canvas = canvas;
-            GRInformation.getInstance().setUpMuseumRoom(roomId, distance, canvas);
+            repo.setUpMuseumRoom(roomId, distance, canvas);
         }
         l.unlock();
     }
@@ -101,15 +102,13 @@ public class Museum implements InterfaceMuseum {
             rooms[roomId].canvas--;
             flag = true;
 
-            GRInformation.getInstance().setCanvasElem(partyId, elemPos, 1);
-            GRInformation.getInstance().updateMuseumRoom(roomId);
-            //t.setStateThief(Constants.AT_A_ROOM);
-            //GRInformation.getInstance().printUpdateLine();
+            repo.setCanvasElem(partyId, elemPos, 1);
+            repo.updateMuseumRoom(roomId);
+            //t.setStateThief(Constants.AT_A_ROOM); a mudança de estado passou para o STUB
 
         } else
         {
             //t.setStateThief(Constants.AT_A_ROOM);
-            //GRInformation.getInstance().printUpdateLine();
         }
         l.unlock();
         return flag;

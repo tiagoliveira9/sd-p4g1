@@ -7,7 +7,6 @@ import HeistMuseum.Constants;
 import ServerSide.AssaultParty;
 import ServerSide.ConcentrationSite;
 import ServerSide.ControlCollectionSite;
-//import ServerSide.Museum;
 
 /**
  * This data type implements a Master Thief thread.
@@ -63,7 +62,6 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
                     //dist = Museum.getInstance().getRoomDistance(pick[1]);
                     dist = museum.getRoomDistance(pick[1]);
                     AssaultParty.getInstance(pick[0]).setUpRoom(dist, pick[1]);
-
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
                     ConcentrationSite.getInstance().prepareAssaultParty2(pick[0], pick[1]);
 

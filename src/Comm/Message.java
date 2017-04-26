@@ -19,6 +19,8 @@ public class Message implements Serializable {
      *
      * @serialField ACK
      */
+    
+    public static final int OK = 0;
     public static final int ACK = 1;
 
     /* Messages Museum */
@@ -29,7 +31,7 @@ public class Message implements Serializable {
     public static final int SHUTDOWN = 6;
 
     /* Messages GRInformation */
-    public static final int SETUP_ROOM = 7;
+    public static final int SETUP_MUS_ROOM = 7;
     public static final int SETCANVAS_ELEM = 8;
     public static final int SETSTATE_MASTER = 9;
     public static final int SETSTATE_THIEF = 10;
@@ -40,6 +42,9 @@ public class Message implements Serializable {
     public static final int RESET_PARTY_ELEM = 15;
     public static final int SETPOS_ELEM = 16;
     public static final int UPDATE_MUS_ROOM = 17;
+    public static final int SETAGILITY = 18;
+    public static final int CLOSE_REPO = 19;
+    public static final int PRINT_LEGE = 20;
 
     /* Info Active Entities */
     private int thiefId;
@@ -95,7 +100,6 @@ public class Message implements Serializable {
      *
      * @param type tipo da mensagem
      */
-    // GRInformation printUpdateLine();
     public Message(int type)
     {
         msgType = type;
@@ -148,6 +152,7 @@ public class Message implements Serializable {
     // GRInformation setStateThief(stateThief, thiefId)         
     // GRInformation setRoomId(partyId, roomId)
     // GRInformation resetIdPartyElem(partyId, elemId) 
+    // GRInformation setStateAgility(int thiefAgility, int thiefId)
     public Message(int type, int val1, int val2)
     {
         msgType = type;
@@ -166,7 +171,10 @@ public class Message implements Serializable {
                 partyId = val1;
                 elemId = val2;
                 break;
-
+            case SETAGILITY:
+                agility = val1;
+                thiefId = val2;
+                break;
             default:
                 break;
         }
@@ -195,14 +203,14 @@ public class Message implements Serializable {
                 elemPos = val2;
                 partyId = val3;
                 break;
-            case SETUP_ROOM:
+            case SETUP_MUS_ROOM:
                 roomId = val1;
                 distance = val2;
                 canvas = val3;
                 break;
             case SETCANVAS_ELEM:
                 partyId = val1;
-                elemPos = val2;
+                elemId = val2;
                 canvas = val3;
                 break;
             case SETPARTY_ELEM:

@@ -1,13 +1,14 @@
 package HeistMuseum;
 
+import Auxiliary.InterfaceGRInformation;
 import ServerSide.ConcentrationSite;
 import ServerSide.ControlCollectionSite;
 import ServerSide.AssaultParty;
-import ServerSide.Museum;
 import ServerSide.GRInformation;
 
 import ClientSide.Thief;
 import ClientSide.MasterThief;
+import ServerSide.GRInformationStub;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -26,13 +27,17 @@ public class HeistMuseum {
      * @param args the command line arguments
      * @throws java.lang.InterruptedException
      */
+    private final static InterfaceGRInformation repo= new GRInformationStub();
+
+
     public static void main(String[] args) throws InterruptedException
     {
 
         // Instanciation of the World
         ConcentrationSite.getInstance();
         ControlCollectionSite.getInstance();
-        GRInformation.getInstance().printHeader();
+        //GRInformation.getInstance().printHeader();
+
         for (int i = 0; i < Constants.N_ASSAULT_PARTY; i++)
         {
             AssaultParty.getInstance(i);
@@ -50,7 +55,6 @@ public class HeistMuseum {
             canvas = ThreadLocalRandom.current().nextInt(8, 16 + 1);
             hermitage.setUpRoom(i, distance, canvas);
         }*/
-
         Thief[] thieves = new Thief[Constants.N_THIEVES];
         MasterThief masterThief = new MasterThief();
         int agility;
@@ -62,7 +66,7 @@ public class HeistMuseum {
             agility = ThreadLocalRandom.current().nextInt(2, 6 + 1);
             // agility = 2;
             thieves[i] = new Thief(i, agility);
-            GRInformation.getInstance().setStateAgility(thieves[i]);
+            repo.setStateAgility(thieves[i].getAgility(), thieves[i].getThiefId());
             thieves[i].start();
         }
 

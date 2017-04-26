@@ -1,8 +1,9 @@
 package ServerSide;
 
 import Auxiliary.InterfaceGRInformation;
-import ClientSide.MasterThief;
-import ClientSide.Thief;
+import ClientSide.ClientCom;
+import Comm.Message;
+import static java.lang.System.out;
 
 /**
  *
@@ -10,112 +11,325 @@ import ClientSide.Thief;
  */
 public class GRInformationStub implements InterfaceGRInformation {
 
+    private ClientCom initiateConnection()
+    {
+        ClientCom con = new ClientCom("trump-pc", 4001);
+
+        if (!con.open())
+        {
+            System.out.println("Couldn't initiate connection to "
+                    + "trump-pc" + ":" + 4001);
+        }
+
+        return con;
+    }
+
     @Override
     public void close()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        ClientCom con = initiateConnection();
 
-    @Override
-    public void printAssaultDescription()
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        Message inMessage, outMessage;
 
-    @Override
-    public void printColumnHeader()
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        outMessage = new Message(Message.CLOSE_REPO);
 
-    @Override
-    public void printEntityStates()
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        con.writeObject(outMessage);
 
-    @Override
-    public void printHeader()
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void printLegend()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.PRINT_LEGE);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void printResume(int totalPaints)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.RESUME_CANVAS, totalPaints);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void resetIdPartyElem(int partyId, int elemId)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.RESET_PARTY_ELEM, partyId, elemId);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void resetIdPartyRoom(int partyId)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.RESET_PARTY_ROOM, partyId);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void setCanvasElem(int partyId, int elemId, int cv)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.SETCANVAS_ELEM, partyId, elemId, cv);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void setIdPartyElem(int partyId, int elemId, int id)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.SETPARTY_ELEM, partyId, elemId, id);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void setPosElem(int partyId, int elemId, int pos)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.SETPOS_ELEM, partyId, elemId, pos);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void setRoomId(int partyId, int roomId)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.SETROOM_ID, partyId, roomId);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
-    public void setStateAgility(Thief thief)
+    public void setStateAgility(int thiefAgility, int thiefId)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.SETAGILITY, thiefAgility, thiefId);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void setStateMasterThief(int masterThief)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.SETSTATE_MASTER, masterThief);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
-    public void setStateThief(int thief, int thiefId)
+    public void setStateThief(int thiefState, int thiefId)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.SETSTATE_THIEF, thiefState, thiefId);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void setUpMuseumRoom(int roomId, int distance, int canvas)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.SETUP_MUS_ROOM, roomId, distance, canvas);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
 
     @Override
     public void updateMuseumRoom(int roomId)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.UPDATE_MUS_ROOM, roomId);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
     }
-    
+
 }

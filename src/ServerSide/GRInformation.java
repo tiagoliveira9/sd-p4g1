@@ -1,8 +1,6 @@
 package ServerSide;
 
 import Auxiliary.InterfaceGRInformation;
-import ClientSide.MasterThief;
-import ClientSide.Thief;
 import HeistMuseum.Constants;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -78,10 +76,10 @@ public class GRInformation implements InterfaceGRInformation {
      * @param thief
      */
     @Override
-    public void setStateThief(int thief, int thiefId)
+    public void setStateThief(int thiefState, int thiefId)
     {
         lock.lock();
-        ladrao[thiefId].stat = thief;
+        ladrao[thiefId].stat = thiefState;
         printDoubleLine();
         lock.unlock();
     }
@@ -89,13 +87,14 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Set thief agility
      *
-     * @param thief
+     * @param thiefAgility
+     * @param thiefId
      */
     @Override
-    public void setStateAgility(Thief thief)
+    public void setStateAgility(int thiefAgility, int thiefId)
     {
         lock.lock();
-        ladrao[thief.getThiefId()].md = Integer.toString(thief.getAgility());
+        ladrao[thiefId].md = Integer.toString(thiefAgility);
         lock.unlock();
     }
 
@@ -154,7 +153,9 @@ public class GRInformation implements InterfaceGRInformation {
     public void setRoomId(int partyId, int roomId)
     {
         lock.lock();
+        System.out.println("partyID " + partyId + " roomId " + roomId);
         party[partyId].roomId = Integer.toString(roomId + 1);
+        //party[roomId].roomId = Integer.toString(partyId + 1);
         lock.unlock();
     }
 
@@ -316,6 +317,7 @@ public class GRInformation implements InterfaceGRInformation {
             if (instance == null)
             {
                 instance = new GRInformation();
+                instance.printHeader();
             }
         } finally
         {
@@ -362,7 +364,6 @@ public class GRInformation implements InterfaceGRInformation {
      * This method print the header of the log.
      *
      */
-    @Override
     public void printHeader()
     {
 
@@ -371,7 +372,7 @@ public class GRInformation implements InterfaceGRInformation {
         Formatter formatter = new Formatter(strb);
         formatter.format("%1$84s%n", "Heist to the museum - Description of the internal state");
         log.print(strb.toString());
-        System.out.println(strb.toString());
+        //System.out.println(strb.toString());
         log.flush();
         printColumnHeader();
         printEntityStates();
@@ -383,7 +384,6 @@ public class GRInformation implements InterfaceGRInformation {
      * Prints game column header.
      *
      */
-    @Override
     public void printColumnHeader()
     {
         lock.lock();
@@ -404,7 +404,7 @@ public class GRInformation implements InterfaceGRInformation {
                 "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "NP DT", "NP DT", "NP DT", "ND DP", "ND DP");
 
         log.print(strb.toString());
-        System.out.println(strb.toString());
+        //System.out.println(strb.toString());
         log.flush();
         lock.unlock();
     }
@@ -424,7 +424,6 @@ public class GRInformation implements InterfaceGRInformation {
      * Print the states of the entities. The first line.
      *
      */
-    @Override
     public void printEntityStates()
     {
         lock.lock();
@@ -441,7 +440,7 @@ public class GRInformation implements InterfaceGRInformation {
 
         formatter.format("%n");
         log.print(strb.toString());
-        System.out.println(strb.toString());
+        //System.out.println(strb.toString());
         log.flush();
         lock.unlock();
     }
@@ -450,7 +449,6 @@ public class GRInformation implements InterfaceGRInformation {
      * Print the assault party description. The second line.
      *
      */
-    @Override
     public void printAssaultDescription()
     {
         lock.lock();
@@ -476,7 +474,7 @@ public class GRInformation implements InterfaceGRInformation {
 
         formatter.format("%n");
         log.print(strb.toString());
-        System.out.println(strb.toString());
+        //System.out.println(strb.toString());
 
         log.flush();
         lock.unlock();

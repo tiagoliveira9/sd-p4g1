@@ -15,29 +15,6 @@ public interface InterfaceGRInformation {
      */
     void close();
 
-    /**
-     * Print the assault party description. The second line.
-     *
-     */
-    void printAssaultDescription();
-
-    /**
-     * Prints game column header.
-     *
-     */
-    void printColumnHeader();
-
-    /**
-     * Print the states of the entities. The first line.
-     *
-     */
-    void printEntityStates();
-
-    /**
-     * This method print the header of the log.
-     *
-     */
-    void printHeader();
 
     /**
      * Print the legend of the program.
@@ -107,7 +84,7 @@ public interface InterfaceGRInformation {
      *
      * @param thief
      */
-    void setStateAgility(Thief thief);
+    void setStateAgility(int thiefAgility, int thiefId);
 
     /**
      * Set master thief state
@@ -121,7 +98,7 @@ public interface InterfaceGRInformation {
      *
      * @param thief
      */
-    void setStateThief(int thief, int thiefId);
+    void setStateThief(int thiefState, int thiefId);
 
     /**
      * Set up Museum Room, distance and number of canvas.

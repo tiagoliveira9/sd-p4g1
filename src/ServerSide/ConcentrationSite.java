@@ -1,6 +1,7 @@
 package ServerSide;
 
 import Auxiliary.InterfaceConcentrationSite;
+import Auxiliary.InterfaceGRInformation;
 import ClientSide.Thief;
 import HeistMuseum.Constants;
 import java.util.ArrayDeque;
@@ -92,6 +93,8 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * @serialField die
      */
     private int countDie;
+    
+    private final InterfaceGRInformation repo;
 
     /**
      * The method returns ConcentrationSite object.
@@ -127,6 +130,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         counterThief = 0;
         die = false;
         countDie = 0;
+        repo = new GRInformationStub();
     }
 
     /**
@@ -138,7 +142,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         l.lock();
         Thief crook = (Thief) Thread.currentThread();
         crook.setStateThief(Constants.OUTSIDE);
-        GRInformation.getInstance().setStateThief(crook.getStateThief(), crook.getThiefId());        
+        repo.setStateThief(crook.getStateThief(), crook.getThiefId());        
         queueThieves.add(crook);
         l.unlock();
     }
@@ -208,7 +212,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
     {
         l.lock();
         nAssaultParty = partyId;
-        GRInformation.getInstance().setRoomId(partyId, roomId);
+        repo.setRoomId(partyId, roomId);
 
         //Thief c = stThief.pop();
         Thief c = queueThieves.remove();
@@ -290,7 +294,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         l.lock();
         Thief t = (Thief) Thread.currentThread();
         t.setStateThief(Constants.DEAD);
-        GRInformation.getInstance().setStateThief(t.getStateThief(), t.getThiefId());
+        repo.setStateThief(t.getStateThief(), t.getThiefId());
         l.unlock();
     }
 }

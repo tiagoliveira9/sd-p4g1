@@ -1,39 +1,39 @@
 package Comm;
 
 /**
- *   Este tipo de dados define uma excepção que é lançada se a mensagem for inválida.
+ * Este tipo de dados define uma excepção que é lançada se a mensagem for
+ * inválida.
  */
+public class MessageException extends Exception {
 
-public class MessageException extends Exception
-{
-  /**
-   *  Mensagem que originou a excepção
-   *    @serialField msg
-   */
+    /**
+     * Mensagem que originou a excepção
+     *
+     * @serialField msg
+     */
 
-   private Message msg;
+    private Message msg;
+    private static final long serialVersionUID = 1001L;
 
-  /**
-   *  Instanciação de uma mensagem.
-   *
-   *    @param errorMessage texto sinalizando a condição de erro
-   *    @param msg mensagem que está na origem da excepção
-   */
+    /**
+     * Instanciação de uma mensagem.
+     *
+     * @param errorMessage texto sinalizando a condição de erro
+     * @param msg mensagem que está na origem da excepção
+     */
+    public MessageException(String errorMessage, Message msg)
+    {
+        super(errorMessage);
+        this.msg = msg;
+    }
 
-   public MessageException (String errorMessage, Message msg)
-   {
-     super (errorMessage);
-     this.msg = msg;
-   }
-
-  /**
-   *  Obtenção da mensagem que originou a excepção.
-   *
-   *    @return mensagem
-   */
-
-   public Message getMessageVal ()
-   {
-     return (msg);
-   }
+    /**
+     * Obtenção da mensagem que originou a excepção.
+     *
+     * @return mensagem
+     */
+    public Message getMessageVal()
+    {
+        return (msg);
+    }
 }

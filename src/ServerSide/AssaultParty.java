@@ -1,6 +1,7 @@
 package ServerSide;
 
 import Auxiliary.InterfaceAssaultParty;
+import Auxiliary.InterfaceGRInformation;
 import ClientSide.MasterThief;
 import ClientSide.Thief;
 import HeistMuseum.Constants;
@@ -30,6 +31,8 @@ public class AssaultParty implements InterfaceAssaultParty {
     private int teamHeadIn; // thief that goes on the front crawling IN
     private int teamHeadOut; // thief that goes on the front crawling OUT
     private int idGlobal;
+
+    private final InterfaceGRInformation repo;
 
     private class Crook {
 
@@ -94,6 +97,7 @@ public class AssaultParty implements InterfaceAssaultParty {
         }
         moveThief = l.newCondition();
         idGlobal = -1;
+        repo = new GRInformationStub();
     }
 
     /**
@@ -122,7 +126,7 @@ public class AssaultParty implements InterfaceAssaultParty {
                     {
                         line[i] = t.getThiefId();
                         int id = t.getThiefId() + 1;
-                        GRInformation.getInstance().setIdPartyElem(partyId, i, id);
+                        repo.setIdPartyElem(partyId, i, id);
                         break;
                     }
                 }
@@ -163,8 +167,7 @@ public class AssaultParty implements InterfaceAssaultParty {
         {
         }
         t.setStateThief(Constants.CRAWLING_INWARDS);
-
-        GRInformation.getInstance().setStateThief(t.getStateThief(), t.getThiefId());
+        repo.setStateThief(t.getStateThief(), t.getThiefId());
 
         l.unlock();
     }
@@ -232,7 +235,7 @@ public class AssaultParty implements InterfaceAssaultParty {
         try
         {
             t.setStateThief(Constants.CRAWLING_OUTWARDS);
-            GRInformation.getInstance().setStateThief(t.getStateThief(), t.getThiefId());
+            repo.setStateThief(t.getStateThief(), t.getThiefId());
 
             while (c.id != idGlobal)
             {
@@ -253,7 +256,7 @@ public class AssaultParty implements InterfaceAssaultParty {
             // Remove myself from team
             line[myElemId] = -1;
             nCrook--;
-            GRInformation.getInstance().resetIdPartyElem(partyId, myElemId);
+            repo.resetIdPartyElem(partyId, myElemId);
             //
             idGlobal = squad[next].id;
             moveThief.signalAll();
@@ -322,12 +325,10 @@ public class AssaultParty implements InterfaceAssaultParty {
                         c.pos = distance;
                         if (way)
                         {
-                            GRInformation.getInstance().setPosElem(partyId,
-                                    elemId, c.pos);
+                            repo.setPosElem(partyId, elemId, c.pos);
                         } else
                         {
-                            GRInformation.getInstance().setPosElem(partyId,
-                                    elemId, translatePos[c.pos]);
+                            repo.setPosElem(partyId, elemId, translatePos[c.pos]);
                         }
                         flagI = true;
                         break;
@@ -342,12 +343,10 @@ public class AssaultParty implements InterfaceAssaultParty {
                         c.pos = distance;
                         if (way)
                         {
-                            GRInformation.getInstance().setPosElem(partyId,
-                                    elemId, c.pos);
+                            repo.setPosElem(partyId, elemId, c.pos);
                         } else
                         {
-                            GRInformation.getInstance().setPosElem(partyId,
-                                    elemId, translatePos[c.pos]);
+                            repo.setPosElem(partyId, elemId, translatePos[c.pos]);
                         }
                         flagI = true;
                         break;
@@ -357,12 +356,10 @@ public class AssaultParty implements InterfaceAssaultParty {
             }
             if (way)
             {
-                GRInformation.getInstance().setPosElem(partyId,
-                        elemId, c.pos);
+                repo.setPosElem(partyId, elemId, c.pos);
             } else
             {
-                GRInformation.getInstance().setPosElem(partyId,
-                        elemId, translatePos[c.pos]);
+                repo.setPosElem(partyId, elemId, translatePos[c.pos]);
             }
         } while (c.pos - teamHead != 3);
 
