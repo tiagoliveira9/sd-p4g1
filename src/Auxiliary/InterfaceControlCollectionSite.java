@@ -36,7 +36,7 @@ public interface InterfaceControlCollectionSite {
      * @param partyId
      * @param roomId
      */
-    void handACanvas(boolean canvas, int roomId, int partyId);
+    void handACanvas(int canvas, int roomId, int partyId);
 
     /**
      * The method prepareAssaultPart stage 1. Selects Assault Party and Room to
@@ -62,5 +62,7 @@ public interface InterfaceControlCollectionSite {
      *
      */
     void takeARest();
+
+    boolean shutdown();
     
 }

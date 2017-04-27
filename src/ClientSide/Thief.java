@@ -1,12 +1,11 @@
 package ClientSide;
 
+import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceMuseum;
 import Auxiliary.InterfaceThief;
 import HeistMuseum.Constants;
 import ServerSide.AssaultParty;
 import ServerSide.ConcentrationSite;
-import ServerSide.ControlCollectionSite;
-//import ServerSide.Museum;
 
 /**
  * This data type implements a Thief thread. (in the future explain more)
@@ -42,7 +41,9 @@ public class Thief extends Thread implements InterfaceThief {
     private boolean justHanded;
 
     private final InterfaceMuseum museum;
-
+    private final InterfaceControlCollectionSite control;
+    
+    
     /**
      * Thief instantiation.
      *
@@ -58,7 +59,7 @@ public class Thief extends Thread implements InterfaceThief {
         stateThief = Constants.OUTSIDE;
         justHanded = false;
         museum = new MuseumStub();
-
+        control = new ControlCollectionSiteStub();
     }
 
     /**
@@ -88,12 +89,16 @@ public class Thief extends Thread implements InterfaceThief {
 
             //boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
             boolean painting = museum.rollACanvas(roll[0], roll[1], partyId);
+            
+            int canvas = 0;
             if (painting)
             {
                 AssaultParty.getInstance(partyId).addCrookCanvas(roll[1]);
+                canvas = 1;
             }
             AssaultParty.getInstance(partyId).crawlOut();
-            ControlCollectionSite.getInstance().handACanvas(painting, roll[0], partyId);
+
+            control.handACanvas(canvas, roll[0], partyId);
             justHanded = true; // to avoid wrong, first time signal
         }
         ConcentrationSite.getInstance().setDeadState();
@@ -111,7 +116,7 @@ public class Thief extends Thread implements InterfaceThief {
         ConcentrationSite.getInstance().addThief();
         if (justHanded)
         {
-            ControlCollectionSite.getInstance().goCollectMaster();
+            control.goCollectMaster();
         }
         return ConcentrationSite.getInstance().waitForCall();
     }

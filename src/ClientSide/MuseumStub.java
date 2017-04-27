@@ -53,8 +53,9 @@ public class MuseumStub implements InterfaceMuseum {
     public boolean rollACanvas(int roomId, int elemPos, int partyId)
     {
         Thief t = (Thief) Thread.currentThread();
-        ClientCom con = initiateConnection();
         t.setStateThief(Constants.AT_A_ROOM);
+        
+        ClientCom con = initiateConnection();
         Message inMessage, outMessage;
 
         outMessage = new Message(Message.GET_ROLL,roomId, elemPos, partyId);

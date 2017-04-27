@@ -1,12 +1,12 @@
 package ClientSide;
 
+import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceMasterThief;
 import Auxiliary.InterfaceMuseum;
 
 import HeistMuseum.Constants;
 import ServerSide.AssaultParty;
 import ServerSide.ConcentrationSite;
-import ServerSide.ControlCollectionSite;
 
 /**
  * This data type implements a Master Thief thread.
@@ -22,8 +22,10 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      * @serialField stateMaster
      */
     private int stateMaster;
-    
+
     private final InterfaceMuseum museum;
+    private final InterfaceControlCollectionSite control;
+
     /**
      * Constructor.
      */
@@ -32,6 +34,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
         super("master");
         stateMaster = Constants.PLANNING_THE_HEIST;
         museum = new MuseumStub();
+        control = new ControlCollectionSiteStub();
     }
 
     /**
@@ -50,16 +53,17 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
             switch (opt)
             {
                 case 2:
+                    System.out.println("entrei case 2");
                     // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
                     // {AssaultPartyId, tSala}
-                    pick = ControlCollectionSite.getInstance().prepareAssaultParty1();
+                    pick = control.prepareAssaultParty1();
+                    System.out.println("pick" + pick[0] + " pick " + pick[1]);
                     if (pick[1] == -1)
                     {
                         // no rooms available, go deciding what to do
                         break;
                     }
                     // check distance to room to setUp AssaultParty
-                    //dist = Museum.getInstance().getRoomDistance(pick[1]);
                     dist = museum.getRoomDistance(pick[1]);
                     AssaultParty.getInstance(pick[0]).setUpRoom(dist, pick[1]);
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
@@ -69,15 +73,16 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
 
                     break;
                 case 3:
-                    ControlCollectionSite.getInstance().takeARest();
+                    System.out.println("entrei case 3");
+                    control.takeARest();
                     break;
                 default:
-                    // throw exception
+                   System.out.println("entrei default");
                     break;
             }
         }
         ConcentrationSite.getInstance().wakeAll();
-        ControlCollectionSite.getInstance().printResult();
+        control.printResult();
     }
 
     /**
@@ -85,7 +90,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      */
     public void startOperations()
     {
-        ControlCollectionSite.getInstance().setDeciding();
+        control.setDeciding();
     }
 
     /**
@@ -99,13 +104,13 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
     public int appraiseSit()
     {
 
-        ControlCollectionSite.getInstance().setDeciding();
+        control.setDeciding();
         int nThieves = ConcentrationSite.getInstance().checkThiefNumbers();
 
         if (!anyRoomLeft())
         {
             return 1;
-        } else if ((nThieves > 2) && ControlCollectionSite.getInstance().anyTeamAvailable())
+        } else if ((nThieves > 2) && control.anyTeamAvailable())
         {
             return 2;
         } else
@@ -123,7 +128,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
     public boolean anyRoomLeft()
     {
 
-        return ControlCollectionSite.getInstance().anyRoomLeft();
+        return control.anyRoomLeft();
     }
 
     /**

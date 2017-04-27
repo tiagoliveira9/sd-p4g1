@@ -2,7 +2,6 @@ package ServerSide;
 
 import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceGRInformation;
-import ClientSide.MasterThief;
 import HeistMuseum.Constants;
 
 import java.util.concurrent.locks.Condition;
@@ -105,7 +104,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         {
             salas[i] = new Sala(i);
         }
-        
+
         repo = new GRInformationStub();
     }
 
@@ -116,9 +115,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     public void setDeciding()
     {
         l.lock();
-        MasterThief master = (MasterThief) Thread.currentThread();
-        master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
-        repo.setStateMasterThief(Constants.DECIDING_WHAT_TO_DO);
+        stateMaster = Constants.DECIDING_WHAT_TO_DO;
+        repo.setStateMasterThief(stateMaster);
         l.unlock();
     }
 
@@ -133,12 +131,11 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     {
         l.lock();
 
-        MasterThief master = (MasterThief) Thread.currentThread();
+
         int tempAssault = -1;
         int tempSala = -1;
 
         stateMaster = Constants.ASSEMBLING_A_GROUP;
-        master.setStateMaster(stateMaster);
         repo.setStateMasterThief(stateMaster);
 
         if (!assaultP1)
@@ -177,12 +174,9 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     public void takeARest()
     {
         l.lock();
-        MasterThief master = (MasterThief) Thread.currentThread();
 
         stateMaster = Constants.WAITING_FOR_ARRIVAL;
-        master.setStateMaster(stateMaster);
-        // set statemaster
-       repo.setStateMasterThief(stateMaster);
+        repo.setStateMasterThief(stateMaster);
 
         try
         {
@@ -208,12 +202,12 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @param roomId
      */
     @Override
-    public void handACanvas(boolean canvas, int roomId, int partyId)
+    public void handACanvas(int canvas, int roomId, int partyId)
     {
 
         l.lock();
         boolean lastArriving = false;
-        if (canvas)
+        if (canvas == 1)
         {
             nCanvas++;
         } else
@@ -269,17 +263,17 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     @Override
     public boolean anyRoomLeft()
     {
-
+       
         l.lock();
         // trying to find if every thief can die.
         boolean temp = true;
-
         for (int i = 0; i < Constants.N_ROOMS; i++)
         {
             // if is empty, choose (empty = false on creation)
             if (!salas[i].empty)
             {
                 l.unlock();
+                 System.out.println("anyRoomLeft");
                 return true;
             } else
             {
@@ -317,11 +311,14 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     public void printResult()
     {
         l.lock();
-        MasterThief m = (MasterThief) Thread.currentThread();
-        m.setStateMaster(Constants.PRESENTING_THE_REPORT);
-        repo.setStateMasterThief(m.getStateMaster());
+        repo.setStateMasterThief(Constants.PRESENTING_THE_REPORT);
         repo.printResume(nCanvas);
         l.unlock();
     }
 
+    @Override
+    public boolean shutdown()
+    {
+        return true;
+    }
 }

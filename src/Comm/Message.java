@@ -19,7 +19,6 @@ public class Message implements Serializable {
      *
      * @serialField ACK
      */
-    
     public static final int OK = 0;
     public static final int ACK = 1;
 
@@ -46,6 +45,19 @@ public class Message implements Serializable {
     public static final int CLOSE_REPO = 19;
     public static final int PRINT_LEGE = 20;
 
+    /* Messages ControlCollection*/
+    public static final int HAND_CANVAS = 21;
+    public static final int GO_COLLECTM = 22;
+    public static final int GET_PREP_ASG1 = 23;
+    public static final int PREP_ASG1 = 24;
+    public static final int TAKE_REST = 25;
+    public static final int PRINT_RESULT = 26;
+    public static final int SETDECIDING = 27;
+    public static final int GET_ANY_TEAM_AVAIL = 28;
+    public static final int ANY_TEAM_AVAIL = 29;
+    public static final int GET_ANY_ROOM_LEFT = 30;
+    public static final int ANY_ROOM_LEFT = 31;
+
     /* Info Active Entities */
     private int thiefId;
     private int stateThief;
@@ -66,6 +78,15 @@ public class Message implements Serializable {
     private int canvas = -1;
     private int distance = -1;
     private int nCanvas = -1;
+    //anyTeamAvailable
+    private boolean anyTeam = false;
+    private boolean roomLeft = false;
+
+    //Assault, Sala
+    private int[] pick = new int[]
+    {
+        0, 0
+    };
 
     /**
      * Tipo da mensagem
@@ -108,7 +129,25 @@ public class Message implements Serializable {
     public Message(int type, boolean val)
     {
         msgType = type;
-        canvasBool = val;
+        switch (msgType)
+        {
+            case ROLL:
+                canvasBool = val;
+                break;
+            case ANY_ROOM_LEFT:
+                roomLeft = val;
+            case ANY_TEAM_AVAIL:
+                anyTeam = val;
+            default:
+                break;
+        }
+    }
+
+    // ControlCollection int[] prepareAssaultParty1()
+    public Message(int type, int[] val)
+    {
+        msgType = type;
+        pick = val;
     }
 
     /**
@@ -192,6 +231,7 @@ public class Message implements Serializable {
     // GRInformation setCanvasElem(partyId, elemPos, cv) 
     // GRInformation setIdPartyElem(int partyId, int elemId, int id)
     // GRInformation setPosElem(int partyId, int elemId, int pos)
+    // ControlCollection handACanvas(int canvas, int roomId, int partyId)
     public Message(int type, int val1, int val2, int val3)
     {
         msgType = type;
@@ -222,6 +262,11 @@ public class Message implements Serializable {
                 partyId = val1;
                 elemId = val2;
                 elemPos = val3;
+                break;
+            case HAND_CANVAS:
+                canvas = val1;
+                roomId = val2;
+                partyId = val3;
                 break;
             default:
                 break;
@@ -307,4 +352,20 @@ public class Message implements Serializable {
     {
         return elemIdReal;
     }
+
+    public int[] getPick()
+    {
+        return pick;
+    }
+
+    public boolean isAnyTeam()
+    {
+        return anyTeam;
+    }
+
+    public boolean isRoomLeft()
+    {
+        return roomLeft;
+    }
+
 }

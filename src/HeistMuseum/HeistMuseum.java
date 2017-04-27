@@ -1,7 +1,9 @@
 package HeistMuseum;
 
+import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceGRInformation;
 import Auxiliary.InterfaceMuseum;
+import ClientSide.ControlCollectionSiteStub;
 import ServerSide.ConcentrationSite;
 import ServerSide.ControlCollectionSite;
 import ServerSide.AssaultParty;
@@ -31,6 +33,7 @@ public class HeistMuseum {
     private final static InterfaceGRInformation repo = new GRInformationStub();
 
     private final static InterfaceMuseum mus = new MuseumStub();
+    private final static InterfaceControlCollectionSite control = new ControlCollectionSiteStub();
 
     public static void main(String[] args) throws InterruptedException
     {
@@ -84,9 +87,9 @@ public class HeistMuseum {
         masterThief.join();
 
         // quando o master morre, posso matar todos os servicos
-        System.out.println("Morri");
         repo.shutdown();
         mus.shutdown();
+        control.shutdown();
 
     }
 
