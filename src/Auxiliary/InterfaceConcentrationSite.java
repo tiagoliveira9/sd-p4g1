@@ -9,7 +9,7 @@ public interface InterfaceConcentrationSite {
     /**
      * Adds thief to stack and changes state to Outside.
      */
-    void addThief();
+    void addThief(int thiefId);
 
     /**
      * This method returns the size of the thieves stack.
@@ -31,7 +31,7 @@ public interface InterfaceConcentrationSite {
     /**
      * Change thief state to DEAD.
      */
-    void setDeadState();
+    void setDeadState(int thiefId);
 
     /**
      * The method prepareExcursion. The last Thief to enter the assault party,
@@ -48,12 +48,14 @@ public interface InterfaceConcentrationSite {
      *
      * @return
      */
-    int waitForCall();
+    int waitForCall(int thiefId);
 
     /**
      * Master Thief uses this method to wake every thief and awaits for the last
      * thief to wake her up.
      */
     void wakeAll();
-    
+
+    boolean shutdown();
+
 }

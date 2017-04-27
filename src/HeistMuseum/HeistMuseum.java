@@ -1,8 +1,10 @@
 package HeistMuseum;
 
+import Auxiliary.InterfaceConcentrationSite;
 import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceGRInformation;
 import Auxiliary.InterfaceMuseum;
+import ClientSide.ConcentrationSiteStub;
 import ClientSide.ControlCollectionSiteStub;
 import ServerSide.ConcentrationSite;
 import ServerSide.ControlCollectionSite;
@@ -34,6 +36,7 @@ public class HeistMuseum {
 
     private final static InterfaceMuseum mus = new MuseumStub();
     private final static InterfaceControlCollectionSite control = new ControlCollectionSiteStub();
+    private final static InterfaceConcentrationSite conc = new ConcentrationSiteStub();
 
     public static void main(String[] args) throws InterruptedException
     {
@@ -90,7 +93,7 @@ public class HeistMuseum {
         repo.shutdown();
         mus.shutdown();
         control.shutdown();
-
+        conc.shutdown();
     }
 
 }

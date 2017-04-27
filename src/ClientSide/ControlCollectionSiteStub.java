@@ -43,7 +43,6 @@ public class ControlCollectionSiteStub implements InterfaceControlCollectionSite
         }
 
         con.close();
-        System.out.println("room: "+inMessage.isRoomLeft());
         return inMessage.isRoomLeft();
     }
 

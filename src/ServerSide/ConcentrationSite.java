@@ -2,7 +2,6 @@ package ServerSide;
 
 import Auxiliary.InterfaceConcentrationSite;
 import Auxiliary.InterfaceGRInformation;
-import ClientSide.Thief;
 import HeistMuseum.Constants;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -71,7 +70,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * @serialField stThief
      */
     //private final Stack<Thief> stThief;
-    private final Queue<Thief> queueThieves;
+    private final Queue<Integer> queueThieves;
     /**
      * Counter used to control the call of the next thieves to wake. First thief
      * is waken by Master Thief and then two thieves are awaken sequentially by
@@ -137,13 +136,11 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * Adds thief to stack and changes state to Outside.
      */
     @Override
-    public void addThief()
+    public void addThief(int thiefId)
     {
         l.lock();
-        Thief crook = (Thief) Thread.currentThread();
-        crook.setStateThief(Constants.OUTSIDE);
-        repo.setStateThief(crook.getStateThief(), crook.getThiefId());        
-        queueThieves.add(crook);
+        repo.setStateThief(Constants.OUTSIDE, thiefId);        
+        queueThieves.add(thiefId);
         l.unlock();
     }
 
@@ -157,14 +154,13 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * @return
      */
     @Override
-    public int waitForCall()
+    public int waitForCall(int thiefId)
     {
         l.lock();
 
-        Thief crook = (Thief) Thread.currentThread();
         try
         {
-            while (crook.getThiefId() != globalId && !die)
+            while (thiefId != globalId && !die)
             {
                 prepare.await();
             }
@@ -180,9 +176,8 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
             counterThief++;
             if (counterThief < 3)
             {
-                //Thief c = stThief.pop();
-                Thief c = queueThieves.remove();
-                globalId = c.getThiefId();
+                int id = queueThieves.remove();
+                globalId = id;
                 prepare.signalAll();
             } else
             {
@@ -214,9 +209,8 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         nAssaultParty = partyId;
         repo.setRoomId(partyId, roomId);
 
-        //Thief c = stThief.pop();
-        Thief c = queueThieves.remove();
-        globalId = c.getThiefId();
+        int thiefId = queueThieves.remove();
+        globalId = thiefId;
         // signal all but only one thief moves
         prepare.signalAll();
         try
@@ -289,12 +283,16 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * Change thief state to DEAD.
      */
     @Override
-    public void setDeadState()
+    public void setDeadState(int thiefId)
     {
         l.lock();
-        Thief t = (Thief) Thread.currentThread();
-        t.setStateThief(Constants.DEAD);
-        repo.setStateThief(t.getStateThief(), t.getThiefId());
+        repo.setStateThief(Constants.DEAD, thiefId);
         l.unlock();
+    }
+     
+    @Override
+    public boolean shutdown()
+    {
+        return true;
     }
 }

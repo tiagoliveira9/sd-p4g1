@@ -32,9 +32,7 @@ public class ControlCollectionInterface implements InterfaceServer {
                 outMessage = new Message(Message.OK);
                 break;
             case Message.GET_ANY_ROOM_LEFT:
-                System.out.println("roomssss");
                 boolean any = control.anyRoomLeft();
-                System.out.println("any" + any);
                 outMessage = new Message(Message.ANY_ROOM_LEFT, any);
                 break;
             case Message.GET_ANY_TEAM_AVAIL:
@@ -50,7 +48,6 @@ public class ControlCollectionInterface implements InterfaceServer {
                 outMessage = new Message(Message.OK);
                 break;
             case Message.SETDECIDING:
-                System.out.println("setdeciding");
                 control.setDeciding();
                 outMessage = new Message(Message.OK);
                 break;

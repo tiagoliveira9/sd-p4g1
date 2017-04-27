@@ -45,7 +45,7 @@ public class Message implements Serializable {
     public static final int CLOSE_REPO = 19;
     public static final int PRINT_LEGE = 20;
 
-    /* Messages ControlCollection*/
+    /* Messages ControlCollectionSite */
     public static final int HAND_CANVAS = 21;
     public static final int GO_COLLECTM = 22;
     public static final int GET_PREP_ASG1 = 23;
@@ -57,6 +57,17 @@ public class Message implements Serializable {
     public static final int ANY_TEAM_AVAIL = 29;
     public static final int GET_ANY_ROOM_LEFT = 30;
     public static final int ANY_ROOM_LEFT = 31;
+
+    /* Messages ConcentrationSite */
+    public static final int TEAM_READY = 32;
+    public static final int SETDEAD_STATE = 33;
+    public static final int ADD_THIEF = 34;
+    public static final int GET_WAIT_FOR_CALL = 35;
+    public static final int WAIT_FOR_CALL = 36;
+    public static final int GET_THIEF_NUMBERS = 37;
+    public static final int THIEF_NUMBERS = 38;
+    public static final int PREP_ASG2 = 39;
+    public static final int WAKE_ALL = 40;
 
     /* Info Active Entities */
     private int thiefId;
@@ -81,6 +92,8 @@ public class Message implements Serializable {
     //anyTeamAvailable
     private boolean anyTeam = false;
     private boolean roomLeft = false;
+    private int nAssaultParty = -1;
+    private int nThievesQueue = -1;
 
     //Assault, Sala
     private int[] pick = new int[]
@@ -160,6 +173,7 @@ public class Message implements Serializable {
     // GRInformation resetIdPartyRoom(partyId)
     // GRInformation printResume(nCanvas)
     // GRInformation updateMuseumRoom(roomId)
+    // void addThief(int thiefId)
     public Message(int type, int val)
     {
         msgType = type;
@@ -183,6 +197,14 @@ public class Message implements Serializable {
             case UPDATE_MUS_ROOM:
                 roomId = val;
                 break;
+            case WAIT_FOR_CALL:
+                nAssaultParty = val;
+                break;
+            case ADD_THIEF:
+                thiefId = val;
+                break;
+            case SETDEAD_STATE:
+                thiefId = val;
             default:
                 break;
         }
@@ -192,6 +214,7 @@ public class Message implements Serializable {
     // GRInformation setRoomId(partyId, roomId)
     // GRInformation resetIdPartyElem(partyId, elemId) 
     // GRInformation setStateAgility(int thiefAgility, int thiefId)
+    // public void prepareAssaultParty2(int partyId, int roomId)
     public Message(int type, int val1, int val2)
     {
         msgType = type;
@@ -213,6 +236,10 @@ public class Message implements Serializable {
             case SETAGILITY:
                 agility = val1;
                 thiefId = val2;
+                break;
+            case PREP_ASG2:
+                partyId = val1;
+                roomId = val2;
                 break;
             default:
                 break;
@@ -368,4 +395,13 @@ public class Message implements Serializable {
         return roomLeft;
     }
 
+    public int getnAssaultParty()
+    {
+        return nAssaultParty;
+    }
+
+    public int getnThievesQueue()
+    {
+        return nThievesQueue;
+    }
 }

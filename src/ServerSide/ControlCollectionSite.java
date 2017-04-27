@@ -273,7 +273,6 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
             if (!salas[i].empty)
             {
                 l.unlock();
-                 System.out.println("anyRoomLeft");
                 return true;
             } else
             {
