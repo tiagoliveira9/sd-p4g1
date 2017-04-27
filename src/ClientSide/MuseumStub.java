@@ -13,12 +13,12 @@ public class MuseumStub implements InterfaceMuseum {
 
     private ClientCom initiateConnection()
     {
-        ClientCom con = new ClientCom("trump-pc", 4000);
+        ClientCom con = new ClientCom("127.0.0.1", 4000);
 
         if (!con.open())
         {
             out.println("Couldn't initiate connection to "
-                    + "trump-pc" + ":" + 4000);
+                    + "127.0.0.1" + ":" + 4000);
         }
 
         return con;

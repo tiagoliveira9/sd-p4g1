@@ -12,12 +12,12 @@ public class ConcentrationSiteStub implements InterfaceConcentrationSite {
 
     private ClientCom initiateConnection()
     {
-        ClientCom con = new ClientCom("trump-pc", 4003);
+        ClientCom con = new ClientCom("127.0.0.1", 4003);
 
         if (!con.open())
         {
             System.out.println("Couldn't initiate connection to "
-                    + "trump-pc" + ":" + 4003);
+                    + "127.0.0.1" + ":" + 4003);
         }
 
         return con;

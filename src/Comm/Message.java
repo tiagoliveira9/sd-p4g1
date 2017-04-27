@@ -149,8 +149,10 @@ public class Message implements Serializable {
                 break;
             case ANY_ROOM_LEFT:
                 roomLeft = val;
+                break;
             case ANY_TEAM_AVAIL:
                 anyTeam = val;
+                break;
             default:
                 break;
         }
@@ -205,6 +207,7 @@ public class Message implements Serializable {
                 break;
             case SETDEAD_STATE:
                 thiefId = val;
+                break;
             default:
                 break;
         }

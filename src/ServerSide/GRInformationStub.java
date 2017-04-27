@@ -13,12 +13,12 @@ public class GRInformationStub implements InterfaceGRInformation {
 
     private ClientCom initiateConnection()
     {
-        ClientCom con = new ClientCom("trump-pc", 4001);
+        ClientCom con = new ClientCom("127.0.0.1", 4001);
 
         if (!con.open())
         {
             System.out.println("Couldn't initiate connection to "
-                    + "trump-pc" + ":" + 4001);
+                    + "127.0.0.1" + ":" + 4001);
         }
 
         return con;
