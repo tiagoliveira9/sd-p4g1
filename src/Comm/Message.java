@@ -69,6 +69,19 @@ public class Message implements Serializable {
     public static final int PREP_ASG2 = 39;
     public static final int WAKE_ALL = 40;
 
+    /* Messages Assault Party */
+    public static final int SETUP_ASP_ROOM = 41;
+    public static final int SEND_ASSAULTP = 42;
+    public static final int GET_ADD_TO_SQUAD = 43;
+    public static final int ADD_TO_SQUAD = 44;
+    public static final int WAIT_START_ROBB = 45;
+    public static final int GET_CRAWLIN = 46;
+    public static final int CRAWLIN = 47;
+    public static final int ADD_CANVAS = 48;
+    
+    public static final int GET_CRAWLOUT = 49;
+    public static final int CRAWLOUT = 50;
+    
     /* Info Active Entities */
     private int thiefId;
     private int stateThief;
@@ -94,7 +107,9 @@ public class Message implements Serializable {
     private boolean roomLeft = false;
     private int nAssaultParty = -1;
     private int nThievesQueue = -1;
-
+    private boolean addSquad = false;
+   
+    
     //Assault, Sala
     private int[] pick = new int[]
     {
@@ -139,6 +154,7 @@ public class Message implements Serializable {
         msgType = type;
     }
 
+    // ASP boolean addToSquad(int thiefId, int thiefAgility)
     public Message(int type, boolean val)
     {
         msgType = type;
@@ -153,16 +169,31 @@ public class Message implements Serializable {
             case ANY_TEAM_AVAIL:
                 anyTeam = val;
                 break;
+            case ADD_TO_SQUAD:
+                addSquad = val;
+                break;
             default:
                 break;
         }
     }
 
     // ControlCollection int[] prepareAssaultParty1()
+    // ASP int[] crawlIn (int thiefId)
+    // ASP int[] crawlOut(int thiefId)
     public Message(int type, int[] val)
     {
         msgType = type;
-        pick = val;
+        
+        switch (msgType)
+        {
+            case CRAWLIN: //  usamos também o pick para o crawlin
+            case PREP_ASG1:
+            case CRAWLOUT:
+                pick = val;
+                break;
+            
+                
+        }
     }
 
     /**
@@ -176,6 +207,10 @@ public class Message implements Serializable {
     // GRInformation printResume(nCanvas)
     // GRInformation updateMuseumRoom(roomId)
     // void addThief(int thiefId)
+    //ASG waitToStartRobbing(int thiefId)
+    // ASP int[] crawlIn (int thiefId)
+    // ASG void addCrookCanvas(int elemId)
+
     public Message(int type, int val)
     {
         msgType = type;
@@ -202,14 +237,24 @@ public class Message implements Serializable {
             case WAIT_FOR_CALL:
                 nAssaultParty = val;
                 break;
-            case ADD_THIEF:
+            /*case ADD_THIEF:
+                thiefId = val; é possivel colapsar mais cases
+                break; */
+ /*case SETDEAD_STATE:
                 thiefId = val;
-                break;
-            case SETDEAD_STATE:
-                thiefId = val;
-                break;
+                break;*/
             case THIEF_NUMBERS:
-                nThievesQueue =val;
+                nThievesQueue = val;
+                break;
+            case ADD_THIEF:
+            case SETDEAD_STATE:
+            case WAIT_START_ROBB:
+            case GET_CRAWLIN:
+            case GET_CRAWLOUT:
+                thiefId = val;
+                break;
+            case ADD_CANVAS:
+                elemId = val;
                 break;
             default:
                 break;
@@ -221,6 +266,8 @@ public class Message implements Serializable {
     // GRInformation resetIdPartyElem(partyId, elemId) 
     // GRInformation setStateAgility(int thiefAgility, int thiefId)
     // public void prepareAssaultParty2(int partyId, int roomId)
+    // ASP boolean addToSquad(int thiefId, int thiefAgility)
+    // ASP void setUpRoom(int distance, int roomId)
     public Message(int type, int val1, int val2)
     {
         msgType = type;
@@ -245,6 +292,14 @@ public class Message implements Serializable {
                 break;
             case PREP_ASG2:
                 partyId = val1;
+                roomId = val2;
+                break;
+            case GET_ADD_TO_SQUAD:
+                thiefId = val1;
+                agility = val2;
+                break;
+            case SETUP_ASP_ROOM:
+                distance = val1;
                 roomId = val2;
                 break;
             default:
@@ -409,5 +464,10 @@ public class Message implements Serializable {
     public int getnThievesQueue()
     {
         return nThievesQueue;
+    }
+
+    public boolean isAddSquad()
+    {
+        return addSquad;
     }
 }

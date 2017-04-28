@@ -18,7 +18,7 @@ public interface InterfaceAssaultParty {
      *
      * @return boolean. True if is the last Thief, false otherwise.
      */
-    boolean addToSquad();
+    boolean addToSquad(int thiefId, int thiefAgility);
 
     /**
      *
@@ -51,6 +51,7 @@ public interface InterfaceAssaultParty {
      * others will be by there fellow teammates.
      *
      */
-    void waitToStartRobbing();
-    
+    void waitToStartRobbing(int thiefId);
+
+    boolean shutdown();
 }

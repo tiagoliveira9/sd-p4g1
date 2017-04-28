@@ -6,7 +6,7 @@ import Auxiliary.InterfaceMasterThief;
 import Auxiliary.InterfaceMuseum;
 
 import HeistMuseum.Constants;
-import ServerSide.AssaultParty;
+//import ServerSide.AssaultParty;
 
 /**
  * This data type implements a Master Thief thread.
@@ -26,6 +26,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
     private final InterfaceMuseum musStub;
     private final InterfaceControlCollectionSite contStub;
     private final InterfaceConcentrationSite concStub;
+    private final AssaultPartyStub agrStub;
 
     /**
      * Constructor.
@@ -37,6 +38,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
         musStub = new MuseumStub();
         contStub = new ControlCollectionSiteStub();
         concStub = new ConcentrationSiteStub();
+        agrStub = new AssaultPartyStub();
     }
 
     /**
@@ -65,11 +67,15 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
                     }
                     // check distance to room to setUp AssaultParty
                     dist = musStub.getRoomDistance(pick[1]);
-                    AssaultParty.getInstance(pick[0]).setUpRoom(dist, pick[1]);
+                    agrStub.setConnectionAssaultParty(pick[0]);
+
+                    agrStub.setUpRoom(dist, pick[1]);
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
 
                     concStub.prepareAssaultParty2(pick[0], pick[1]);
-                    AssaultParty.getInstance(pick[0]).sendAssaultParty();
+                    
+                    agrStub.setConnectionAssaultParty(pick[0]);
+                    agrStub.sendAssaultParty();
 
                     break;
                 case 3:

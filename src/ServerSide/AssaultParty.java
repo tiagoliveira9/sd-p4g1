@@ -107,25 +107,25 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return boolean. True if is the last Thief, false otherwise.
      */
     @Override
-    public boolean addToSquad()
+    public boolean addToSquad(int thiefId, int thiefAgility)
     {
         l.lock();
-        Thief t = (Thief) Thread.currentThread();
+        //Thief t = (Thief) Thread.currentThread();
         boolean flag = false;
 
         try
         {
             if (nCrook < Constants.N_SQUAD)
             {
-                squad[nCrook] = new Crook(t.getThiefId(), t.getAgility());
+                squad[nCrook] = new Crook(thiefId, thiefAgility);
                 nCrook++;
                 int i;
                 for (i = 0; i < Constants.N_SQUAD; i++)
                 {
                     if (line[i] == -1)
                     {
-                        line[i] = t.getThiefId();
-                        int id = t.getThiefId() + 1;
+                        line[i] = thiefId;
+                        int id = thiefId + 1;
                         repo.setIdPartyElem(partyId, i, id);
                         break;
                     }
@@ -150,11 +150,10 @@ public class AssaultParty implements InterfaceAssaultParty {
      *
      */
     @Override
-    public void waitToStartRobbing()
+    public void waitToStartRobbing(int thiefId)
     {
         l.lock();
-        Thief t = (Thief) Thread.currentThread();
-        Crook c = getCrook(t.getThiefId());
+        Crook c = getCrook(thiefId);
         try
         {
             // it's like they stop one after each other, a team line
@@ -166,8 +165,8 @@ public class AssaultParty implements InterfaceAssaultParty {
         } catch (InterruptedException ex)
         {
         }
-        t.setStateThief(Constants.CRAWLING_INWARDS);
-        repo.setStateThief(t.getStateThief(), t.getThiefId());
+
+        repo.setStateThief(Constants.CRAWLING_INWARDS, thiefId);
 
         l.unlock();
     }
@@ -182,7 +181,6 @@ public class AssaultParty implements InterfaceAssaultParty {
         l.lock();
         //Thief t = (Thief) Thread.currentThread();
         Crook cr = getCrook(thiefId);
-
         int next = selectNext(thiefId);
 
         try
@@ -226,7 +224,6 @@ public class AssaultParty implements InterfaceAssaultParty {
     @Override
     public int[] crawlOut(int thiefId)
     {
-        Thief tf = (Thief) Thread.currentThread();
         //int id = t.getThiefId();
         Crook cr = getCrook(thiefId);
         int myElemId = myPositionTeam(thiefId);
@@ -234,7 +231,7 @@ public class AssaultParty implements InterfaceAssaultParty {
 
         try
         {
-            tf.setStateThief(Constants.CRAWLING_OUTWARDS);
+
             repo.setStateThief(Constants.CRAWLING_OUTWARDS, cr.id);
 
             while (cr.id != idGlobal)
@@ -551,6 +548,12 @@ public class AssaultParty implements InterfaceAssaultParty {
     public int getPartyId()
     {
         return partyId;
+    }
+
+    @Override
+    public boolean shutdown()
+    {
+        return true;
     }
 
 }

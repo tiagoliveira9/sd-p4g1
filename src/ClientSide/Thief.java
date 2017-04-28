@@ -1,11 +1,12 @@
 package ClientSide;
 
+import Auxiliary.InterfaceAssaultParty;
 import Auxiliary.InterfaceConcentrationSite;
 import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceMuseum;
 import Auxiliary.InterfaceThief;
 import HeistMuseum.Constants;
-import ServerSide.AssaultParty;
+//import ServerSide.AssaultParty;
 
 /**
  * This data type implements a Thief thread. (in the future explain more)
@@ -43,6 +44,7 @@ public class Thief extends Thread implements InterfaceThief {
     private final InterfaceMuseum musStub;
     private final InterfaceControlCollectionSite contStub;
     private final InterfaceConcentrationSite concStub;
+    private final AssaultPartyStub agrStub;
 
     /**
      * Thief instantiation.
@@ -61,6 +63,7 @@ public class Thief extends Thread implements InterfaceThief {
         musStub = new MuseumStub();
         contStub = new ControlCollectionSiteStub();
         concStub = new ConcentrationSiteStub();
+        agrStub = new AssaultPartyStub();
     }
 
     /**
@@ -74,7 +77,9 @@ public class Thief extends Thread implements InterfaceThief {
         while ((partyId = amINeeded()) != -1)
         {
             // goes to team ordered by master
-            boolean last = AssaultParty.getInstance(partyId).addToSquad();
+            agrStub.setConnectionAssaultParty(partyId);
+            //boolean last = AssaultParty.getInstance(partyId).addToSquad(thiefId, agility);
+            boolean last = agrStub.addToSquad(thiefId, agility);
 
             if (last)
             {
@@ -83,9 +88,11 @@ public class Thief extends Thread implements InterfaceThief {
             }
 
             // back to assault party to block and Get in line
-            AssaultParty.getInstance(partyId).waitToStartRobbing();
+            agrStub.setConnectionAssaultParty(partyId);
+            agrStub.waitToStartRobbing(thiefId);
             // roll[0] = roomId, roll[1] = elemId 
-            int[] roll = AssaultParty.getInstance(partyId).crawlIn(thiefId);
+            agrStub.setConnectionAssaultParty(partyId);
+            int[] roll = agrStub.crawlIn(thiefId);
 
             //boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
             boolean painting = musStub.rollACanvas(roll[0], roll[1], partyId);
@@ -93,10 +100,12 @@ public class Thief extends Thread implements InterfaceThief {
             int canvas = 0;
             if (painting)
             {
-                AssaultParty.getInstance(partyId).addCrookCanvas(roll[1]);
+                agrStub.setConnectionAssaultParty(partyId);
+                agrStub.addCrookCanvas(roll[1]);
                 canvas = 1;
             }
-            AssaultParty.getInstance(partyId).crawlOut(thiefId);
+            agrStub.setConnectionAssaultParty(partyId);
+            agrStub.crawlOut(thiefId);
 
             contStub.handACanvas(canvas, roll[0], partyId);
             justHanded = true; // to avoid wrong, first time signal
