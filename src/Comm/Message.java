@@ -208,6 +208,9 @@ public class Message implements Serializable {
             case SETDEAD_STATE:
                 thiefId = val;
                 break;
+            case THIEF_NUMBERS:
+                nThievesQueue =val;
+                break;
             default:
                 break;
         }

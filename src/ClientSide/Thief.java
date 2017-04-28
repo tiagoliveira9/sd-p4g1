@@ -43,8 +43,7 @@ public class Thief extends Thread implements InterfaceThief {
     private final InterfaceMuseum musStub;
     private final InterfaceControlCollectionSite contStub;
     private final InterfaceConcentrationSite concStub;
-    
-    
+
     /**
      * Thief instantiation.
      *
@@ -65,7 +64,7 @@ public class Thief extends Thread implements InterfaceThief {
     }
 
     /**
-     * Run this thread -> Life cycle of the Thief.
+     * Run this thread: Life cycle of the Thief.
      */
     @Override
     public void run()
@@ -85,13 +84,13 @@ public class Thief extends Thread implements InterfaceThief {
 
             // back to assault party to block and Get in line
             AssaultParty.getInstance(partyId).waitToStartRobbing();
-
+            System.out.println("vou fazer crawlin: " + thiefId);
             // roll[0] = roomId, roll[1] = elemId 
             int[] roll = AssaultParty.getInstance(partyId).crawlIn();
 
             //boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
             boolean painting = musStub.rollACanvas(roll[0], roll[1], partyId);
-            
+
             int canvas = 0;
             if (painting)
             {

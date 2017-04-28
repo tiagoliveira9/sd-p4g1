@@ -153,9 +153,7 @@ public class GRInformation implements InterfaceGRInformation {
     public void setRoomId(int partyId, int roomId)
     {
         lock.lock();
-        System.out.println("partyID " + partyId + " roomId " + roomId);
         party[partyId].roomId = Integer.toString(roomId + 1);
-        //party[roomId].roomId = Integer.toString(partyId + 1);
         lock.unlock();
     }
 

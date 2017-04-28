@@ -58,7 +58,6 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
                     // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
                     // {AssaultPartyId, tSala}
                     pick = contStub.prepareAssaultParty1();
-                    System.out.println("pick" + pick[0] + " pick " + pick[1]);
                     if (pick[1] == -1)
                     {
                         // no rooms available, go deciding what to do
@@ -68,8 +67,8 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
                     dist = musStub.getRoomDistance(pick[1]);
                     AssaultParty.getInstance(pick[0]).setUpRoom(dist, pick[1]);
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
-                    concStub.prepareAssaultParty2(pick[0], pick[1]);
 
+                    concStub.prepareAssaultParty2(pick[0], pick[1]);
                     AssaultParty.getInstance(pick[0]).sendAssaultParty();
 
                     break;

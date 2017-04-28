@@ -28,7 +28,7 @@ public class ConcentrationSiteStub implements InterfaceConcentrationSite {
     {
         Thief t = (Thief) Thread.currentThread();
         t.setStateThief(Constants.OUTSIDE);
-        
+
         ClientCom con = initiateConnection();
 
         Message inMessage, outMessage;
@@ -98,7 +98,7 @@ public class ConcentrationSiteStub implements InterfaceConcentrationSite {
     {
         Thief t = (Thief) Thread.currentThread();
         t.setStateThief(Constants.DEAD);
-        
+
         ClientCom con = initiateConnection();
 
         Message inMessage, outMessage;
@@ -143,15 +143,17 @@ public class ConcentrationSiteStub implements InterfaceConcentrationSite {
     @Override
     public int waitForCall(int thiefId)
     {
+        Thief t = (Thief) Thread.currentThread();
         ClientCom con = initiateConnection();
 
         Message inMessage, outMessage;
 
         outMessage = new Message(Message.GET_WAIT_FOR_CALL, thiefId);
-
+        System.out.println("antes de enviar a msg: " + thiefId);
         con.writeObject(outMessage);
-
+        System.out.println("depois de enviar a msg: " + thiefId);
         inMessage = (Message) con.readObject();
+        System.out.println("ler resposta: " + thiefId);
 
         if (inMessage.getType() != Message.WAIT_FOR_CALL)
         {
@@ -166,7 +168,7 @@ public class ConcentrationSiteStub implements InterfaceConcentrationSite {
     @Override
     public void wakeAll()
     {
-         ClientCom con = initiateConnection();
+        ClientCom con = initiateConnection();
 
         Message inMessage, outMessage;
 

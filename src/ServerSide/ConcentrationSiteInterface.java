@@ -21,7 +21,7 @@ public class ConcentrationSiteInterface implements InterfaceServer {
     public Message processAndReply(Message inMessage) throws MessageException
     {
         Message outMessage = null;
-        System.out.println("tipo mensagem " + inMessage.getType());
+        //System.out.println("tipo mensagem " + inMessage.getType());
 
         // deviamos validar a mensagem SWITCH
         // processar a mensagem SWITCH
