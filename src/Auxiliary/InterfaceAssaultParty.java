@@ -24,13 +24,13 @@ public interface InterfaceAssaultParty {
      *
      * @return
      */
-    int[] crawlIn();
+    int[] crawlIn(int thiefId);
 
     /**
      *
      * @return
      */
-    int[] crawlOut();
+    int[] crawlOut(int thiefId);
 
     /**
      * Activates Assault Party. Wakes up the first Thief to block on the assault

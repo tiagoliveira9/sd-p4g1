@@ -31,7 +31,6 @@ public class GRInformationInterface implements InterfaceServer {
                 break;
 
             case Message.SETCANVAS_ELEM:
-                System.out.println("party: " + inMessage.getPartyId() + " elemId: " + inMessage.getElemId() + " canvas: " + inMessage.getCanvas());
                 repo.setCanvasElem(inMessage.getPartyId(), inMessage.getElemId(), inMessage.getCanvas());
                 outMessage = new Message(Message.OK);
                 break;

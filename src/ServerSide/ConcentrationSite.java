@@ -141,7 +141,6 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         l.lock();
         repo.setStateThief(Constants.OUTSIDE, thiefId);
         queueThieves.add(thiefId);
-        System.out.println("adicionado ladrao: " + queueThieves.size());
         l.unlock();
     }
 
@@ -168,7 +167,6 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
             }
             queueThieves.remove();
             
-            System.out.println("acordei " + thiefId);
             if (die)
             {
                 countDie++;
@@ -214,8 +212,6 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         repo.setRoomId(partyId, roomId);
         
         int tid = queueThieves.peek();
-        //System.out.println("tidd: "+tidd);
-        //System.out.println("removido ladrao: " + tid);
 
         globalId = tid;
         // signal all but only one thief moves

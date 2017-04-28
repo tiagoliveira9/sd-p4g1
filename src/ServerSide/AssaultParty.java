@@ -177,22 +177,22 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return
      */
     @Override
-    public int[] crawlIn()
+    public int[] crawlIn(int thiefId)
     {
         l.lock();
-        Thief t = (Thief) Thread.currentThread();
-        Crook c = getCrook(t.getThiefId());
+        //Thief t = (Thief) Thread.currentThread();
+        Crook cr = getCrook(thiefId);
 
-        int next = selectNext(t.getThiefId());
+        int next = selectNext(thiefId);
 
         try
         {
-            while (!crawlGo(true))
+            while (!crawlGo(true, cr))
             {
                 idGlobal = squad[next].id;
                 moveThief.signalAll();
 
-                while (c.id != idGlobal)
+                while (cr.id != idGlobal)
                 {
                     moveThief.await();
                 }
@@ -200,7 +200,7 @@ public class AssaultParty implements InterfaceAssaultParty {
             idGlobal = squad[next].id;
             moveThief.signalAll();
             //l.unlock();
-            return getRoomIdToAssault(t.getThiefId());
+            return getRoomIdToAssault(cr.id);
 
         } catch (InterruptedException ex)
         {
@@ -215,7 +215,7 @@ public class AssaultParty implements InterfaceAssaultParty {
         // if the thread is in await state, the lock can be obtained by another
         // thread even without the previous thread unlocking it
         // the unlock only happens in crawlOut
-        return getRoomIdToAssault(t.getThiefId());
+        return getRoomIdToAssault(cr.id);
 
     }
 
@@ -224,31 +224,31 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return
      */
     @Override
-    public int[] crawlOut()
+    public int[] crawlOut(int thiefId)
     {
-        Thief t = (Thief) Thread.currentThread();
-        int id = t.getThiefId();
-        Crook c = getCrook(id);
-        int myElemId = myPositionTeam(id);
-        int next = selectNext(t.getThiefId());
+        Thief tf = (Thief) Thread.currentThread();
+        //int id = t.getThiefId();
+        Crook cr = getCrook(thiefId);
+        int myElemId = myPositionTeam(thiefId);
+        int next = selectNext(thiefId);
 
         try
         {
-            t.setStateThief(Constants.CRAWLING_OUTWARDS);
-            repo.setStateThief(t.getStateThief(), t.getThiefId());
+            tf.setStateThief(Constants.CRAWLING_OUTWARDS);
+            repo.setStateThief(Constants.CRAWLING_OUTWARDS, cr.id);
 
-            while (c.id != idGlobal)
+            while (cr.id != idGlobal)
             {
                 moveThief.await();
             }
-            c.pos = 0;
-            while (!crawlGo(false))
+            cr.pos = 0;
+            while (!crawlGo(false, cr))
             {
 
                 idGlobal = squad[next].id;
                 moveThief.signalAll();
 
-                while (c.id != idGlobal)
+                while (cr.id != idGlobal)
                 {
                     moveThief.await();
                 }
@@ -262,7 +262,7 @@ public class AssaultParty implements InterfaceAssaultParty {
             moveThief.signalAll();
 
             l.unlock();
-            return getRoomIdToAssault(t.getThiefId());
+            return getRoomIdToAssault(cr.id);
 
         } catch (InterruptedException ex)
         {
@@ -271,19 +271,18 @@ public class AssaultParty implements InterfaceAssaultParty {
         }
 
         l.unlock();
-        return getRoomIdToAssault(t.getThiefId());
+        return getRoomIdToAssault(cr.id);
 
     }
 
-    private boolean crawlGo(boolean way)
+    private boolean crawlGo(boolean way, Crook cr)
     {
         l.lock();
 
-        Thief t = (Thief) Thread.currentThread();
-        Crook c = getCrook(t.getThiefId());
-
+        //Thief t = (Thief) Thread.currentThread();
+        //Crook c = getCrook(t.getThiefId());
         boolean flagI = false;
-        int elemId = myPositionTeam(c.id);
+        int elemId = myPositionTeam(cr.id);
         int teamHead;
 
         if (way)
@@ -295,7 +294,7 @@ public class AssaultParty implements InterfaceAssaultParty {
         }
         do
         {
-            int pos = c.pos + c.agility;
+            int pos = cr.pos + cr.agility;
 
             if (pos <= teamHead)
             {
@@ -307,8 +306,8 @@ public class AssaultParty implements InterfaceAssaultParty {
                     } else
                     {
                         // update elem position and registers
-                        teamLineup[c.pos] = -1;
-                        c.pos = pos;
+                        teamLineup[cr.pos] = -1;
+                        cr.pos = pos;
                         teamLineup[pos] = elemId;
                         break;
                     }
@@ -317,59 +316,59 @@ public class AssaultParty implements InterfaceAssaultParty {
             {
                 if (pos - teamHead > 3)
                 {
-                    teamLineup[c.pos] = -1;
-                    c.pos = teamHead + 3;
+                    teamLineup[cr.pos] = -1;
+                    cr.pos = teamHead + 3;
 
-                    if (c.pos >= distance)
+                    if (cr.pos >= distance)
                     {
-                        c.pos = distance;
+                        cr.pos = distance;
                         if (way)
                         {
-                            repo.setPosElem(partyId, elemId, c.pos);
+                            repo.setPosElem(partyId, elemId, cr.pos);
                         } else
                         {
-                            repo.setPosElem(partyId, elemId, translatePos[c.pos]);
+                            repo.setPosElem(partyId, elemId, translatePos[cr.pos]);
                         }
                         flagI = true;
                         break;
                     }
-                    teamLineup[c.pos] = elemId;
+                    teamLineup[cr.pos] = elemId;
                 } else
                 {
-                    teamLineup[c.pos] = -1;
-                    c.pos = pos;
+                    teamLineup[cr.pos] = -1;
+                    cr.pos = pos;
                     if (pos >= distance)
                     {
-                        c.pos = distance;
+                        cr.pos = distance;
                         if (way)
                         {
-                            repo.setPosElem(partyId, elemId, c.pos);
+                            repo.setPosElem(partyId, elemId, cr.pos);
                         } else
                         {
-                            repo.setPosElem(partyId, elemId, translatePos[c.pos]);
+                            repo.setPosElem(partyId, elemId, translatePos[cr.pos]);
                         }
                         flagI = true;
                         break;
                     }
-                    teamLineup[c.pos] = elemId;
+                    teamLineup[cr.pos] = elemId;
                 }
             }
             if (way)
             {
-                repo.setPosElem(partyId, elemId, c.pos);
+                repo.setPosElem(partyId, elemId, cr.pos);
             } else
             {
-                repo.setPosElem(partyId, elemId, translatePos[c.pos]);
+                repo.setPosElem(partyId, elemId, translatePos[cr.pos]);
             }
-        } while (c.pos - teamHead != 3);
+        } while (cr.pos - teamHead != 3);
 
         // register the new yellow shirt
         if (way)
         {
-            teamHeadIn = c.pos;
+            teamHeadIn = cr.pos;
         } else
         {
-            teamHeadOut = c.pos;
+            teamHeadOut = cr.pos;
         }
         // here he will be always 3 positions ahead or at room
         l.unlock();
@@ -451,7 +450,6 @@ public class AssaultParty implements InterfaceAssaultParty {
     @Override
     public void sendAssaultParty()
     {
-        MasterThief master = (MasterThief) Thread.currentThread();
 
         l.lock();
         // Master wakes up the first Thief to block on the team

@@ -20,13 +20,13 @@ public class AssaultPartyStub implements InterfaceAssaultParty{
     }
 
     @Override
-    public int[] crawlIn()
+    public int[] crawlIn(int thiefId)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public int[] crawlOut()
+    public int[] crawlOut(int thiefId)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

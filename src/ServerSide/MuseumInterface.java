@@ -40,7 +40,6 @@ public class MuseumInterface implements InterfaceServer {
                 outMessage = new Message(Message.ROOMDIST, dist);
                 break;
             case Message.GET_ROLL:
-                //System.out.println("quem chamou: " + Thread.currentThread().getName());
                 boolean cv = mus.rollACanvas(inMessage.getRoomId(),
                         inMessage.getElemPos(), inMessage.getPartyId());
                 outMessage = new Message(Message.ROLL, cv);

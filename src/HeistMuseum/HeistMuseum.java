@@ -90,10 +90,11 @@ public class HeistMuseum {
         masterThief.join();
 
         // quando o master morre, posso matar todos os servicos
-        repo.shutdown();
+        
         mus.shutdown();
         control.shutdown();
         conc.shutdown();
+        repo.shutdown();
     }
 
 }

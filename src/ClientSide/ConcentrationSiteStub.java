@@ -149,11 +149,8 @@ public class ConcentrationSiteStub implements InterfaceConcentrationSite {
         Message inMessage, outMessage;
 
         outMessage = new Message(Message.GET_WAIT_FOR_CALL, thiefId);
-        System.out.println("antes de enviar a msg: " + thiefId);
         con.writeObject(outMessage);
-        System.out.println("depois de enviar a msg: " + thiefId);
         inMessage = (Message) con.readObject();
-        System.out.println("ler resposta: " + thiefId);
 
         if (inMessage.getType() != Message.WAIT_FOR_CALL)
         {

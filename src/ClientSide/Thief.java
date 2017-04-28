@@ -84,9 +84,8 @@ public class Thief extends Thread implements InterfaceThief {
 
             // back to assault party to block and Get in line
             AssaultParty.getInstance(partyId).waitToStartRobbing();
-            System.out.println("vou fazer crawlin: " + thiefId);
             // roll[0] = roomId, roll[1] = elemId 
-            int[] roll = AssaultParty.getInstance(partyId).crawlIn();
+            int[] roll = AssaultParty.getInstance(partyId).crawlIn(thiefId);
 
             //boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
             boolean painting = musStub.rollACanvas(roll[0], roll[1], partyId);
@@ -97,7 +96,7 @@ public class Thief extends Thread implements InterfaceThief {
                 AssaultParty.getInstance(partyId).addCrookCanvas(roll[1]);
                 canvas = 1;
             }
-            AssaultParty.getInstance(partyId).crawlOut();
+            AssaultParty.getInstance(partyId).crawlOut(thiefId);
 
             contStub.handACanvas(canvas, roll[0], partyId);
             justHanded = true; // to avoid wrong, first time signal
