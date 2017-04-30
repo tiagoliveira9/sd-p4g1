@@ -105,7 +105,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Set master thief state
      *
-     * @param masterThief Master thief 
+     * @param masterThief Master thief
      */
     @Override
     public void setStateMasterThief(int masterThief)
@@ -213,9 +213,11 @@ public class GRInformation implements InterfaceGRInformation {
     public void resetIdPartyElem(int partyId, int elemId)
     {
         lock.lock();
+        ladrao[(Integer.parseInt(party[partyId].elements[elemId].id)-1)].stat = Constants.OUTSIDE;
         party[partyId].elements[elemId].id = "-";
         party[partyId].elements[elemId].pos = "-";
         party[partyId].elements[elemId].cv = "-";
+
         lock.unlock();
     }
 

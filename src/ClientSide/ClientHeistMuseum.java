@@ -75,10 +75,10 @@ public class ClientHeistMuseum {
                             // when master dies, sends death signal to all infidels 
                             mus.shutdown();
                             control.shutdown();
-                            conc.shutdown();
-                            repo.shutdown();
                             agr.shutdown(0);
                             agr.shutdown(1);
+                            conc.shutdown();
+                            repo.shutdown();
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(ClientHeistMuseum.class.getName()).log(Level.SEVERE, null, ex);

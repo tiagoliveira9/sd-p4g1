@@ -6,7 +6,6 @@ import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceMuseum;
 import Auxiliary.InterfaceThief;
 import Auxiliary.Constants;
-//import ServerSide.AssaultParty;
 
 /**
  * This data type implements a Thief thread. (in the future explain more)

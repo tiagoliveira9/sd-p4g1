@@ -139,7 +139,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
     public void addThief(int thiefId)
     {
         l.lock();
-        repo.setStateThief(Constants.OUTSIDE, thiefId);
+        //repo.setStateThief(Constants.OUTSIDE, thiefId);
         queueThieves.add(thiefId);
         l.unlock();
     }

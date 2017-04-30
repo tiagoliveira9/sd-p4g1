@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class AssaultParty implements InterfaceAssaultParty {
 
     private static final AssaultParty[] instances = new AssaultParty[Constants.N_ASSAULT_PARTY];
-    private final int partyId;
+    private final  int partyId;
     private final static Lock l = new ReentrantLock();
     private final Condition moveThief;
     private int[] line; // order that thieves blocks for the first time awaiting orders
@@ -107,7 +107,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return True if is the last Thief, false otherwise.
      */
     @Override
-    public boolean addToSquad(int thiefId, int thiefAgility, int partyId)
+    public boolean addToSquad(int thiefId, int thiefAgility, int partyIdMsg)
     {
         l.lock();
         //Thief t = (Thief) Thread.currentThread();
@@ -126,7 +126,7 @@ public class AssaultParty implements InterfaceAssaultParty {
                     {
                         line[i] = thiefId;
                         int id = thiefId + 1;
-                        repo.setIdPartyElem(partyId, i, id);
+                        repo.setIdPartyElem(partyIdMsg, i, id);
                         break;
                     }
                 }
@@ -250,7 +250,7 @@ public class AssaultParty implements InterfaceAssaultParty {
             // Remove myself from team
             line[myElemId] = -1;
             nCrook--;
-            repo.resetIdPartyElem(partyId, myElemId);
+            repo.resetIdPartyElem(partyIdMsg, myElemId);
             //
             idGlobal = squad[next].id;
             moveThief.signalAll();
