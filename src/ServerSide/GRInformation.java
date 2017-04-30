@@ -1,7 +1,7 @@
 package ServerSide;
 
 import Auxiliary.InterfaceGRInformation;
-import HeistMuseum.Constants;
+import Auxiliary.Constants;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Formatter;
@@ -71,9 +71,8 @@ public class GRInformation implements InterfaceGRInformation {
     private AssParty[] party;
 
     /**
-     * Set thief state
+     * Set thief state.
      *
-     * @param thief
      */
     @Override
     public void setStateThief(int thiefState, int thiefId)
@@ -92,8 +91,8 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Set thief agility
      *
-     * @param thiefAgility
-     * @param thiefId
+     * @param thiefAgility Thief agility
+     * @param thiefId Thief identification
      */
     @Override
     public void setStateAgility(int thiefAgility, int thiefId)
@@ -106,7 +105,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Set master thief state
      *
-     * @param masterThief
+     * @param masterThief Master thief 
      */
     @Override
     public void setStateMasterThief(int masterThief)
@@ -120,9 +119,9 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Change the position of a element in a assault party.
      *
-     * @param partyId
-     * @param elemId
-     * @param pos
+     * @param partyId Assault party identification
+     * @param elemId Element identification
+     * @param pos Element position
      */
     @Override
     public void setPosElem(int partyId, int elemId, int pos)
@@ -136,7 +135,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Remove a canvas from a Museum Room (stolen canvas).
      *
-     * @param roomId
+     * @param roomId Room identification
      */
     public void updateMuseumRoom(int roomId)
     {
@@ -151,9 +150,9 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Change canvas status of a element in a assault party.
      *
-     * @param partyId
-     * @param elemId
-     * @param cv
+     * @param partyId Assault party identification
+     * @param elemId Element identification
+     * @param cv Canvas of thief
      */
     @Override
     public void setCanvasElem(int partyId, int elemId, int cv, int roomId, int thiefId)
@@ -175,8 +174,8 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Set targeted Room on Assault Party #, #-1,2
      *
-     * @param partyId
-     * @param roomId
+     * @param partyId Assault party identification
+     * @param roomId Room identification
      */
     @Override
     public void setRoomId(int partyId, int roomId)
@@ -189,9 +188,9 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Set Thief ID on Assault Party Element
      *
-     * @param partyId
-     * @param elemId
-     * @param id
+     * @param partyId Assault party identification
+     * @param elemId Element identification
+     * @param id Thief identification
      */
     @Override
     public void setIdPartyElem(int partyId, int elemId, int id)
@@ -207,8 +206,8 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Resets information on the element pretended.
      *
-     * @param partyId
-     * @param elemId
+     * @param partyId Assault party identification
+     * @param elemId Element identification
      */
     @Override
     public void resetIdPartyElem(int partyId, int elemId)
@@ -223,7 +222,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Reset room in a assault party.
      *
-     * @param partyId
+     * @param partyId Assault party identification
      */
     @Override
     public void resetIdPartyRoom(int partyId)
@@ -236,9 +235,9 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Set up Museum Room, distance and number of canvas.
      *
-     * @param roomId
-     * @param distance
-     * @param canvas
+     * @param roomId Room identification
+     * @param distance Room distance
+     * @param canvas Canvas of thief
      *
      */
     @Override
@@ -318,7 +317,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * The method returns General Repository Information object.
      *
-     * @return
+     * @return Instance of GRI
      */
     public static GRInformation getInstance()
     {
@@ -421,7 +420,7 @@ public class GRInformation implements InterfaceGRInformation {
     }
 
     /**
-     *
+     * Prints both lines.
      */
     public void printDoubleLine()
     {
@@ -494,7 +493,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Translate the state of the thief to a 4 letter word.
      *
-     * @param thiefState
+     * @param thiefState Thief state
      * @return string with abbreviation
      */
     public String translateThiefState(int thiefState)
@@ -519,7 +518,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Translate the state of the master thief to a 4 letter word.
      *
-     * @param masterThiefState
+     * @param masterThiefState Master thief state
      * @return string with abbreviation
      */
     public String translateMasterThiefState(int masterThiefState)
@@ -544,7 +543,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Translate the thief situation to a 1 letter word.
      *
-     * @param thiefSit
+     * @param thiefSit Thief situation
      * @return string with abbreviation
      */
     public String translateThiefSituation(int thiefSit)
@@ -594,7 +593,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Print the end of the program.
      *
-     * @param totalPaints
+     * @param totalPaints Total number of paints
      */
     @Override
     public void printResume(int totalPaints)
@@ -609,7 +608,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Test method.
      *
-     * @param s, Some string to print.
+     * @param s Some string to print
      */
     public void printSomething(String s)
     {

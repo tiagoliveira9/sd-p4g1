@@ -5,7 +5,7 @@ import Auxiliary.InterfaceConcentrationSite;
 import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceMuseum;
 import Auxiliary.InterfaceThief;
-import HeistMuseum.Constants;
+import Auxiliary.Constants;
 //import ServerSide.AssaultParty;
 
 /**
@@ -19,7 +19,7 @@ public class Thief extends Thread implements InterfaceThief {
     /**
      * Identification of the Thief.
      *
-     * @serialField thiefId
+     * @serialField thiefId 
      */
     private final int thiefId;
     /**
@@ -37,7 +37,7 @@ public class Thief extends Thread implements InterfaceThief {
     /**
      * Used to verify if the Thief comes from handing a canvas.
      *
-     * @serialField justHanded
+     * @serialField justHanded 
      */
     private boolean justHanded;
 
@@ -128,7 +128,7 @@ public class Thief extends Thread implements InterfaceThief {
     /**
      * Get thief identification
      *
-     * @return Thief Id
+     * @return Thief identification
      */
     @Override
     public int getThiefId()
@@ -150,7 +150,7 @@ public class Thief extends Thread implements InterfaceThief {
     /**
      * Set thief state
      *
-     * @param stateThief
+     * @param stateThief Thief state
      */
     @Override
     public void setStateThief(int stateThief)

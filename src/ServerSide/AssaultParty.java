@@ -2,7 +2,7 @@ package ServerSide;
 
 import Auxiliary.InterfaceAssaultParty;
 import Auxiliary.InterfaceGRInformation;
-import HeistMuseum.Constants;
+import Auxiliary.Constants;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -10,7 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * This data type implements Assault party.
  *
+ * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
 public class AssaultParty implements InterfaceAssaultParty {
@@ -53,8 +55,8 @@ public class AssaultParty implements InterfaceAssaultParty {
     // entrega decrementa o sum, no ultimo hand a canvas, limpa assault party
     /**
      *
-     * @param i
-     * @return
+     * @param i Assault party counter
+     * @return Instance of assault party
      */
     public static AssaultParty getInstance(int i)
     {
@@ -76,7 +78,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     /**
      * Private constructor for Doubleton.
      *
-     * @param party Party identifier.
+     * @param partyId Assault party identification
      */
     private AssaultParty(int partyId)
     {
@@ -102,7 +104,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * Add thief to AssaultParty#. Return a flag, so the Thief knows who is last
      * to wake the Master
      *
-     * @return boolean. True if is the last Thief, false otherwise.
+     * @return True if is the last Thief, false otherwise.
      */
     @Override
     public boolean addToSquad(int thiefId, int thiefAgility, int partyId)
@@ -166,25 +168,25 @@ public class AssaultParty implements InterfaceAssaultParty {
         {
         }
 
-
         l.unlock();
     }
 
     /**
+     * Thief crawls in.
      *
-     * @return
+     * @return Thief to the right room of an assault party
      */
     @Override
-    public int[] crawlIn(int thiefId, int partyId)
+    public int[] crawlIn(int thiefId, int partyIdMsg)
     {
         l.lock();
-        
+
         Crook cr = getCrook(thiefId);
         int next = selectNext(thiefId);
 
         try
         {
-            while (!crawlGo(true, cr))
+            while (!crawlGo(true, cr, partyIdMsg))
             {
                 idGlobal = squad[next].id;
                 moveThief.signalAll();
@@ -212,11 +214,12 @@ public class AssaultParty implements InterfaceAssaultParty {
     }
 
     /**
+     * Thief crawls out.
      *
-     * @return
+     * @return Thief to the right room of an assault party
      */
     @Override
-    public int[] crawlOut(int thiefId, int partyId)
+    public int[] crawlOut(int thiefId, int partyIdMsg)
     {
         l.lock();
         Crook cr = getCrook(thiefId);
@@ -233,7 +236,7 @@ public class AssaultParty implements InterfaceAssaultParty {
                 moveThief.await();
             }
             cr.pos = 0;
-            while (!crawlGo(false, cr))
+            while (!crawlGo(false, cr, partyIdMsg))
             {
 
                 idGlobal = squad[next].id;
@@ -266,7 +269,7 @@ public class AssaultParty implements InterfaceAssaultParty {
 
     }
 
-    private boolean crawlGo(boolean way, Crook cr)
+    private boolean crawlGo(boolean way, Crook cr, int partyIdMsg)
     {
         l.lock();
 
@@ -315,10 +318,10 @@ public class AssaultParty implements InterfaceAssaultParty {
                         cr.pos = distance;
                         if (way)
                         {
-                            repo.setPosElem(partyId, elemId, cr.pos);
+                            repo.setPosElem(partyIdMsg, elemId, cr.pos);
                         } else
                         {
-                            repo.setPosElem(partyId, elemId, translatePos[cr.pos]);
+                            repo.setPosElem(partyIdMsg, elemId, translatePos[cr.pos]);
                         }
                         flagI = true;
                         break;
@@ -333,10 +336,10 @@ public class AssaultParty implements InterfaceAssaultParty {
                         cr.pos = distance;
                         if (way)
                         {
-                            repo.setPosElem(partyId, elemId, cr.pos);
+                            repo.setPosElem(partyIdMsg, elemId, cr.pos);
                         } else
                         {
-                            repo.setPosElem(partyId, elemId, translatePos[cr.pos]);
+                            repo.setPosElem(partyIdMsg, elemId, translatePos[cr.pos]);
                         }
                         flagI = true;
                         break;
@@ -346,10 +349,10 @@ public class AssaultParty implements InterfaceAssaultParty {
             }
             if (way)
             {
-                repo.setPosElem(partyId, elemId, cr.pos);
+                repo.setPosElem(partyIdMsg, elemId, cr.pos);
             } else
             {
-                repo.setPosElem(partyId, elemId, translatePos[cr.pos]);
+                repo.setPosElem(partyIdMsg, elemId, translatePos[cr.pos]);
             }
         } while (cr.pos - teamHead != 3);
 
@@ -368,8 +371,8 @@ public class AssaultParty implements InterfaceAssaultParty {
 
     /**
      *
-     * @param thiefId
-     * @return
+     * @param thiefId Thief identification
+     * @return Squad number
      */
     public Crook getCrook(int thiefId)
     {
@@ -392,8 +395,8 @@ public class AssaultParty implements InterfaceAssaultParty {
      * is possible to use the correct condition (array of conditions) to block
      * and wake up the next
      *
-     * @param myThiefId
-     * @return nextThiefLine
+     * @param myThiefId Thief identification for each thief
+     * @return Next Thief to crawl
      */
     public int selectNext(int myThiefId)
     {
@@ -415,8 +418,8 @@ public class AssaultParty implements InterfaceAssaultParty {
 
     /**
      *
-     * @param myThiefId
-     * @return
+     * @param myThiefId Thief identification for each thief
+     * @return Position of thief
      */
     public int myPositionTeam(int myThiefId)
     {
@@ -460,8 +463,8 @@ public class AssaultParty implements InterfaceAssaultParty {
     /**
      * Master provides information of the room to assault: distance and roomId.
      *
-     * @param distance
-     * @param roomId
+     * @param distance Room distance
+     * @param roomId Room identification
      */
     @Override
     public void setUpRoom(int distance, int roomId, int partyId)
@@ -491,7 +494,7 @@ public class AssaultParty implements InterfaceAssaultParty {
 
     /**
      *
-     * @param elemId
+     * @param elemId Element identification
      */
     @Override
     public void addCrookCanvas(int elemId, int partyId)
@@ -505,8 +508,8 @@ public class AssaultParty implements InterfaceAssaultParty {
 
     /**
      *
-     * @param thiefId
-     * @return {roomId, elemId}
+     * @param thiefId Thief identification
+     * @return Room and element identification
      */
     public int[] getRoomIdToAssault(int thiefId)
     {
@@ -518,7 +521,7 @@ public class AssaultParty implements InterfaceAssaultParty {
 
     /**
      *
-     * @return
+     * @return Room identification
      */
     public int getRoomId()
     {
@@ -527,7 +530,7 @@ public class AssaultParty implements InterfaceAssaultParty {
 
     /**
      *
-     * @return
+     * @return Room distance
      */
     public int getDistance()
     {
@@ -537,7 +540,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     /**
      * Get id from Assault Party.
      *
-     * @return partyId Party identifier.
+     * @return Assault party identification
      */
     public int getPartyId()
     {

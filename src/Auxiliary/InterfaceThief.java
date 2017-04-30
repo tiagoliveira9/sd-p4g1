@@ -1,8 +1,10 @@
 package Auxiliary;
 
 /**
+ * Thief interface.
  *
- * @author Tiago Oliveira tiago9@ua.pt n.:51687
+ * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
+ * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  */
 public interface InterfaceThief {
 
@@ -23,14 +25,14 @@ public interface InterfaceThief {
     /**
      * Get thief identification
      *
-     * @return Thief Id
+     * @return Thief identification
      */
     int getThiefId();
 
     /**
      * Set thief state
      *
-     * @param stateThief
+     * @param stateThief Thief state
      */
     void setStateThief(int stateThief);
     

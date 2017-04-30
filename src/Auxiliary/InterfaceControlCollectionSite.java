@@ -1,8 +1,10 @@
 package Auxiliary;
 
 /**
- *
- * @author Tiago Oliveira tiago9@ua.pt n.:51687
+ * Control and collection site interface.
+ * 
+ * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
+ * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  */
 public interface InterfaceControlCollectionSite {
 
@@ -17,7 +19,7 @@ public interface InterfaceControlCollectionSite {
      * This method checks Assault Parties availability. Return true if exists at
      * least one, returns false if every team is occupied
      *
-     * @return availability
+     * @return Availability of teams
      */
     boolean anyTeamAvailable();
 
@@ -32,9 +34,9 @@ public interface InterfaceControlCollectionSite {
      * Room id to identify which room is not in use. Canvas true if has canvas
      * to deliver.
      *
-     * @param canvas
-     * @param partyId
-     * @param roomId
+     * @param canvas Canvas of thief
+     * @param partyId Assault party identification
+     * @param roomId Room identification 
      */
     void handACanvas(int canvas, int roomId, int partyId);
 
@@ -42,7 +44,7 @@ public interface InterfaceControlCollectionSite {
      * The method prepareAssaultPart stage 1. Selects Assault Party and Room to
      * sack
      *
-     * @return {AssaultPartyId, tSala}
+     * @return Assault party and room identification
      */
     int[] prepareAssaultParty1();
 

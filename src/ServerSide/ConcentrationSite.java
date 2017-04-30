@@ -2,7 +2,7 @@ package ServerSide;
 
 import Auxiliary.InterfaceConcentrationSite;
 import Auxiliary.InterfaceGRInformation;
-import HeistMuseum.Constants;
+import Auxiliary.Constants;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.concurrent.locks.Condition;
@@ -151,7 +151,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * thief is responsible to wake the third thief. After is awaken, he removes
      * himself from the stack or dies.
      * 
-     * @return
+     * @return Assault Party number
      */
     @Override
     public int waitForCall(int thiefId)
@@ -201,8 +201,8 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * to AssaultPart #. nAssaultParty is changed here so when Thief wakes up,
      * returns the update value to life cycle.
      *
-     * @param partyId
-     * @param roomId
+     * @param partyId Assault party identification
+     * @param roomId Room identification
      */
     @Override
     public void prepareAssaultParty2(int partyId, int roomId)

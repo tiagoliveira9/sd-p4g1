@@ -6,7 +6,7 @@ import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceMasterThief;
 import Auxiliary.InterfaceMuseum;
 
-import HeistMuseum.Constants;
+import Auxiliary.Constants;
 //import ServerSide.AssaultParty;
 
 /**
@@ -43,7 +43,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
     }
 
     /**
-     * Run this thread -> Life cycle of the Thief.
+     * Run this thread: Life cycle of the Thief.
      */
     @Override
     public void run()
@@ -138,7 +138,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
     /**
      * Get Master state.
      *
-     * @return stateMaster
+     * @return Master thief state
      */
     @Override
     public int getStateMaster()
@@ -149,7 +149,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
     /**
      * Set Master state.
      *
-     * @param stateMaster
+     * @param stateMaster Master thief state
      */
     @Override
     public void setStateMaster(int stateMaster)

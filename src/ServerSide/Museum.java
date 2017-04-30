@@ -2,12 +2,14 @@ package ServerSide;
 
 import Auxiliary.InterfaceGRInformation;
 import Auxiliary.InterfaceMuseum;
-import HeistMuseum.Constants;
+import Auxiliary.Constants;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ *  This data type implements Museum.
+ * 
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
@@ -66,7 +68,7 @@ public class Museum implements InterfaceMuseum {
      *
      * @param roomId Room identification
      * @param distance Room distance from outside
-     * @param canvas How much paintings exists on this Room
+     * @param canvas How much paintings exists on this room
      */
     public void setUpRoom(int roomId, int distance, int canvas)
     {
@@ -83,10 +85,10 @@ public class Museum implements InterfaceMuseum {
     /**
      * Thief roll a canvas in the room he is in.
      *
-     * @param roomId room identification
-     * @param elemPos element position
-     * @param partyId assault party identification
-     * @return
+     * @param roomId Room identification
+     * @param elemPos Element position
+     * @param partyId Assault party identification
+     * @return Flag value
      */
     @Override
     public boolean rollACanvas(int roomId, int elemPos, int partyId, int thiefId)
@@ -118,8 +120,8 @@ public class Museum implements InterfaceMuseum {
     /**
      * This method get the distance of the room.
      *
-     * @param roomId
-     * @return default
+     * @param roomId Room identification
+     * @return Default value
      */
     @Override
     public int getRoomDistance(int roomId)
@@ -135,8 +137,8 @@ public class Museum implements InterfaceMuseum {
     /**
      * This method get the number of canvas in a room.
      *
-     * @param roomId
-     * @return default
+     * @param roomId Room identification
+     * @return Default value
      */
     public int getRoomCanvas(int roomId)
     {

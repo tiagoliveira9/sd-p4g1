@@ -2,7 +2,7 @@ package ServerSide;
 
 import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceGRInformation;
-import HeistMuseum.Constants;
+import Auxiliary.Constants;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -85,7 +85,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     }
 
     /**
-     * Singleton needs private constructor
+     * Singleton needs private constructor.
      */
     private ControlCollectionSite()
     {
@@ -124,7 +124,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * The method prepareAssaultPart stage 1. Selects Assault Party and Room to
      * sack
      *
-     * @return {AssaultPartyId, tSala}
+     * @return Assault party and room identification
      */
     @Override
     public int[] prepareAssaultParty1()
@@ -197,9 +197,9 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * Room id to identify which room is not in use. Canvas true if has canvas
      * to deliver.
      *
-     * @param canvas
-     * @param partyId
-     * @param roomId
+     * @param canvas Canvas of thief
+     * @param partyId Assault party identification
+     * @param roomId Room identification
      */
     @Override
     public void handACanvas(int canvas, int roomId, int partyId)
@@ -288,7 +288,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * This method checks Assault Parties availability. Return true if exists at
      * least one, returns false if every team is occupied
      *
-     * @return availability
+     * @return Availability of teams
      */
     @Override
     public boolean anyTeamAvailable()

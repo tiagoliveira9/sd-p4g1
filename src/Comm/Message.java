@@ -198,7 +198,7 @@ public class Message implements Serializable {
      * Instanciação de uma mensagem (forma 2).
      *
      * @param type tipo da mensagem
-     * @param
+     * @param val valor
      */
     // GRInformation setStateMasterThief(stateMaster)
     // GRInformation resetIdPartyRoom(partyId)
@@ -301,8 +301,9 @@ public class Message implements Serializable {
      * Instanciação de uma mensagem
      *
      * @param type tipo da mensagem
-     * @param barbId identificação do barbeiro
-     * @param custId identificação do cliente
+     * @param val1 valor 1
+     * @param val2 valor 2
+     * @param val3 valor 3
      */
     //new Message(Message.SETUP_ASP_ROOM, distance, roomId, partyId)
     //(Message.GET_ADD_TO_SQUAD, thiefId, agility, partyId)

@@ -1,6 +1,8 @@
-package HeistMuseum;
+package Auxiliary;
 
 /**
+ * Constants of program.
+ * 
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */

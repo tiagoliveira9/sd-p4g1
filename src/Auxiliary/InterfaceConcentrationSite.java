@@ -1,20 +1,23 @@
 package Auxiliary;
 
 /**
+ * Concentration site interface.
  *
- * @author Tiago Oliveira tiago9@ua.pt n.:51687
+ * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
+ * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  */
 public interface InterfaceConcentrationSite {
 
     /**
      * Adds thief to stack and changes state to Outside.
+     * @param thiefId Thief identification
      */
     void addThief(int thiefId);
 
     /**
      * This method returns the size of the thieves stack.
      *
-     * @return size of thieves stack
+     * @return Size of thieves stack
      */
     int checkThiefNumbers();
 
@@ -23,13 +26,14 @@ public interface InterfaceConcentrationSite {
      * to AssaultPart #. nAssaultParty is changed here so when Thief wakes up,
      * returns the update value to life cycle.
      *
-     * @param partyId
-     * @param roomId
+     * @param partyId Assault party identification
+     * @param roomId Room identification
      */
     void prepareAssaultParty2(int partyId, int roomId);
 
     /**
      * Change thief state to DEAD.
+     * @param thiefId Thief identification
      */
     void setDeadState(int thiefId);
 
@@ -46,7 +50,8 @@ public interface InterfaceConcentrationSite {
      * thief is responsible to wake the third thief. After is awaken, he removes
      * himself from the stack or dies.
      *
-     * @return
+     * @param thiefId Thief identification
+     * @return Assault party number
      */
     int waitForCall(int thiefId);
 

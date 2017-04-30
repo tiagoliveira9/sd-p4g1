@@ -2,11 +2,13 @@ package ClientSide;
 
 import Auxiliary.InterfaceAssaultParty;
 import Comm.Message;
-import HeistMuseum.Constants;
+import Auxiliary.Constants;
 
 /**
- *
- * @author Tiago Oliveira tiago9@ua.pt n.:51687
+ * Assault party stub.
+ * 
+ * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
+ * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  *
  */
 public class AssaultPartyStub implements InterfaceAssaultParty {

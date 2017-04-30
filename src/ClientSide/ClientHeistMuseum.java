@@ -5,15 +5,17 @@ import Auxiliary.InterfaceConcentrationSite;
 import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceGRInformation;
 import Auxiliary.InterfaceMuseum;
-import HeistMuseum.Constants;
+import Auxiliary.Constants;
 import ServerSide.GRInformationStub;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Client Heist the Museum
  *
- * @author Tiago Oliveira tiago9@ua.pt n.:51687
+ * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
+ * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  */
 public class ClientHeistMuseum {
 
