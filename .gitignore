@@ -2,3 +2,6 @@
 /build/
 /dist/
 /*.txt
+/bin
+/binClient
+/binServer

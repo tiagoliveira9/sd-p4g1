@@ -151,6 +151,8 @@ public class AssaultParty implements InterfaceAssaultParty {
     public void waitToStartRobbing(int thiefId, int partyId)
     {
         l.lock();
+        repo.setStateThief(Constants.CRAWLING_INWARDS, thiefId);
+
         Crook c = getCrook(thiefId);
         try
         {
@@ -164,7 +166,6 @@ public class AssaultParty implements InterfaceAssaultParty {
         {
         }
 
-        repo.setStateThief(Constants.CRAWLING_INWARDS, thiefId);
 
         l.unlock();
     }
