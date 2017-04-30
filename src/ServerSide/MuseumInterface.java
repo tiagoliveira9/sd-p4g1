@@ -41,7 +41,7 @@ public class MuseumInterface implements InterfaceServer {
                 break;
             case Message.GET_ROLL:
                 boolean cv = mus.rollACanvas(inMessage.getRoomId(),
-                        inMessage.getElemPos(), inMessage.getPartyId());
+                        inMessage.getElemPos(), inMessage.getPartyId(), inMessage.getThiefId());
                 outMessage = new Message(Message.ROLL, cv);
                 break;
             default:
@@ -52,7 +52,7 @@ public class MuseumInterface implements InterfaceServer {
     }
 
     @Override
-    public boolean shutingDown()
+    public boolean shutingDown(int val)
     {
         return mus.shutdown();
     }

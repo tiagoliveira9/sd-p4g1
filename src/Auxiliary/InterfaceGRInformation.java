@@ -51,7 +51,7 @@ public interface InterfaceGRInformation {
      * @param elemId
      * @param cv
      */
-    void setCanvasElem(int partyId, int elemId, int cv);
+    void setCanvasElem(int partyId, int elemId, int cv, int roomId, int thiefId);
 
     /**
      * Set Thief ID on Assault Party Element
@@ -110,12 +110,6 @@ public interface InterfaceGRInformation {
      */
     void setUpMuseumRoom(int roomId, int distance, int canvas);
 
-    /**
-     * Remove a canvas from a Museum Room (stolen canvas).
-     *
-     * @param roomId
-     */
-    void updateMuseumRoom(int roomId);
     
     boolean shutdown();
     

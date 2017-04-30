@@ -3,8 +3,6 @@ package ClientSide;
 import Auxiliary.InterfaceAssaultParty;
 import Comm.Message;
 import HeistMuseum.Constants;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -13,19 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class AssaultPartyStub implements InterfaceAssaultParty {
 
-    private int setConnection = -1;
-
-    private final static Lock l = new ReentrantLock();
-
-    public void setConnectionAssaultParty(int setConnection)
-    {
-        l.lock();
-        this.setConnection = setConnection;
-        System.out.println("set");
-        l.unlock();
-    }
-
-    private ClientCom initiateConnection()
+    private ClientCom initiateConnection(int setConnection)
     {
         if (setConnection == 0)
         {
@@ -35,7 +21,7 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
             if (!con.open())
             {
                 System.out.println("Couldn't initiate connection to "
-                        + "127.0.0.1" + ":" + 4003);
+                        + "127.0.0.1" + ":" + 4004);
             }
             return con;
         } else
@@ -46,7 +32,7 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
             if (!con.open())
             {
                 System.out.println("Couldn't initiate connection to "
-                        + "127.0.0.1" + ":" + 4004);
+                        + "127.0.0.1" + ":" + 4005);
             }
             return con;
         }
@@ -55,14 +41,14 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
     }
 
     @Override
-    public void addCrookCanvas(int elemId)
+    public void addCrookCanvas(int elemId, int partyId)
     {
 
-        ClientCom con = initiateConnection();
+        ClientCom con = initiateConnection(partyId);
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.ADD_CANVAS, elemId);
+        outMessage = new Message(Message.ADD_CANVAS, elemId, partyId);
 
         con.writeObject(outMessage);
 
@@ -78,13 +64,13 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
     }
 
     @Override
-    public boolean addToSquad(int thiefId, int agility)
+    public boolean addToSquad(int thiefId, int agility, int partyId)
     {
-        ClientCom con = initiateConnection();
+        ClientCom con = initiateConnection(partyId);
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.GET_ADD_TO_SQUAD, thiefId, agility);
+        outMessage = new Message(Message.GET_ADD_TO_SQUAD, thiefId, agility, partyId);
 
         con.writeObject(outMessage);
 
@@ -101,13 +87,13 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
     }
 
     @Override
-    public int[] crawlIn(int thiefId)
+    public int[] crawlIn(int thiefId, int partyId)
     {
-        ClientCom con = initiateConnection();
+        ClientCom con = initiateConnection(partyId);
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.GET_CRAWLIN, thiefId);
+        outMessage = new Message(Message.GET_CRAWLIN, thiefId, partyId);
 
         con.writeObject(outMessage);
 
@@ -124,16 +110,16 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
     }
 
     @Override
-    public int[] crawlOut(int thiefId)
+    public int[] crawlOut(int thiefId, int partyId)
     {
         Thief th = (Thief) Thread.currentThread();
         th.setStateThief(Constants.CRAWLING_OUTWARDS);
 
-        ClientCom con = initiateConnection();
+        ClientCom con = initiateConnection(partyId);
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.GET_CRAWLOUT, thiefId);
+        outMessage = new Message(Message.GET_CRAWLOUT, thiefId, partyId);
 
         con.writeObject(outMessage);
 
@@ -150,9 +136,9 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
     }
 
     @Override
-    public void sendAssaultParty()
+    public void sendAssaultParty(int partyId)
     {
-        ClientCom con = initiateConnection();
+        ClientCom con = initiateConnection(partyId);
 
         Message inMessage, outMessage;
 
@@ -172,14 +158,13 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
     }
 
     @Override
-    public void setUpRoom(int distance, int roomId)
+    public void setUpRoom(int distance, int roomId, int partyId)
     {
-        System.out.println("set2222");
-        ClientCom con = initiateConnection();
+        ClientCom con = initiateConnection(partyId);
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.SETUP_ASP_ROOM, distance, roomId);
+        outMessage = new Message(Message.SETUP_ASP_ROOM, distance, roomId, partyId);
 
         con.writeObject(outMessage);
 
@@ -195,17 +180,17 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
     }
 
     @Override
-    public void waitToStartRobbing(int thiefId)
+    public void waitToStartRobbing(int thiefId, int partyId)
     {
 
         Thief th = (Thief) Thread.currentThread();
         th.setStateThief(Constants.CRAWLING_INWARDS);
 
-        ClientCom con = initiateConnection();
+        ClientCom con = initiateConnection(partyId);
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.WAIT_START_ROBB, thiefId);
+        outMessage = new Message(Message.WAIT_START_ROBB, thiefId, partyId);
 
         con.writeObject(outMessage);
 
@@ -221,9 +206,9 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
     }
 
     @Override
-    public boolean shutdown()
+    public boolean shutdown(int partyId)
     {
-        ClientCom con = initiateConnection();
+        ClientCom con = initiateConnection(partyId);
 
         Message inMessage, outMessage;
 

@@ -13,6 +13,7 @@ interface InterfaceServer {
      * alterar isto
      *
      * @return true if going to shutdown
+     * val para escolher as assault party
      */
-    boolean shutingDown();
+    boolean shutingDown(int val);
 }

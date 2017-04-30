@@ -22,7 +22,7 @@ public interface InterfaceMuseum {
      * @param partyId assault party identification
      * @return
      */
-    boolean rollACanvas(int roomId, int elemPos, int partyId);
+    boolean rollACanvas(int roomId, int elemPos, int partyId, int thiefId);
 
     boolean shutdown();
 

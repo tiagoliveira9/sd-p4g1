@@ -3,6 +3,8 @@ package ServerSide;
 import genclass.GenericIO;
 import java.io.*;
 import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *   Este tipo de dados implementa o canal de comunicação, lado do servidor, para uma comunicação baseada em passagem de
@@ -272,5 +274,16 @@ public class ServerCom
         e.printStackTrace ();
         System.exit (1);
       }
+   }
+   public void flushOut(){
+   
+       try
+       {
+           out.flush();
+       } catch (IOException ex)
+       {
+           Logger.getLogger(ServerCom.class.getName()).log(Level.SEVERE, null, ex);
+       }
+   
    }
 }

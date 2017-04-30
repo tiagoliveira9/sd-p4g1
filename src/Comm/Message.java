@@ -40,7 +40,7 @@ public class Message implements Serializable {
     public static final int SETPARTY_ELEM = 14;
     public static final int RESET_PARTY_ELEM = 15;
     public static final int SETPOS_ELEM = 16;
-    public static final int UPDATE_MUS_ROOM = 17;
+    //public static final int UPDATE_MUS_ROOM = 17;
     public static final int SETAGILITY = 18;
     public static final int CLOSE_REPO = 19;
     public static final int PRINT_LEGE = 20;
@@ -78,10 +78,10 @@ public class Message implements Serializable {
     public static final int GET_CRAWLIN = 46;
     public static final int CRAWLIN = 47;
     public static final int ADD_CANVAS = 48;
-    
+
     public static final int GET_CRAWLOUT = 49;
     public static final int CRAWLOUT = 50;
-    
+
     /* Info Active Entities */
     private int thiefId;
     private int stateThief;
@@ -108,8 +108,7 @@ public class Message implements Serializable {
     private int nAssaultParty = -1;
     private int nThievesQueue = -1;
     private boolean addSquad = false;
-   
-    
+
     //Assault, Sala
     private int[] pick = new int[]
     {
@@ -183,7 +182,7 @@ public class Message implements Serializable {
     public Message(int type, int[] val)
     {
         msgType = type;
-        
+
         switch (msgType)
         {
             case CRAWLIN: //  usamos também o pick para o crawlin
@@ -191,8 +190,7 @@ public class Message implements Serializable {
             case CRAWLOUT:
                 pick = val;
                 break;
-            
-                
+
         }
     }
 
@@ -210,7 +208,6 @@ public class Message implements Serializable {
     //ASG waitToStartRobbing(int thiefId)
     // ASP int[] crawlIn (int thiefId)
     // ASG void addCrookCanvas(int elemId)
-
     public Message(int type, int val)
     {
         msgType = type;
@@ -231,36 +228,26 @@ public class Message implements Serializable {
             case SETSTATE_MASTER:
                 stateMasterThief = val;
                 break;
-            case UPDATE_MUS_ROOM:
-                roomId = val;
-                break;
             case WAIT_FOR_CALL:
                 nAssaultParty = val;
                 break;
-            /*case ADD_THIEF:
-                thiefId = val; é possivel colapsar mais cases
-                break; */
- /*case SETDEAD_STATE:
-                thiefId = val;
-                break;*/
             case THIEF_NUMBERS:
                 nThievesQueue = val;
                 break;
             case ADD_THIEF:
             case SETDEAD_STATE:
-            case WAIT_START_ROBB:
-            case GET_CRAWLIN:
-            case GET_CRAWLOUT:
                 thiefId = val;
                 break;
-            case ADD_CANVAS:
-                elemId = val;
+            case SEND_ASSAULTP:
+                partyId = val;
                 break;
             default:
                 break;
         }
     }
-
+    //tMessage = new Message(Message.WAIT_START_ROBB, thiefId, partyId)
+    // outMessage = new Message(Message.GET_CRAWLIN, thiefId, partyId);
+    //Message.ADD_CANVAS, elemId, partyId
     // GRInformation setStateThief(stateThief, thiefId)         
     // GRInformation setRoomId(partyId, roomId)
     // GRInformation resetIdPartyElem(partyId, elemId) 
@@ -268,6 +255,7 @@ public class Message implements Serializable {
     // public void prepareAssaultParty2(int partyId, int roomId)
     // ASP boolean addToSquad(int thiefId, int thiefAgility)
     // ASP void setUpRoom(int distance, int roomId)
+
     public Message(int type, int val1, int val2)
     {
         msgType = type;
@@ -294,13 +282,15 @@ public class Message implements Serializable {
                 partyId = val1;
                 roomId = val2;
                 break;
-            case GET_ADD_TO_SQUAD:
-                thiefId = val1;
-                agility = val2;
+            case ADD_CANVAS:
+                elemId = val1;
+                partyId = val2;
                 break;
-            case SETUP_ASP_ROOM:
-                distance = val1;
-                roomId = val2;
+            case GET_CRAWLIN:
+            case GET_CRAWLOUT:
+            case WAIT_START_ROBB:
+                thiefId = val1;
+                partyId = val2;
                 break;
             default:
                 break;
@@ -314,7 +304,8 @@ public class Message implements Serializable {
      * @param barbId identificação do barbeiro
      * @param custId identificação do cliente
      */
-    // Museum rollACanvas(int roomId, int elemPos, int partyId)
+    //new Message(Message.SETUP_ASP_ROOM, distance, roomId, partyId)
+    //(Message.GET_ADD_TO_SQUAD, thiefId, agility, partyId)
     // GRInformation setUpMuseumRoom(roomId, distance, canvas)
     // GRInformation setCanvasElem(partyId, elemPos, cv) 
     // GRInformation setIdPartyElem(int partyId, int elemId, int id)
@@ -326,21 +317,12 @@ public class Message implements Serializable {
 
         switch (msgType)
         {
-            case GET_ROLL:
-                roomId = val1;
-                elemPos = val2;
-                partyId = val3;
-                break;
             case SETUP_MUS_ROOM:
                 roomId = val1;
                 distance = val2;
                 canvas = val3;
                 break;
-            case SETCANVAS_ELEM:
-                partyId = val1;
-                elemId = val2;
-                canvas = val3;
-                break;
+
             case SETPARTY_ELEM:
                 partyId = val1;
                 elemId = val2;
@@ -356,9 +338,59 @@ public class Message implements Serializable {
                 roomId = val2;
                 partyId = val3;
                 break;
+            case GET_ADD_TO_SQUAD:
+                thiefId = val1;
+                agility = val2;
+                partyId = val3;
+                break;
+            case SETUP_ASP_ROOM:
+                distance = val1;
+                roomId = val2;
+                partyId = val3;
+                break;
             default:
                 break;
         }
+    }
+
+    // Museum rollACanvas(int roomId, int elemPos, int partyId, int thiefid)
+    public Message(int type, int val1, int val2, int val3, int val4)
+    {
+        msgType = type;
+
+        switch (msgType)
+        {
+            case GET_ROLL:
+                roomId = val1;
+                elemPos = val2;
+                partyId = val3;
+                thiefId = val4;
+                break;
+            default:
+                break;
+        }
+    }
+
+    //    public void setCanvasElem(int partyId, int elemId, int cv, int roomId, int thiefId)
+    public Message(int type, int val1, int val2, int val3, int val4, int val5)
+    {
+
+        msgType = type;
+
+        switch (type)
+        {
+            case SETCANVAS_ELEM: 
+
+                partyId = val1;
+                elemId = val2;
+                canvas = val3;
+                roomId = val4;
+                thiefId = val5;
+                break;
+            default:
+                break;
+        }
+
     }
 
     /**

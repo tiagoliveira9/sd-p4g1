@@ -1,9 +1,11 @@
 package HeistMuseum;
 
+import Auxiliary.InterfaceAssaultParty;
 import Auxiliary.InterfaceConcentrationSite;
 import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceGRInformation;
 import Auxiliary.InterfaceMuseum;
+import ClientSide.AssaultPartyStub;
 import ClientSide.ConcentrationSiteStub;
 import ClientSide.ControlCollectionSiteStub;
 import ServerSide.ConcentrationSite;
@@ -37,6 +39,7 @@ public class HeistMuseum {
     private final static InterfaceMuseum mus = new MuseumStub();
     private final static InterfaceControlCollectionSite control = new ControlCollectionSiteStub();
     private final static InterfaceConcentrationSite conc = new ConcentrationSiteStub();
+    private final static InterfaceAssaultParty asg = new AssaultPartyStub();
 
     public static void main(String[] args) throws InterruptedException
     {
@@ -46,23 +49,7 @@ public class HeistMuseum {
         ControlCollectionSite.getInstance();
         //GRInformation.getInstance().printHeader();
 
-        for (int i = 0; i < Constants.N_ASSAULT_PARTY; i++)
-        {
-            AssaultParty.getInstance(i);
-        }
 
-        /*Museum hermitage = Museum.getInstance();
-       
-        int distance, canvas;
-
-        for (int i = 0; i < Constants.N_ROOMS; i++)
-        {
-            // distance between 15 and 30
-            distance = ThreadLocalRandom.current().nextInt(15, 30 + 1);
-            // canvas between 8 and 16
-            canvas = ThreadLocalRandom.current().nextInt(8, 16 + 1);
-            hermitage.setUpRoom(i, distance, canvas);
-        }*/
         Thief[] thieves = new Thief[Constants.N_THIEVES];
         MasterThief masterThief = new MasterThief();
         int agility;
@@ -95,6 +82,8 @@ public class HeistMuseum {
         control.shutdown();
         conc.shutdown();
         repo.shutdown();
+        asg.shutdown(0);
+        asg.shutdown(1);
     }
 
 }

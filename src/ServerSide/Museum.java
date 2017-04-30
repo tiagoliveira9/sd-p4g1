@@ -89,10 +89,9 @@ public class Museum implements InterfaceMuseum {
      * @return
      */
     @Override
-    public boolean rollACanvas(int roomId, int elemPos, int partyId)
+    public boolean rollACanvas(int roomId, int elemPos, int partyId, int thiefId)
     {
         l.lock();
-        //Thief t = (Thief) Thread.currentThread();
 
         boolean flag = false;
         int number = rooms[roomId].canvas;
@@ -102,13 +101,15 @@ public class Museum implements InterfaceMuseum {
             rooms[roomId].canvas--;
             flag = true;
 
-            repo.setCanvasElem(partyId, elemPos, 1);
-            repo.updateMuseumRoom(roomId);
-            //t.setStateThief(Constants.AT_A_ROOM); a mudança de estado passou para o STUB
+            //    public void setCanvasElem(int partyId, int elemId, int cv, int roomId, int thiefId)
+            repo.setCanvasElem(partyId, elemPos, 1, roomId, thiefId);
+            //repo.setStateThief(Constants.CRAWLING_OUTWARDS, thiefId);
 
         } else
         {
-            //t.setStateThief(Constants.AT_A_ROOM);
+            repo.setStateThief(Constants.AT_A_ROOM, thiefId);
+            //repo.setStateThief(Constants.CRAWLING_OUTWARDS, thiefId); implicito
+
         }
         l.unlock();
         return flag;
@@ -145,7 +146,7 @@ public class Museum implements InterfaceMuseum {
         }
         return -1;
     }
-    
+
     @Override
     public boolean shutdown()
     {

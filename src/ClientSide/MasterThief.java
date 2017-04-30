@@ -1,5 +1,6 @@
 package ClientSide;
 
+import Auxiliary.InterfaceAssaultParty;
 import Auxiliary.InterfaceConcentrationSite;
 import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceMasterThief;
@@ -26,7 +27,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
     private final InterfaceMuseum musStub;
     private final InterfaceControlCollectionSite contStub;
     private final InterfaceConcentrationSite concStub;
-    private final AssaultPartyStub agrStub;
+    private final InterfaceAssaultParty agrStub;
 
     /**
      * Constructor.
@@ -67,15 +68,14 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
                     }
                     // check distance to room to setUp AssaultParty
                     dist = musStub.getRoomDistance(pick[1]);
-                    agrStub.setConnectionAssaultParty(pick[0]);
-
-                    agrStub.setUpRoom(dist, pick[1]);
+                    //agrStub.setConnectionAssaultParty(pick[0]);
+                    agrStub.setUpRoom(dist, pick[1],pick[0]);
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
 
                     concStub.prepareAssaultParty2(pick[0], pick[1]);
                     
-                    agrStub.setConnectionAssaultParty(pick[0]);
-                    agrStub.sendAssaultParty();
+                    //agrStub.setConnectionAssaultParty(pick[0]);
+                    agrStub.sendAssaultParty(pick[0]);
 
                     break;
                 case 3:

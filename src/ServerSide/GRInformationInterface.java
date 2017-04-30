@@ -30,8 +30,9 @@ public class GRInformationInterface implements InterfaceServer {
                 outMessage = new Message(Message.OK);
                 break;
 
-            case Message.SETCANVAS_ELEM:
-                repo.setCanvasElem(inMessage.getPartyId(), inMessage.getElemId(), inMessage.getCanvas());
+            case Message.SETCANVAS_ELEM: //(int partyId, int elemId, int cv, int roomId, int thiefId)
+                repo.setCanvasElem(inMessage.getPartyId(), inMessage.getElemId(),
+                        inMessage.getCanvas(), inMessage.getRoomId(), inMessage.getThiefId());
                 outMessage = new Message(Message.OK);
                 break;
             case Message.SETSTATE_MASTER:
@@ -66,10 +67,6 @@ public class GRInformationInterface implements InterfaceServer {
                 repo.setPosElem(inMessage.getPartyId(), inMessage.getElemId(), inMessage.getElemPos());
                 outMessage = new Message(Message.OK);
                 break;
-            case Message.UPDATE_MUS_ROOM:
-                repo.updateMuseumRoom(inMessage.getRoomId());
-                outMessage = new Message(Message.OK);
-                break;
             case Message.SETAGILITY:
                 repo.setStateAgility(inMessage.getAgility(), inMessage.getThiefId());
                 outMessage = new Message(Message.OK);
@@ -91,7 +88,7 @@ public class GRInformationInterface implements InterfaceServer {
     }
 
     @Override
-    public boolean shutingDown()
+    public boolean shutingDown(int val)
     {
         return repo.shutdown();
     }

@@ -2,8 +2,6 @@ package ServerSide;
 
 import Auxiliary.InterfaceAssaultParty;
 import Auxiliary.InterfaceGRInformation;
-import ClientSide.MasterThief;
-import ClientSide.Thief;
 import HeistMuseum.Constants;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -107,7 +105,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return boolean. True if is the last Thief, false otherwise.
      */
     @Override
-    public boolean addToSquad(int thiefId, int thiefAgility)
+    public boolean addToSquad(int thiefId, int thiefAgility, int partyId)
     {
         l.lock();
         //Thief t = (Thief) Thread.currentThread();
@@ -150,7 +148,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      *
      */
     @Override
-    public void waitToStartRobbing(int thiefId)
+    public void waitToStartRobbing(int thiefId, int partyId)
     {
         l.lock();
         Crook c = getCrook(thiefId);
@@ -176,10 +174,10 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return
      */
     @Override
-    public int[] crawlIn(int thiefId)
+    public int[] crawlIn(int thiefId, int partyId)
     {
         l.lock();
-        //Thief t = (Thief) Thread.currentThread();
+        
         Crook cr = getCrook(thiefId);
         int next = selectNext(thiefId);
 
@@ -197,7 +195,7 @@ public class AssaultParty implements InterfaceAssaultParty {
             }
             idGlobal = squad[next].id;
             moveThief.signalAll();
-            //l.unlock();
+            l.unlock();
             return getRoomIdToAssault(cr.id);
 
         } catch (InterruptedException ex)
@@ -207,12 +205,7 @@ public class AssaultParty implements InterfaceAssaultParty {
 
         }
 
-        //l.unlock();
-        // this is done to prevent thieves to be in the room at the same time
-        // we're extending our critical area to crawlOut
-        // if the thread is in await state, the lock can be obtained by another
-        // thread even without the previous thread unlocking it
-        // the unlock only happens in crawlOut
+        l.unlock();
         return getRoomIdToAssault(cr.id);
 
     }
@@ -222,9 +215,9 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return
      */
     @Override
-    public int[] crawlOut(int thiefId)
+    public int[] crawlOut(int thiefId, int partyId)
     {
-        //int id = t.getThiefId();
+        l.lock();
         Crook cr = getCrook(thiefId);
         int myElemId = myPositionTeam(thiefId);
         int next = selectNext(thiefId);
@@ -445,7 +438,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * party and changes the state of the Master
      */
     @Override
-    public void sendAssaultParty()
+    public void sendAssaultParty(int partyId)
     {
 
         l.lock();
@@ -470,7 +463,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @param roomId
      */
     @Override
-    public void setUpRoom(int distance, int roomId)
+    public void setUpRoom(int distance, int roomId, int partyId)
     {
         l.lock();
         try
@@ -500,7 +493,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @param elemId
      */
     @Override
-    public void addCrookCanvas(int elemId)
+    public void addCrookCanvas(int elemId, int partyId)
     {
         l.lock();
         Crook c = squad[elemId];
@@ -551,7 +544,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     }
 
     @Override
-    public boolean shutdown()
+    public boolean shutdown(int partyId)
     {
         return true;
     }

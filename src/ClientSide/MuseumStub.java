@@ -36,7 +36,7 @@ public class MuseumStub implements InterfaceMuseum {
         con.writeObject(outMessage);
 
         inMessage = (Message) con.readObject();
-        
+
         if (inMessage.getType() != Message.ROOMDIST)
         {
             out.println("Returned message with wrong type");
@@ -50,15 +50,15 @@ public class MuseumStub implements InterfaceMuseum {
     }
 
     @Override
-    public boolean rollACanvas(int roomId, int elemPos, int partyId)
+    public boolean rollACanvas(int roomId, int elemPos, int partyId, int thiefId)
     {
         Thief t = (Thief) Thread.currentThread();
         t.setStateThief(Constants.AT_A_ROOM);
-        
+
         ClientCom con = initiateConnection();
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.GET_ROLL,roomId, elemPos, partyId);
+        outMessage = new Message(Message.GET_ROLL, roomId, elemPos, partyId, thiefId);
 
         con.writeObject(outMessage);
 
@@ -71,8 +71,8 @@ public class MuseumStub implements InterfaceMuseum {
         }
 
         con.close();
-        
-        
+        t.setStateThief(Constants.CRAWLING_OUTWARDS);
+
         return inMessage.isCanvas();
     }
 

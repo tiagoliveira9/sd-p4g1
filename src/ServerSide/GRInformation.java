@@ -81,6 +81,11 @@ public class GRInformation implements InterfaceGRInformation {
         lock.lock();
         ladrao[thiefId].stat = thiefState;
         printDoubleLine();
+        if (thiefState == Constants.AT_A_ROOM)
+        {
+            ladrao[thiefId].stat = Constants.CRAWLING_OUTWARDS;
+            printDoubleLine();
+        }
         lock.unlock();
     }
 
@@ -129,6 +134,21 @@ public class GRInformation implements InterfaceGRInformation {
     }
 
     /**
+     * Remove a canvas from a Museum Room (stolen canvas).
+     *
+     * @param roomId
+     */
+    public void updateMuseumRoom(int roomId)
+    {
+        lock.lock();
+        int n = Integer.parseInt(sala[roomId].canvas);
+        n--;
+        sala[roomId].canvas = Integer.toString(n);
+        //printDoubleLine();
+        lock.unlock();
+    }
+
+    /**
      * Change canvas status of a element in a assault party.
      *
      * @param partyId
@@ -136,10 +156,19 @@ public class GRInformation implements InterfaceGRInformation {
      * @param cv
      */
     @Override
-    public void setCanvasElem(int partyId, int elemId, int cv)
+    public void setCanvasElem(int partyId, int elemId, int cv, int roomId, int thiefId)
     {
         lock.lock();
         party[partyId].elements[elemId].cv = Integer.toString(cv);
+        // update museum room
+        int n = Integer.parseInt(sala[roomId].canvas);
+        n--;
+        sala[roomId].canvas = Integer.toString(n);
+        // update thief state
+        ladrao[thiefId].stat = Constants.AT_A_ROOM;
+        printDoubleLine();
+        ladrao[thiefId].stat = Constants.CRAWLING_OUTWARDS;
+        printDoubleLine();
         lock.unlock();
     }
 
@@ -218,22 +247,6 @@ public class GRInformation implements InterfaceGRInformation {
         lock.lock();
         sala[roomId].distance = Integer.toString(distance);
         sala[roomId].canvas = Integer.toString(canvas);
-        lock.unlock();
-    }
-
-    /**
-     * Remove a canvas from a Museum Room (stolen canvas).
-     *
-     * @param roomId
-     */
-    @Override
-    public void updateMuseumRoom(int roomId)
-    {
-        lock.lock();
-        int n = Integer.parseInt(sala[roomId].canvas);
-        n--;
-        sala[roomId].canvas = Integer.toString(n);
-        printDoubleLine();
         lock.unlock();
     }
 

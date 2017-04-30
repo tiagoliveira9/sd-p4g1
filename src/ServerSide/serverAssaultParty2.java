@@ -25,6 +25,7 @@ public class serverAssaultParty2 {
             sconi = scon.accept();
             proxy = new ClientProxy(sconi, service);
             proxy.start();
+            
         }
     }
 

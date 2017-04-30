@@ -66,7 +66,7 @@ public class ControlCollectionInterface implements InterfaceServer {
     }
 
     @Override
-    public boolean shutingDown()
+    public boolean shutingDown(int val)
     {
         return control.shutdown();
     }

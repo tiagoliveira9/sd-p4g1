@@ -60,7 +60,7 @@ public class ConcentrationSiteInterface implements InterfaceServer {
     }
 
     @Override
-    public boolean shutingDown()
+    public boolean shutingDown(int val)
     {
         return conc.shutdown();
     }

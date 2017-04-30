@@ -134,14 +134,15 @@ public class GRInformationStub implements InterfaceGRInformation {
         con.close();
     }
 
-    @Override
-    public void setCanvasElem(int partyId, int elemId, int cv)
+    @Override//    public void setCanvasElem(int partyId, int elemId, int cv, int roomId, int thiefId)
+
+    public void setCanvasElem(int partyId, int elemId, int cv, int roomId, int thiefId)
     {
         ClientCom con = initiateConnection();
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.SETCANVAS_ELEM, partyId, elemId, cv);
+        outMessage = new Message(Message.SETCANVAS_ELEM, partyId, elemId, cv, roomId, thiefId);
 
         con.writeObject(outMessage);
 
@@ -296,28 +297,6 @@ public class GRInformationStub implements InterfaceGRInformation {
         Message inMessage, outMessage;
 
         outMessage = new Message(Message.SETUP_MUS_ROOM, roomId, distance, canvas);
-
-        con.writeObject(outMessage);
-
-        inMessage = (Message) con.readObject();
-
-        if (inMessage.getType() != Message.OK)
-        {
-            System.out.println("Returned message with wrong type");
-            System.exit(1);
-        }
-
-        con.close();
-    }
-
-    @Override
-    public void updateMuseumRoom(int roomId)
-    {
-        ClientCom con = initiateConnection();
-
-        Message inMessage, outMessage;
-
-        outMessage = new Message(Message.UPDATE_MUS_ROOM, roomId);
 
         con.writeObject(outMessage);
 
