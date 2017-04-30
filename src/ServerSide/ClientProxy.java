@@ -6,7 +6,6 @@ import Comm.MessageException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class ClientProxy extends Thread {
 
     private final ServerCom sconi;
@@ -20,10 +19,10 @@ public class ClientProxy extends Thread {
      * @param sconi connection accepted by the main server
      * @param servInterface server interface to be provided
      */
-    ClientProxy(ServerCom sconi, InterfaceServer servInterface)
+    ClientProxy(ServerCom sconi, InterfaceServer servInterface, String name)
     {
 
-        super(Integer.toString(clientProxyId++));
+        super(name + " " + Integer.toString(clientProxyId++));
         this.sconi = sconi;
         this.servInterface = servInterface;
     }
@@ -33,7 +32,9 @@ public class ClientProxy extends Thread {
     {
         Message inMessage, outMessage = null;
 
-        Thread.currentThread().setName("Proxy-" + Integer.toString(clientProxyId));
+        System.out.println();
+
+        Thread.currentThread().setName("proxy - " +Thread.currentThread().getName());
 
         inMessage = (Message) sconi.readObject();
 
@@ -69,5 +70,5 @@ public class ClientProxy extends Thread {
         }
 
     }
-    
+
 }

@@ -17,17 +17,52 @@ public class ServerHeistMuseum {
         ClientProxy proxy;
         InterfaceServer service = null;
 
-        scon = new ServerCom(4000);
-        service = new MuseumInterface();
+        if (args.length == 1)
+        {
+            switch (args[0])
+            {
+                case "gri":
+                    scon = new ServerCom(22400);
+                    service = new GRInformationInterface();
+                    break;
+
+                case "museum":
+                    scon = new ServerCom(22401);
+                    service = new MuseumInterface();
+                    break;
+
+                case "control":
+                    scon = new ServerCom(22402);
+                    service = new ControlCollectionInterface();
+                    break;
+
+                case "conc":
+                    scon = new ServerCom(22403);
+                    service = new ConcentrationSiteInterface();
+                    break;
+
+                case "agr1":
+                    scon = new ServerCom(22404);
+                    service = new AssaultPartyInterface(0);
+                    break;
+                    
+                case "agr2":
+                    scon = new ServerCom(22405);
+                    service = new AssaultPartyInterface(0);
+                    break;
+            }
+        }
+
         scon.start();
-        out.println("Server Museum started and listening for connections...");
-        
+        out.println("Server " + args[0] + " started. Listening for connections...");
+
         while (true)
         {
             sconi = scon.accept();
-            proxy = new ClientProxy(sconi, service);
+            proxy = new ClientProxy(sconi, service, args[0]);
             proxy.start();
         }
+
     }
 
 }

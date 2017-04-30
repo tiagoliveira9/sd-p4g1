@@ -12,12 +12,12 @@ public class ControlCollectionSiteStub implements InterfaceControlCollectionSite
 
     private ClientCom initiateConnection()
     {
-        ClientCom con = new ClientCom("127.0.0.1", 4002);
+        ClientCom con = new ClientCom("127.0.0.1", 22402);
 
         if (!con.open())
         {
             System.out.println("Couldn't initiate connection to "
-                    + "127.0.0.1" + ":" + 4002);
+                    + "127.0.0.1" + ":" + 22402);
         }
 
         return con;

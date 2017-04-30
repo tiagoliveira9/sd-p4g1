@@ -44,14 +44,7 @@ public class HeistMuseum {
     public static void main(String[] args) throws InterruptedException
     {
 
-        // Instanciation of the World
-        ConcentrationSite.getInstance();
-        ControlCollectionSite.getInstance();
-        //GRInformation.getInstance().printHeader();
-
-
         Thief[] thieves = new Thief[Constants.N_THIEVES];
-        MasterThief masterThief = new MasterThief();
         int agility;
 
         // Instantiation of the Thieves 
@@ -65,8 +58,6 @@ public class HeistMuseum {
             thieves[i].start();
         }
 
-        // Simulation starts
-        masterThief.start();
 
         // waiting for end of simulation
         for (int i = 0; i < Constants.N_THIEVES; i++)
@@ -74,10 +65,7 @@ public class HeistMuseum {
             thieves[i].join();
         }
 
-        masterThief.join();
-
         // quando o master morre, posso matar todos os servicos
-        
         mus.shutdown();
         control.shutdown();
         conc.shutdown();
