@@ -24,7 +24,7 @@ public class Message implements Serializable {
     /**
      * Operação realizada com sucesso (resposta enviada pelo servidor)
      *
-     * @serial Field ACK
+     * @serialField ACK
      */
     public static final int OK = 0;
     public static final int ACK = 1;
@@ -125,28 +125,28 @@ public class Message implements Serializable {
     /**
      * Tipo da mensagem
      *
-     * @serial Field msgType
+     * @serialField msgType
      */
     private int msgType = -1;
 
     /**
      * Identificação do cliente
      *
-     * @serial Field custId
+     * @serialField custId
      */
     private int custId = -1;
 
     /**
      * Nome do ficheiro de logging
      *
-     * @serial Field fName
+     * @serialField fName
      */
     private String fName = null;
 
     /**
      * Número de iterações do ciclo de vida dos clientes
      *
-     * @serial Field nIter
+     * @serialField nIter
      */
     private int nIter = -1;
 
