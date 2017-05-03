@@ -7,6 +7,7 @@ import Auxiliary.Constants;
 /**
  * Assault party stub.
  * 
+ * 
  * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
  * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  *

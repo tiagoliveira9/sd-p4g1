@@ -72,5 +72,10 @@ public interface InterfaceAssaultParty {
      */
     void waitToStartRobbing(int thiefId, int partyId);
 
+     /**
+     * Shutdown.
+     * 
+     * @return Boolean value. True to shutdown.
+     */
     boolean shutdown(int partyId);
 }

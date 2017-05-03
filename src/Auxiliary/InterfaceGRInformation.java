@@ -116,7 +116,11 @@ public interface InterfaceGRInformation {
      */
     void setUpMuseumRoom(int roomId, int distance, int canvas);
 
-    
+     /**
+     * Shutdown.
+     * 
+     * @return Boolean value. True to shutdown.
+     */
     boolean shutdown();
     
 }

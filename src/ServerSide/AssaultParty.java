@@ -51,9 +51,8 @@ public class AssaultParty implements InterfaceAssaultParty {
         }
     }
 
-    // canvas devia estar aqui? fazemos um total e cada vez que um ladrao
-    // entrega decrementa o sum, no ultimo hand a canvas, limpa assault party
     /**
+     * The method returns Assault Party object.
      *
      * @param i Assault party counter
      * @return Instance of assault party
@@ -370,6 +369,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     }
 
     /**
+     * Get a thief.
      *
      * @param thiefId Thief identification
      * @return Squad number
@@ -417,7 +417,8 @@ public class AssaultParty implements InterfaceAssaultParty {
     }
 
     /**
-     *
+     * Gives the position of the thief.
+     * 
      * @param myThiefId Thief identification for each thief
      * @return Position of thief
      */
@@ -493,7 +494,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     }
 
     /**
-     *
+     * Add a canvas to the thief.
      * @param elemId Element identification
      */
     @Override
@@ -507,6 +508,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     }
 
     /**
+     * Get room identification to assault.
      *
      * @param thiefId Thief identification
      * @return Room and element identification
@@ -520,6 +522,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     }
 
     /**
+     * Get room identification
      *
      * @return Room identification
      */
@@ -529,6 +532,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     }
 
     /**
+     * Get room distance.
      *
      * @return Room distance
      */

@@ -61,6 +61,11 @@ public interface InterfaceConcentrationSite {
      */
     void wakeAll();
 
+    /**
+     * Shutdown.
+     * 
+     * @return Boolean value. True to shutdown.
+     */
     boolean shutdown();
 
 }

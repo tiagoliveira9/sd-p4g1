@@ -27,6 +27,11 @@ public interface InterfaceMuseum {
      */
     boolean rollACanvas(int roomId, int elemPos, int partyId, int thiefId);
 
+     /**
+     * Shutdown.
+     * 
+     * @return Boolean value. True to shutdown.
+     */
     boolean shutdown();
 
 }

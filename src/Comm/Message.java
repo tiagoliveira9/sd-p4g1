@@ -2,6 +2,13 @@ package Comm;
 
 import java.io.*;
 
+/**
+ * Este tipo de dados define as mensagens que são trocadas entre os clientes e o
+ * servidores.
+ * 
+ * A comunicação propriamente dita baseia-se na troca de objectos de tipo Message num canal TCP.
+ */
+
 public class Message implements Serializable {
 
     /**
@@ -17,7 +24,7 @@ public class Message implements Serializable {
     /**
      * Operação realizada com sucesso (resposta enviada pelo servidor)
      *
-     * @serialField ACK
+     * @serial Field ACK
      */
     public static final int OK = 0;
     public static final int ACK = 1;
@@ -118,28 +125,28 @@ public class Message implements Serializable {
     /**
      * Tipo da mensagem
      *
-     * @serialField msgType
+     * @serial Field msgType
      */
     private int msgType = -1;
 
     /**
      * Identificação do cliente
      *
-     * @serialField custId
+     * @serial Field custId
      */
     private int custId = -1;
 
     /**
      * Nome do ficheiro de logging
      *
-     * @serialField fName
+     * @serial Field fName
      */
     private String fName = null;
 
     /**
      * Número de iterações do ciclo de vida dos clientes
      *
-     * @serialField nIter
+     * @serial Field nIter
      */
     private int nIter = -1;
 
@@ -403,102 +410,203 @@ public class Message implements Serializable {
     {
         return (msgType);
     }
-
+    
+    /**
+     * Obter o id do quarto.
+     * 
+     * @return Room identification
+     */
     public int getRoomId()
     {
         return roomId;
     }
 
+    /**
+     * Saber se o ladrão tem quadro.
+     * 
+     * @return verdadeiro se tiver
+     */
     public boolean isCanvas()
     {
         return canvasBool;
     }
 
+    /**
+     * Obeter distancia do quarto.
+     * 
+     * @return Distancia do quarto
+     */
     public int getRoomDistance()
     {
         return roomDistance;
     }
 
+    /**
+     * Obter posiçao do elemento.
+     * 
+     * @return posiçao do elemento
+     */
     public int getElemPos()
     {
         return elemPos;
     }
 
+    /**
+     * Obter o numero do grupo.
+     * 
+     * @return numero do grupo de assalto
+     */
     public int getPartyId()
     {
         return partyId;
     }
 
+    /**
+     * Obter o quadro.
+     * 
+     * @return o quadro
+     */
     public int getCanvas()
     {
         return canvas;
     }
 
+    /**
+     * Obter a distancia.
+     * 
+     * @return distancia
+     */
     public int getDistance()
     {
         return distance;
     }
 
+    /**
+     * Obter o numero de quadros.
+     * 
+     * @return numero de quadros
+     */
     public int getnCanvas()
     {
         return nCanvas;
     }
 
+    
+    /**
+     * Obter o numero do ladrao.
+     * 
+     * @return numero do ladrao
+     */
     public int getThiefId()
     {
         return thiefId;
     }
 
+    /**
+     * Obter o estado do ladrao.
+     * 
+     * @return estado do ladrao
+     */
     public int getStateThief()
     {
         return stateThief;
     }
 
+    /**
+     * Obter agilidade do ladrao.
+     * 
+     * @return agilidade
+     */
     public int getAgility()
     {
         return agility;
     }
 
+    /**
+     * Obter o estado da ladra chefe.
+     * 
+     * @return estado da ladra chefe
+     */
     public int getStateMasterThief()
     {
         return stateMasterThief;
     }
 
+    /**
+     * Obter o numero do elemento no grupo.
+     * 
+     * @return numero do elemento
+     */
     public int getElemId()
     {
         return elemId;
     }
 
+    /**
+     * Obter o numero do elemento no total dos 6 ladroes.
+     * 
+     * @return numero do elemento
+     */
     public int getElemIdReal()
     {
         return elemIdReal;
     }
 
+    /**
+     * Obter escolha.
+     * 
+     * @return escolha
+     */
     public int[] getPick()
     {
         return pick;
     }
 
+    /**
+     * Saber se existe alguma equipa livre.
+     * 
+     * @return verdadeiro se houver
+     */
     public boolean isAnyTeam()
     {
         return anyTeam;
     }
 
+    /**
+     * Saber se ainda há algum quarto para assaltar.
+     * 
+     * @return verdadeiro se houver
+     */
     public boolean isRoomLeft()
     {
         return roomLeft;
     }
-
+    
+    /**
+     * Obter o numero de grupos de assalto.
+     * 
+     * @return numero de grupos
+     */
     public int getnAssaultParty()
     {
         return nAssaultParty;
     }
 
+    /**
+     * Obter o numero de ladroes na queue.
+     * 
+     * @return  numero de ladroes
+     */
     public int getnThievesQueue()
     {
         return nThievesQueue;
     }
 
+    /**
+     * Saber se esta adicionado a alguma equipa.
+     * 
+     * @return verdadeiro se estiver
+     */
     public boolean isAddSquad()
     {
         return addSquad;

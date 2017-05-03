@@ -64,7 +64,12 @@ public interface InterfaceControlCollectionSite {
      *
      */
     void takeARest();
-
+    
+    /**
+     * Shutdown.
+     * 
+     * @return Boolean value. True to shutdown.
+     */
     boolean shutdown();
     
 }
