@@ -14,6 +14,9 @@ public class MuseumInterface implements InterfaceServer {
 
     private final Museum mus;
 
+    /**
+     * Museum interface.
+     */
     public MuseumInterface()
     {
         mus = Museum.getInstance();
@@ -29,6 +32,12 @@ public class MuseumInterface implements InterfaceServer {
         }
     }
 
+    /**
+     *
+     * @param inMessage In message
+     * @return Out message
+     * @throws MessageException If an exception occurs
+     */
     @Override
     public Message processAndReply(Message inMessage) throws MessageException
     {

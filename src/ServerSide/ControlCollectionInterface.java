@@ -13,12 +13,21 @@ public class ControlCollectionInterface implements InterfaceServer {
 
     private final ControlCollectionSite control;
 
+    /**
+     * Control and Collection Site interface.
+     */
     public ControlCollectionInterface()
     {
         control = ControlCollectionSite.getInstance();
 
     }
 
+    /**
+     *
+     * @param inMessage In message
+     * @return Out message
+     * @throws MessageException If an exception occurs
+     */
     @Override
     public Message processAndReply(Message inMessage) throws MessageException
     {

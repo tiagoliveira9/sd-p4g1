@@ -13,12 +13,22 @@ public class AssaultPartyInterface implements InterfaceServer {
 
     private final AssaultParty agr;
 
+    /**
+     *
+     * @param i Assault party interface number
+     */
     public AssaultPartyInterface(int i)
     {
         agr = AssaultParty.getInstance(i);
 
     }
 
+    /**
+     *
+     * @param inMessage In message
+     * @return Out message
+     * @throws MessageException If an exception occurs
+     */
     @Override
     public Message processAndReply(Message inMessage) throws MessageException
     {

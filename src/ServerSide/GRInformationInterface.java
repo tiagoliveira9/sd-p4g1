@@ -13,11 +13,20 @@ public class GRInformationInterface implements InterfaceServer {
 
     private final GRInformation repo;
 
+    /**
+     * General Repository Information interface.
+     */
     public GRInformationInterface()
     {
         repo = GRInformation.getInstance();
     }
 
+    /**
+     *
+     * @param inMessage In message
+     * @return Out message
+     * @throws MessageException If an exception occurs
+     */
     @Override
     public Message processAndReply(Message inMessage) throws MessageException
     {

@@ -13,12 +13,21 @@ public class ConcentrationSiteInterface implements InterfaceServer {
 
     private final ConcentrationSite conc;
 
+    /**
+     * Concentration Site interface. 
+     */
     public ConcentrationSiteInterface()
     {
         conc = ConcentrationSite.getInstance();
 
     }
 
+    /**
+     *
+     * @param inMessage In message
+     * @return Out message
+     * @throws MessageException If an exception occurs
+     */
     @Override
     public Message processAndReply(Message inMessage) throws MessageException
     {

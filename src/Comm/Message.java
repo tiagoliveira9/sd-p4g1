@@ -22,71 +22,270 @@ public class Message implements Serializable {
 
     /* Tipos das mensagens */
     /**
-     * Operação realizada com sucesso (resposta enviada pelo servidor)
+     * Answer.
      *
-     * @serialField ACK
      */
     public static final int OK = 0;
+
+    /**
+     * Acknowledgment.
+     */
     public static final int ACK = 1;
 
     /* Messages Museum */
+
+    /**
+     * Get room distance.
+     */
+
     public static final int GET_ROOMDIST = 2;
+
+    /**
+     * Room distance.
+     */
     public static final int ROOMDIST = 3;
+
+    /**
+     * Get roll.
+     */
     public static final int GET_ROLL = 4;
+
+    /**
+     * Roll.
+     */
     public static final int ROLL = 5;
+
+    /**
+     * Shutdown.
+     */
     public static final int SHUTDOWN = 6;
 
     /* Messages GRInformation */
+
+    /**
+     * Set up museum room.
+     */
+
     public static final int SETUP_MUS_ROOM = 7;
+
+    /**
+     * Set canvas element.
+     */
     public static final int SETCANVAS_ELEM = 8;
+
+    /**
+     * Set master thief state.
+     */
     public static final int SETSTATE_MASTER = 9;
+
+    /**
+     * Set thief state.
+     */
     public static final int SETSTATE_THIEF = 10;
+
+    /**
+     * Reset assault party room.
+     */
     public static final int RESET_PARTY_ROOM = 11;
+
+    /**
+     * Resume Canvas.
+     */
     public static final int RESUME_CANVAS = 12;
+
+    /**
+     * Set room identification.
+     */ 
     public static final int SETROOM_ID = 13;
+
+    /**
+     * Set assault party element.
+     */
     public static final int SETPARTY_ELEM = 14;
+
+    /**
+     * Reset assault party element.
+     */
     public static final int RESET_PARTY_ELEM = 15;
+
+    /**
+     * Set element position.
+     */
     public static final int SETPOS_ELEM = 16;
     //public static final int UPDATE_MUS_ROOM = 17;
+
+    /**
+     * Set thief agility.
+     */
     public static final int SETAGILITY = 18;
+
+    /**
+     * Close repository.
+     */
     public static final int CLOSE_REPO = 19;
+
+    /**
+     * Print legend.
+     */
     public static final int PRINT_LEGE = 20;
 
     /* Messages ControlCollectionSite */
+
+    /**
+     * Hand a canvas.
+     */
+
     public static final int HAND_CANVAS = 21;
+
+    /**
+     * Go collect master.
+     */
     public static final int GO_COLLECTM = 22;
+
+    /**
+     * Get prepare assault party 1.
+     */
     public static final int GET_PREP_ASG1 = 23;
+
+    /**
+     * Prepare assault party 1.
+     */
     public static final int PREP_ASG1 = 24;
+
+    /**
+     * Take a rest.
+     */
     public static final int TAKE_REST = 25;
+
+    /**
+     * Print results.
+     */
     public static final int PRINT_RESULT = 26;
+
+    /**
+     *Set deciding.
+     */
     public static final int SETDECIDING = 27;
+
+    /** 
+     * Get teams availability.
+     */
     public static final int GET_ANY_TEAM_AVAIL = 28;
+
+    /**
+     * Any team available.
+     */
     public static final int ANY_TEAM_AVAIL = 29;
+
+    /**
+     *Get rooms left.
+     */
     public static final int GET_ANY_ROOM_LEFT = 30;
+
+    /**
+     * Any room left.
+     */
     public static final int ANY_ROOM_LEFT = 31;
 
     /* Messages ConcentrationSite */
+
+    /**
+     * Team ready.
+     */
+
     public static final int TEAM_READY = 32;
+
+    /**
+     * Set dead state to thief.
+     */
     public static final int SETDEAD_STATE = 33;
+
+    /**
+     * Add thief.
+     */
     public static final int ADD_THIEF = 34;
+
+    /**
+     * Get wait for call.
+     */
     public static final int GET_WAIT_FOR_CALL = 35;
+
+    /**
+     * Wait for call.
+     */
     public static final int WAIT_FOR_CALL = 36;
+
+    /**
+     * Get thief numbers.
+     */
     public static final int GET_THIEF_NUMBERS = 37;
+
+    /**
+     * Thief numbers.
+     */
     public static final int THIEF_NUMBERS = 38;
+
+    /**
+     * Prepare assault party 2.
+     */
     public static final int PREP_ASG2 = 39;
+
+    /**
+     * Wake all thieves.
+     */
     public static final int WAKE_ALL = 40;
 
     /* Messages Assault Party */
+
+    /**
+     *Set up assault party room.
+     */
+
     public static final int SETUP_ASP_ROOM = 41;
+
+    /**
+     *Send assault party.
+     */
     public static final int SEND_ASSAULTP = 42;
+
+    /**
+     * Get thief to add to squad.
+     */
     public static final int GET_ADD_TO_SQUAD = 43;
+
+    /**
+     * Add thief to squad.
+     */
     public static final int ADD_TO_SQUAD = 44;
+
+    /**
+     *Wait to start robbing.
+     */
     public static final int WAIT_START_ROBB = 45;
+
+    /**
+     *Get crawl in.
+     */
     public static final int GET_CRAWLIN = 46;
+
+    /**
+     *Crawling in.
+     */
     public static final int CRAWLIN = 47;
+
+    /**
+     *Add canvas to thief.
+     */
     public static final int ADD_CANVAS = 48;
 
+    /**
+     *Get crawl out.
+     */
     public static final int GET_CRAWLOUT = 49;
+
+    /**
+     *Crawling out.
+     */
     public static final int CRAWLOUT = 50;
 
     /* Info Active Entities */
@@ -125,28 +324,28 @@ public class Message implements Serializable {
     /**
      * Tipo da mensagem
      *
-     * @serialField msgType
+     * 
      */
     private int msgType = -1;
 
     /**
      * Identificação do cliente
      *
-     * @serialField custId
+     * 
      */
     private int custId = -1;
 
     /**
      * Nome do ficheiro de logging
      *
-     * @serialField fName
+     * 
      */
     private String fName = null;
 
     /**
      * Número de iterações do ciclo de vida dos clientes
      *
-     * @serialField nIter
+     * 
      */
     private int nIter = -1;
 
@@ -161,6 +360,12 @@ public class Message implements Serializable {
     }
 
     // ASP boolean addToSquad(int thiefId, int thiefAgility)
+
+    /**
+     *
+     * @param type Type of message
+     * @param val Value
+     */
     public Message(int type, boolean val)
     {
         msgType = type;
@@ -186,6 +391,12 @@ public class Message implements Serializable {
     // ControlCollection int[] prepareAssaultParty1()
     // ASP int[] crawlIn (int thiefId)
     // ASP int[] crawlOut(int thiefId)
+
+    /**
+     *
+     * @param type Type of message
+     * @param val Value
+     */
     public Message(int type, int[] val)
     {
         msgType = type;
@@ -263,6 +474,12 @@ public class Message implements Serializable {
     // ASP boolean addToSquad(int thiefId, int thiefAgility)
     // ASP void setUpRoom(int distance, int roomId)
 
+    /**
+     *
+     * @param type Type of message
+     * @param val1 Value 1
+     * @param val2 Value 2
+     */
     public Message(int type, int val1, int val2)
     {
         msgType = type;
@@ -362,6 +579,15 @@ public class Message implements Serializable {
     }
 
     // Museum rollACanvas(int roomId, int elemPos, int partyId, int thiefid)
+
+    /**
+     *
+     * @param type Type of message
+     * @param val1 Value 1
+     * @param val2 Value 2
+     * @param val3 Value 3
+     * @param val4 Value 4
+     */
     public Message(int type, int val1, int val2, int val3, int val4)
     {
         msgType = type;
@@ -380,6 +606,16 @@ public class Message implements Serializable {
     }
 
     //    public void setCanvasElem(int partyId, int elemId, int cv, int roomId, int thiefId)
+
+    /**
+     *
+     * @param type Type of message
+     * @param val1 Value 1
+     * @param val2 Value 2
+     * @param val3 Value 3
+     * @param val4 Value 4
+     * @param val5 Value 5
+     */
     public Message(int type, int val1, int val2, int val3, int val4, int val5)
     {
 

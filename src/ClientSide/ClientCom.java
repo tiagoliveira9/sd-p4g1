@@ -257,9 +257,11 @@ public class ClientCom {
         }
     }
 
+    
     /**
      * Retirar o objecto.
      */
+    /*
     public void flushOut()
     {
  
@@ -272,4 +274,5 @@ public class ClientCom {
         }
    
     }
+    */
 }

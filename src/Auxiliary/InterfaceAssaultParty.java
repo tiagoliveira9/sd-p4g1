@@ -75,6 +75,7 @@ public interface InterfaceAssaultParty {
      /**
      * Shutdown.
      * 
+     * @param partyId Assault party identification
      * @return Boolean value. True to shutdown.
      */
     boolean shutdown(int partyId);

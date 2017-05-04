@@ -103,6 +103,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * Add thief to AssaultParty#. Return a flag, so the Thief knows who is last
      * to wake the Master
      *
+     * @param partyIdMsg Party identification message
      * @return True if is the last Thief, false otherwise.
      */
     @Override
@@ -173,6 +174,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     /**
      * Thief crawls in.
      *
+     * @param partyIdMsg Party identification message
      * @return Thief to the right room of an assault party
      */
     @Override
@@ -215,6 +217,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     /**
      * Thief crawls out.
      *
+     * @param partyIdMsg Party identification message
      * @return Thief to the right room of an assault party
      */
     @Override

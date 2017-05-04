@@ -6,6 +6,10 @@ import Comm.MessageException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ *
+ * @author gito
+ */
 public class ClientProxy extends Thread {
 
     private final ServerCom sconi;

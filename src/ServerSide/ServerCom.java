@@ -275,6 +275,7 @@ public class ServerCom
         System.exit (1);
       }
    }
+   /*
    public void flushOut(){
    
        try
@@ -286,4 +287,5 @@ public class ServerCom
        }
    
    }
+   */
 }
