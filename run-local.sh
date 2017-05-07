@@ -1,38 +1,202 @@
 
-#########################
-# compile for server side
-mkdir binServer
-javac -d binServer -sourcepath src -cp genclass.jar src/ServerSide/ServerHeistMuseum.java 
+# GRI WS01
 
-# start grinformation
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum gri; bash"
-sleep 0.3
-# start museum
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum museum; bash"
-sleep 0.3
-# start control
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum control; bash"
-sleep 0.3
-# start conc
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum conc; bash"
-sleep 0.3
-# start assault party 1
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum agr1; bash"
-sleep 0.3
-# start assault party 2
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum agr2; bash"
-sleep 0.3
-#########################
-# compile for client side
-mkdir binClient
-javac -d binClient -sourcepath src src/ClientSide/ClientHeistMuseum.java 
-sleep 0.3
-# start thieves
-gnome-terminal -x sh -c "java -classpath binClient/ ClientSide.ClientHeistMuseum thief; bash"
-sleep 0.3
-# start master thief
-gnome-terminal -x sh -c "java -classpath binClient/ ClientSide.ClientHeistMuseum master; bash"
+sftp sd0401@l040101-ws01.ua.pt 'bash -s' << 'ENDSFTP'
+	mkdir project02
+	cd project02
+	put sd2017-proj2.zip
+	bye
+ENDSFTP
 
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws01.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project02
+	if [ -d "binServer" ]; then
+		# Control will enter here if $DIRECTORY exists.
+		rm sd2017-proj2.zip
+	else
+		unzip sd2017-proj2.zip
+		rm sd2017-proj2.zip	
+	fi
+	   
+	./scripts/run-gri.sh
+ENDSSH; bash"
+
+
+# MUSEUM WS02
+
+sftp sd0401@l040101-ws02.ua.pt 'bash -s' << 'ENDSFTP'
+	mkdir project02
+	cd project02
+	put sd2017-proj2.zip
+	bye
+ENDSFTP
+
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws02.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project02
+	if [ -d "binServer" ]; then
+		# Control will enter here if $DIRECTORY exists.
+		rm sd2017-proj2.zip
+	else
+		unzip sd2017-proj2.zip
+		rm sd2017-proj2.zip	
+	fi
+	   
+	./scripts/run-museum.sh
+ENDSSH; bash"
+
+
+# CONTROL WS03
+
+sftp sd0401@l040101-ws03.ua.pt 'bash -s' << 'ENDSFTP'
+	mkdir project02
+	cd project02
+	put sd2017-proj2.zip
+	bye
+ENDSFTP
+
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws03.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project02
+	if [ -d "binServer" ]; then
+		# Control will enter here if $DIRECTORY exists.
+		rm sd2017-proj2.zip
+	else
+		unzip sd2017-proj2.zip
+		rm sd2017-proj2.zip	
+	fi
+	   
+	./scripts/run-control.sh
+ENDSSH; bash"
+
+# CONC WS04
+
+sftp sd0401@l040101-ws04.ua.pt 'bash -s' << 'ENDSFTP'
+	mkdir project02
+	cd project02
+	put sd2017-proj2.zip
+	bye
+ENDSFTP
+
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws04.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project02
+	if [ -d "binServer" ]; then
+		# Control will enter here if $DIRECTORY exists.
+		rm sd2017-proj2.zip
+	else
+		unzip sd2017-proj2.zip
+		rm sd2017-proj2.zip	
+	fi
+	   
+	./scripts/run-conc.sh
+ENDSSH; bash"
+
+
+# AGR1 WS05
+
+sftp sd0401@l040101-ws05.ua.pt 'bash -s' << 'ENDSFTP'
+	mkdir project02
+	cd project02
+	put sd2017-proj2.zip
+	bye
+ENDSFTP
+
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws05.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project02
+	if [ -d "binServer" ]; then
+		# Control will enter here if $DIRECTORY exists.
+		rm sd2017-proj2.zip
+	else
+		unzip sd2017-proj2.zip
+		rm sd2017-proj2.zip	
+	fi
+	   
+	./scripts/run-agr1.sh
+ENDSSH; bash"
+
+
+# AGR2 WS06
+
+sftp sd0401@l040101-ws06.ua.pt 'bash -s' << 'ENDSFTP'
+	mkdir project02
+	cd project02
+	put sd2017-proj2.zip
+	bye
+ENDSFTP
+
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws06.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project02
+	if [ -d "binServer" ]; then
+		# Control will enter here if $DIRECTORY exists.
+		rm sd2017-proj2.zip
+	else
+		unzip sd2017-proj2.zip
+		rm sd2017-proj2.zip	
+	fi
+	   
+	./scripts/run-agr2.sh
+ENDSSH; bash"
+
+
+
+# THIEVES WS09
+
+sftp sd0401@l040101-ws09.ua.pt 'bash -s' << 'ENDSFTP'
+	mkdir project02
+	cd project02
+	put sd2017-proj2.zip
+	bye
+ENDSFTP
+
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws09.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project02
+	if [ -d "binClient" ]; then
+		# Control will enter here if $DIRECTORY exists.
+		rm sd2017-proj2.zip
+	else
+		unzip sd2017-proj2.zip
+		rm sd2017-proj2.zip	
+	fi
+	   
+	./scripts/run-thieves.sh
+	sleep 5
+ENDSSH; bash"
+
+# MASTER WS10
+
+sftp sd0401@l040101-ws10.ua.pt 'bash -s' << 'ENDSFTP'
+	mkdir project02
+	cd project02
+	put sd2017-proj2.zip
+	bye
+ENDSFTP
+
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws10.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project02
+	if [ -d "binClient" ]; then
+		# Control will enter here if $DIRECTORY exists.
+		rm sd2017-proj2.zip
+	else
+		unzip sd2017-proj2.zip
+		rm sd2017-proj2.zip	
+	fi
+	   
+	./scripts/run-master.sh
+ENDSSH; bash"
 
 
 

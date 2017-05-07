@@ -19,23 +19,23 @@ public class AssaultPartyStub implements InterfaceAssaultParty {
         if (setConnection == 0)
         {
 
-            ClientCom con = new ClientCom("127.0.0.1", 22404);
+            ClientCom con = new ClientCom("l040101-ws05.ua.pt", 22404);
 
             if (!con.open())
             {
                 System.out.println("Couldn't initiate connection to "
-                        + "127.0.0.1" + ":" + 22404);
+                        + "l040101-ws05.ua.pt" + ":" + 22404);
             }
             return con;
         } else
         {
 
-            ClientCom con = new ClientCom("127.0.0.1", 22405);
+            ClientCom con = new ClientCom("l040101-ws06.ua.pt", 22405);
 
             if (!con.open())
             {
                 System.out.println("Couldn't initiate connection to "
-                        + "127.0.0.1" + ":" + 22405);
+                        + "l040101-ws06.ua.pt" + ":" + 22405);
             }
             return con;
         }

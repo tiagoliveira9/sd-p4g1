@@ -15,12 +15,12 @@ public class GRInformationStub implements InterfaceGRInformation {
 
     private ClientCom initiateConnection()
     {
-        ClientCom con = new ClientCom("127.0.0.1", 22400);
+        ClientCom con = new ClientCom("l040101-ws01.ua.pt", 22400);
 
         if (!con.open())
         {
             System.out.println("Couldn't initiate connection to "
-                    + "127.0.0.1" + ":" + 22400);
+                    + "l040101-ws01.ua.pt" + ":" + 22400);
         }
 
         return con;

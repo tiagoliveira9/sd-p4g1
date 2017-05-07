@@ -3,7 +3,6 @@ package ClientSide;
 import Comm.Message;
 import Auxiliary.InterfaceMuseum;
 import Auxiliary.Constants;
-import static java.lang.System.out;
 
 /**
  * Museum stub.
@@ -15,12 +14,12 @@ public class MuseumStub implements InterfaceMuseum {
 
     private ClientCom initiateConnection()
     {
-        ClientCom con = new ClientCom("127.0.0.1", 22401);
+        ClientCom con = new ClientCom("l040101-ws02.ua.pt", 22401);
 
         if (!con.open())
         {
-            out.println("Couldn't initiate connection to "
-                    + "127.0.0.1" + ":" + 22401);
+            System.out.println("Couldn't initiate connection to "
+                    + "l040101-ws02.ua.pt" + ":" + 22401);
         }
 
         return con;
@@ -41,7 +40,7 @@ public class MuseumStub implements InterfaceMuseum {
 
         if (inMessage.getType() != Message.ROOMDIST)
         {
-            out.println("Returned message with wrong type");
+            System.out.println("Returned message with wrong type");
             System.exit(1);
         }
 
@@ -68,7 +67,7 @@ public class MuseumStub implements InterfaceMuseum {
 
         if (inMessage.getType() != Message.ROLL)
         {
-            out.println("Returned message with wrong type");
+            System.out.println("Returned message with wrong type");
             System.exit(1);
         }
 
