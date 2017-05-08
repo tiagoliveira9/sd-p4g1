@@ -161,6 +161,7 @@ ENDSFTP
 
 gnome-terminal -x sh -c "ssh sd0401@l040101-ws09.ua.pt 'bash -s' <<'ENDSSH'
   # commands to run on remote host
+  
 	cd project02
 	if [ -d "binClient" ]; then
 		# Control will enter here if $DIRECTORY exists.
@@ -169,9 +170,9 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws09.ua.pt 'bash -s' <<'ENDSSH'
 		unzip sd2017-proj2.zip
 		rm sd2017-proj2.zip	
 	fi
-	   
+	 
 	./scripts/run-thieves.sh
-	sleep 5
+	
 ENDSSH; bash"
 
 # MASTER WS10
@@ -194,7 +195,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws10.ua.pt 'bash -s' <<'ENDSSH'
 		unzip sd2017-proj2.zip
 		rm sd2017-proj2.zip	
 	fi
-	   
+	sleep 1
 	./scripts/run-master.sh
 ENDSSH; bash"
 
