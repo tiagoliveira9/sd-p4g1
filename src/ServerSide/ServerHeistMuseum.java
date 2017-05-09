@@ -1,6 +1,9 @@
 package ServerSide;
 
 import static java.lang.System.out;
+import java.net.SocketTimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Museum Server. 
@@ -60,7 +63,11 @@ public class ServerHeistMuseum {
 
         while (true)
         {
-            sconi = scon.accept();
+            try {
+                sconi = scon.accept();
+            } catch (SocketTimeoutException ex) {
+               continue;
+            }
             proxy = new ClientProxy(sconi, service, args[0]);
             proxy.start();
         }

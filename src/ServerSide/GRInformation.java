@@ -12,7 +12,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 /**
- * * This data type implements the General Repository of Information
+ * This data type implements the General Repository of Information
  *
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687

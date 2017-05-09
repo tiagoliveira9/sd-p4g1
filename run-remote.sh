@@ -23,7 +23,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws01.ua.pt 'bash -s' <<'ENDSSH'
 	./scripts/run-gri.sh
 ENDSSH; bash"
 
-sleep 0.3
+sleep 0.5
 
 # MUSEUM WS02
 
@@ -49,7 +49,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws02.ua.pt 'bash -s' <<'ENDSSH'
 	./scripts/run-museum.sh
 ENDSSH; bash"
 
-sleep 0.3
+sleep 0.5
 
 # CONTROL WS03
 
@@ -75,7 +75,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws03.ua.pt 'bash -s' <<'ENDSSH'
 	./scripts/run-control.sh
 ENDSSH; bash"
 
-sleep 0.3
+sleep 0.5
 
 # CONC WS04
 
@@ -101,7 +101,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws04.ua.pt 'bash -s' <<'ENDSSH'
 	./scripts/run-conc.sh
 ENDSSH; bash"
 
-sleep 0.3
+sleep 0.5
 
 # AGR1 WS05
 
@@ -127,7 +127,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws05.ua.pt 'bash -s' <<'ENDSSH'
 	./scripts/run-agr1.sh
 ENDSSH; bash"
 
-sleep 0.3
+sleep 0.5
 
 # AGR2 WS06
 
@@ -153,7 +153,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws06.ua.pt 'bash -s' <<'ENDSSH'
 	./scripts/run-agr2.sh
 ENDSSH; bash"
 
-sleep 0.3
+sleep 0.5
 
 # THIEVES WS09
 
@@ -180,7 +180,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws09.ua.pt 'bash -s' <<'ENDSSH'
 	
 ENDSSH; bash"
 
-sleep 0.3
+sleep 0.5
 
 # MASTER WS10
 

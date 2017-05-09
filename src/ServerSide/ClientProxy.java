@@ -7,7 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Manages the communications with the clients request.
+ * Like a Service Provider Agent
+ * 
  * @author gito
  */
 public class ClientProxy extends Thread {

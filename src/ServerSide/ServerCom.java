@@ -83,6 +83,7 @@ public class ServerCom
    {
       try
       { listeningSocket = new ServerSocket (serverPortNumb);
+        listeningSocket.setSoTimeout(5000);
       }
       catch (BindException e)                         // erro fatal --- port já em uso
       { GenericIO.writelnString (Thread.currentThread ().getName () +
@@ -127,7 +128,7 @@ public class ServerCom
    *    @return canal de comunicação
    */
 
-   public ServerCom accept ()
+   public ServerCom accept () throws SocketTimeoutException
    {
       ServerCom scon;                                      // canal de comunicação
 
@@ -140,6 +141,10 @@ public class ServerCom
                                  " - foi fechado o socket de escuta durante o processo de escuta!");
         e.printStackTrace ();
         System.exit (1);
+      }
+      catch(SocketTimeoutException e){
+      
+          throw new SocketTimeoutException(); 
       }
       catch (IOException e)
       { GenericIO.writelnString (Thread.currentThread ().getName () +
