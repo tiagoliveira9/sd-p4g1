@@ -55,11 +55,11 @@ public class ClientProxy extends Thread {
             sconi.writeObject(outMessage);
             sconi.close();
 
-            if (shutdown)
+            /*if (shutdown)
             {
                 System.out.println("Client Proxy has terminated");
                 System.exit(0);
-            }
+            }*/
         } else
         {
             // TODO: validate message
