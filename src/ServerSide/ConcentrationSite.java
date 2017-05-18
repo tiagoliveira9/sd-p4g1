@@ -169,6 +169,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
             
             if (die)
             {
+                repo.setStateThief(Constants.DEAD, thiefId);
                 countDie++;
                 assembling.signal();
                 l.unlock();

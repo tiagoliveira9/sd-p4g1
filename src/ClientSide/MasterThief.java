@@ -86,6 +86,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
             }
         }
         concStub.wakeAll();
+        // verificar se todos já morreram e pambas
         contStub.printResult();
     }
 

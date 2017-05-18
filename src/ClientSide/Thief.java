@@ -104,7 +104,7 @@ public class Thief extends Thread implements InterfaceThief {
             contStub.handACanvas(canvas, roll[0], partyId);
             justHanded = true; // to avoid wrong, first time signal
         }
-        concStub.setDeadState(thiefId);
+        //concStub.setDeadState(thiefId);
     }
 
     /**
