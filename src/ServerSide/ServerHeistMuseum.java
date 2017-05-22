@@ -17,7 +17,7 @@ public class ServerHeistMuseum {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ServerCom scon = null, sconi;
+        /*ServerCom scon = null, sconi;
         ClientProxy proxy;
         InterfaceServer service = null;
 
@@ -69,7 +69,7 @@ public class ServerHeistMuseum {
             }
             proxy = new ClientProxy(sconi, service, args[0]);
             proxy.start();
-        }
+        }*/
 
     }
 

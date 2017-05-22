@@ -18,7 +18,7 @@ public class Thief extends Thread implements InterfaceThief {
     /**
      * Identification of the Thief.
      *
-     * @serialField thiefId 
+     * @serialField thiefId
      */
     private final int thiefId;
     /**
@@ -36,75 +36,86 @@ public class Thief extends Thread implements InterfaceThief {
     /**
      * Used to verify if the Thief comes from handing a canvas.
      *
-     * @serialField justHanded 
+     * @serialField justHanded
      */
     private boolean justHanded;
 
-    private final InterfaceMuseum musStub;
-    private final InterfaceControlCollectionSite contStub;
-    private final InterfaceConcentrationSite concStub;
-    private final InterfaceAssaultParty agrStub;
+    private final InterfaceMuseum mus;
+    private final InterfaceControlCollectionSite cont;
+    private final InterfaceConcentrationSite conc;
+    private final InterfaceAssaultParty agr1;
+    private final InterfaceAssaultParty agr2;
 
     /**
      * Thief instantiation.
      *
      * @param thiefId Thief identification
      * @param agility Thief agility
+     * @param mus Museum Interface
+     * @param cont Control & Collection Interface
+     * @param conc Concentration Interface 
+     * @param agr1 Assault Party 1 Interface
+     * @param agr2 Assault Party 2 Interface
      */
-    public Thief(int thiefId, int agility)
-    {
+    public Thief(int thiefId, int agility, InterfaceMuseum mus, InterfaceControlCollectionSite cont,
+            InterfaceConcentrationSite conc, InterfaceAssaultParty agr1, InterfaceAssaultParty agr2) {
+
         super("Thief " + (thiefId + 1));
 
         this.thiefId = thiefId;
         this.agility = agility;
         stateThief = Constants.OUTSIDE;
         justHanded = false;
-        musStub = new MuseumStub();
-        contStub = new ControlCollectionSiteStub();
-        concStub = new ConcentrationSiteStub();
-        agrStub = new AssaultPartyStub();
+        this.mus = mus;
+        this.cont = cont;
+        this.conc = conc;
+        this.agr1 = agr1;
+        this.agr2 = agr2;
     }
 
     /**
      * Run this thread: Life cycle of the Thief.
      */
     @Override
-    public void run()
-    {
+    public void run() {
         int partyId;
 
-        while ((partyId = amINeeded()) != -1)
-        {
+        while ((partyId = amINeeded()) != -1) {
             // goes to team ordered by master
             //boolean last = AssaultParty.getInstance(partyId).addToSquad(thiefId, agility);
-            boolean last = agrStub.addToSquad(thiefId, agility, partyId);
+            InterfaceAssaultParty agr = null;
+            
+            // check this fix later
+            if (partyId == 0)
+                agr = agr1;
+            else
+                agr = agr2;
+            
+            boolean last = agr.addToSquad(thiefId, agility, partyId);
 
-            if (last)
-            {
+            if (last) {
                 // wakes master, team is ready for sendAssaultParty
-                concStub.teamReady();
+                conc.teamReady();
             }
 
             // back to assault party to block and Get in line
-            agrStub.waitToStartRobbing(thiefId, partyId);
+            agr.waitToStartRobbing(thiefId, partyId);
             // roll[0] = roomId, roll[1] = elemId 
-            int[] roll = agrStub.crawlIn(thiefId, partyId);
+            int[] roll = agr.crawlIn(thiefId, partyId);
 
             //boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
-            boolean painting = musStub.rollACanvas(roll[0], roll[1], partyId, thiefId);
+            boolean painting = mus.rollACanvas(roll[0], roll[1], partyId, thiefId);
 
             int canvas = 0;
-            if (painting)
-            {
-                agrStub.addCrookCanvas(roll[1], partyId);
+            if (painting) {
+                agr.addCrookCanvas(roll[1], partyId);
                 canvas = 1;
             }
-            agrStub.crawlOut(thiefId, partyId);
+            agr.crawlOut(thiefId, partyId);
 
-            contStub.handACanvas(canvas, roll[0], partyId);
+            cont.handACanvas(canvas, roll[0], partyId);
             justHanded = true; // to avoid wrong, first time signal
         }
-        //concStub.setDeadState(thiefId);
     }
 
     /**
@@ -114,14 +125,12 @@ public class Thief extends Thread implements InterfaceThief {
      * @return Returns partyId that the Thief should go or -1 if is supposed to
      * die.
      */
-    private int amINeeded()
-    {
-        concStub.addThief(thiefId);
-        if (justHanded)
-        {
-            contStub.goCollectMaster();
+    private int amINeeded() {
+        conc.addThief(thiefId);
+        if (justHanded) {
+            cont.goCollectMaster();
         }
-        return concStub.waitForCall(thiefId);
+        return conc.waitForCall(thiefId);
     }
 
     /**
@@ -130,8 +139,7 @@ public class Thief extends Thread implements InterfaceThief {
      * @return Thief identification
      */
     @Override
-    public int getThiefId()
-    {
+    public int getThiefId() {
         return thiefId;
     }
 
@@ -141,8 +149,7 @@ public class Thief extends Thread implements InterfaceThief {
      * @return Thief State
      */
     @Override
-    public int getStateThief()
-    {
+    public int getStateThief() {
         return stateThief;
     }
 
@@ -152,8 +159,7 @@ public class Thief extends Thread implements InterfaceThief {
      * @param stateThief Thief state
      */
     @Override
-    public void setStateThief(int stateThief)
-    {
+    public void setStateThief(int stateThief) {
         this.stateThief = stateThief;
     }
 
@@ -163,8 +169,7 @@ public class Thief extends Thread implements InterfaceThief {
      * @return Thief agility
      */
     @Override
-    public int getAgility()
-    {
+    public int getAgility() {
         return agility;
     }
 

@@ -24,78 +24,90 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      */
     private int stateMaster;
 
-    private final InterfaceMuseum musStub;
-    private final InterfaceControlCollectionSite contStub;
-    private final InterfaceConcentrationSite concStub;
-    private final InterfaceAssaultParty agrStub;
+    private final InterfaceMuseum mus;
+    private final InterfaceControlCollectionSite cont;
+    private final InterfaceConcentrationSite conc;
+    private final InterfaceAssaultParty agr1;
+    private final InterfaceAssaultParty agr2;
 
     /**
-     * Constructor.
+     * Constructor
+     *
+     * @param mus Museum Interface
+     * @param cont Control & Collection Interface
+     * @param conc Concentration Interface
+     * @param agr1 Assault Party 1 Interface
+     * @param agr2 Assault Party 2 Interface
      */
-    public MasterThief()
-    {
+    public MasterThief(InterfaceMuseum mus, InterfaceControlCollectionSite cont,
+            InterfaceConcentrationSite conc, InterfaceAssaultParty agr1,
+            InterfaceAssaultParty agr2) {
+
         super("master");
         stateMaster = Constants.PLANNING_THE_HEIST;
-        musStub = new MuseumStub();
-        contStub = new ControlCollectionSiteStub();
-        concStub = new ConcentrationSiteStub();
-        agrStub = new AssaultPartyStub();
+        this.mus = mus;
+        this.cont = cont;
+        this.conc = conc;
+        this.agr1 = agr1;
+        this.agr2 = agr2;
     }
 
     /**
      * Run this thread: Life cycle of the Thief.
      */
     @Override
-    public void run()
-    {
+    public void run() {
         int opt; // 1 - end of operations, 2 - begin assault, 3 - take a rest
         int[] pick;    // pick[0]=assaultPartyId, pick[1]=RoomId
         int dist;
 
         startOperations();
-        while ((opt = appraiseSit()) != 1)
-        {
-            switch (opt)
-            {
+        while ((opt = appraiseSit()) != 1) {
+            switch (opt) {
                 case 2:
                     // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
                     // {AssaultPartyId, tSala}
-                    pick = contStub.prepareAssaultParty1();
-                    if (pick[1] == -1)
-                    {
+                    pick = cont.prepareAssaultParty1();
+                    if (pick[1] == -1) {
                         // no rooms available, go deciding what to do
                         break;
                     }
+                    // check this fix later
+                    InterfaceAssaultParty agr = null;
+                    if (pick[0] == 0) {
+                        agr = agr1;
+                    } else {
+                        agr = agr2;
+                    }
                     // check distance to room to setUp AssaultParty
-                    dist = musStub.getRoomDistance(pick[1]);
+                    dist = mus.getRoomDistance(pick[1]);
                     //agrStub.setConnectionAssaultParty(pick[0]);
-                    agrStub.setUpRoom(dist, pick[1],pick[0]);
+                    agr.setUpRoom(dist, pick[1], pick[0]);
                     // passes partyId to thief, wakes 3 thieves and master goes to sleep
 
-                    concStub.prepareAssaultParty2(pick[0], pick[1]);
-                    
+                    conc.prepareAssaultParty2(pick[0], pick[1]);
+
                     //agrStub.setConnectionAssaultParty(pick[0]);
-                    agrStub.sendAssaultParty(pick[0]);
+                    agr.sendAssaultParty(pick[0]);
 
                     break;
                 case 3:
-                    contStub.takeARest();
+                    cont.takeARest();
                     break;
                 default:
                     break;
             }
         }
-        concStub.wakeAll();
+        conc.wakeAll();
         // verificar se todos já morreram e pambas
-        contStub.printResult();
+        cont.printResult();
     }
 
     /**
      * Change Master state to "Deciding what to do".
      */
-    public void startOperations()
-    {
-        contStub.setDeciding();
+    public void startOperations() {
+        cont.setDeciding();
     }
 
     /**
@@ -106,20 +118,16 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      *
      * @return Option for next step to take.
      */
-    public int appraiseSit()
-    {
+    public int appraiseSit() {
 
-        contStub.setDeciding();
-        int nThieves = concStub.checkThiefNumbers();
+        cont.setDeciding();
+        int nThieves = conc.checkThiefNumbers();
 
-        if (!anyRoomLeft())
-        {
+        if (!anyRoomLeft()) {
             return 1;
-        } else if ((nThieves > 2) && contStub.anyTeamAvailable())
-        {
+        } else if ((nThieves > 2) && cont.anyTeamAvailable()) {
             return 2;
-        } else
-        {
+        } else {
             return 3;
         }
 
@@ -130,10 +138,9 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      *
      * @return True if exists a room to sack, False if every room is empty.
      */
-    public boolean anyRoomLeft()
-    {
+    public boolean anyRoomLeft() {
 
-        return contStub.anyRoomLeft();
+        return cont.anyRoomLeft();
     }
 
     /**
@@ -142,8 +149,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      * @return Master thief state
      */
     @Override
-    public int getStateMaster()
-    {
+    public int getStateMaster() {
         return stateMaster;
     }
 
@@ -153,8 +159,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      * @param stateMaster Master thief state
      */
     @Override
-    public void setStateMaster(int stateMaster)
-    {
+    public void setStateMaster(int stateMaster) {
         this.stateMaster = stateMaster;
     }
 
