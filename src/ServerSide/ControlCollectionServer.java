@@ -21,6 +21,10 @@ import registry.ServerConfig;
  */
 public class ControlCollectionServer {
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String args[]) {
 
         /* get location of the registry service */

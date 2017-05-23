@@ -15,6 +15,7 @@ public interface InterfaceMuseum extends Remote{
      *
      * @param roomId Room identification
      * @return Default value
+     * @throws java.rmi.RemoteException
      */
     int getRoomDistance(int roomId) throws RemoteException;
 
@@ -26,6 +27,7 @@ public interface InterfaceMuseum extends Remote{
      * @param partyId Assault party identification
      * @param thiefId Thief identification
      * @return Flag value
+     * @throws java.rmi.RemoteException
      */
     boolean rollACanvas(int roomId, int elemPos, int partyId, int thiefId) throws RemoteException;
 
@@ -33,6 +35,7 @@ public interface InterfaceMuseum extends Remote{
      * Shutdown.
      * 
      * @return Boolean value. True to shutdown.
+     * @throws java.rmi.RemoteException
      */
     boolean shutdown() throws RemoteException;
 

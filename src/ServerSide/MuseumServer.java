@@ -20,6 +20,10 @@ import registry.ServerConfig;
  */
 public class MuseumServer {
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String args[]) {
 
         /* get location of the registry service */

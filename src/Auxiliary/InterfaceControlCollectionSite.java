@@ -15,6 +15,7 @@ public interface InterfaceControlCollectionSite extends Remote{
      * The method anyRoomLeft verifies if there are any room left to sack.
      *
      * @return True if exists a Room to sack, False if every room is empty
+     * @throws java.rmi.RemoteException
      */
     boolean anyRoomLeft() throws RemoteException;
 
@@ -23,12 +24,14 @@ public interface InterfaceControlCollectionSite extends Remote{
      * least one, returns false if every team is occupied
      *
      * @return Availability of teams
+     * @throws java.rmi.RemoteException
      */
     boolean anyTeamAvailable() throws RemoteException;
 
     /**
      * This method is used by the Thief to signal the Master Thief to wake up
      * from the waiting for arrival and collect canvas.
+     * @throws java.rmi.RemoteException
      */
     void goCollectMaster() throws RemoteException;
 
@@ -40,6 +43,7 @@ public interface InterfaceControlCollectionSite extends Remote{
      * @param canvas Canvas of thief
      * @param partyId Assault party identification
      * @param roomId Room identification 
+     * @throws java.rmi.RemoteException 
      */
     void handACanvas(int canvas, int roomId, int partyId) throws RemoteException;
 
@@ -48,16 +52,19 @@ public interface InterfaceControlCollectionSite extends Remote{
      * sack
      *
      * @return Assault party and room identification
+     * @throws java.rmi.RemoteException
      */
     int[] prepareAssaultParty1() throws RemoteException;
 
     /**
      * Master Thief uses this method to print the summary results.
+     * @throws java.rmi.RemoteException
      */
     void printResult() throws RemoteException;
 
     /**
      * This method changes the Thief state to Deciding what to do.
+     * @throws java.rmi.RemoteException
      */
     void setDeciding() throws RemoteException;
 
@@ -65,6 +72,7 @@ public interface InterfaceControlCollectionSite extends Remote{
      * Master thief blocks and wait the signal of a thief to wake up and get the
      * canvas that he will give to her, if he has one.
      *
+     * @throws java.rmi.RemoteException
      */
     void takeARest() throws RemoteException;
     
@@ -72,6 +80,7 @@ public interface InterfaceControlCollectionSite extends Remote{
      * Shutdown.
      * 
      * @return Boolean value. True to shutdown.
+     * @throws java.rmi.RemoteException
      */
     boolean shutdown() throws RemoteException;
     

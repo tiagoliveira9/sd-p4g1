@@ -1,6 +1,5 @@
 package ServerSide;
 
-import garbage.GRInformationStub;
 import Auxiliary.InterfaceAssaultParty;
 import Auxiliary.InterfaceGRInformation;
 import Auxiliary.Constants;
@@ -56,6 +55,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * The method returns Assault Party object.
      *
      * @param i Assault party counter
+     * @param repo
      * @return Instance of assault party
      */
     public static AssaultParty getInstance(int i, InterfaceGRInformation repo) {

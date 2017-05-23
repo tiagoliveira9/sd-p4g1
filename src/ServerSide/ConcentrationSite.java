@@ -99,6 +99,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
     /**
      * The method returns ConcentrationSite object.
      *
+     * @param repo
      * @return ConcentrationSite object to be used.
      */
     public static ConcentrationSite getInstance(InterfaceGRInformation repo) {

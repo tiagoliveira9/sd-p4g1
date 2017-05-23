@@ -17,8 +17,6 @@ public class ServerConfig {
     /* the register handler must do the registry as well */
     public static final String RMI_REGISTER_NAME = "RegisterHandler";
     public static final int RMI_REGISTER_PORT = 22408;
-
-    // gri museum control concentration assp1 assp2 
     
     public static final String REGISTRY_GRI_NAME = "REGISTRY_GRI";
     public static final int REGISTRY_GRI_PORT = 22400;
@@ -27,6 +25,7 @@ public class ServerConfig {
     public static final int REGISTRY_MUS_PORT = 22401;
 
     public static final String REGISTRY_CONTROL_NAME = "REGISTRY_CONTROL";
+
     public static final int REGISTRY_CONTROL_PORT = 22402;
 
     public static final String REGISTRY_CONC_NAME = "REGISTRY_CONC";

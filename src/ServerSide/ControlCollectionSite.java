@@ -66,6 +66,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     /**
      * The method returns ControlCollectionSite object.
      *
+     * @param repo
      * @return ConcentrationSite object to be used.
      */
     public static ControlCollectionSite getInstance(InterfaceGRInformation repo)
@@ -110,6 +111,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
     /**
      * This method changes the Thief state to Deciding what to do.
+     * @throws java.rmi.RemoteException
      */
     @Override
     public void setDeciding() throws RemoteException
@@ -125,6 +127,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * sack
      *
      * @return Assault party and room identification
+     * @throws java.rmi.RemoteException
      */
     @Override
     public int[] prepareAssaultParty1() throws RemoteException
@@ -169,6 +172,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * Master thief blocks and wait the signal of a thief to wake up and get the
      * canvas that he will give to her, if he has one.
      *
+     * @throws java.rmi.RemoteException
      */
     @Override
     public void takeARest() throws RemoteException
@@ -200,6 +204,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @param canvas Canvas of thief
      * @param partyId Assault party identification
      * @param roomId Room identification
+     * @throws java.rmi.RemoteException
      */
     @Override
     public void handACanvas(int canvas, int roomId, int partyId) throws RemoteException
@@ -305,6 +310,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
     /**
      * Master Thief uses this method to print the summary results.
+     * @throws java.rmi.RemoteException
      */
     @Override
     public void printResult() throws RemoteException

@@ -37,6 +37,7 @@ public class Museum implements InterfaceMuseum {
     /**
      * The method returns Museum object.
      *
+     * @param repo
      * @return ConcentrationSite object to be used.
      */
     public static Museum getInstance(InterfaceGRInformation repo) {
@@ -65,6 +66,7 @@ public class Museum implements InterfaceMuseum {
      * @param roomId Room identification
      * @param distance Room distance from outside
      * @param canvas How much paintings exists on this room
+     * @throws java.rmi.RemoteException
      */
     public void setUpRoom(int roomId, int distance, int canvas) throws RemoteException {
         l.lock();
@@ -83,6 +85,7 @@ public class Museum implements InterfaceMuseum {
      * @param elemPos Element position
      * @param partyId Assault party identification
      * @return Flag value
+     * @throws java.rmi.RemoteException
      */
     @Override
     public boolean rollACanvas(int roomId, int elemPos, int partyId, int thiefId) throws RemoteException {

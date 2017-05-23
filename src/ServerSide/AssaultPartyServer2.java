@@ -20,7 +20,10 @@ import registry.ServerConfig;
  */
 public class AssaultPartyServer2 {
 
-  
+    /**
+     *
+     * @param args
+     */
     public static void main(String args[]) {
 
         /* get location of the registry service */

@@ -1,37 +1,89 @@
 
+
+
+# compile all 
+javac -d engineHeist/serverSide -sourcepath src src/ServerSide/*.java 
+javac -d engineHeist/registry -sourcepath src src/registry/*.java
+javac -d engineHeist/clientSide -sourcepath src src/ClientSide/*.java 
+
 #########################
-# compile for server side
-mkdir binServer
-javac -d binServer -sourcepath src -cp genclass.jar src/ServerSide/ServerHeistMuseum.java 
+# registry side
+
+rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false
+
+java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/registry/"\
+     -Djava.rmi.server.useCodebaseOnly=false\
+     -Djava.security.policy=java.policy registry.ServerRegisterRemoteObject
+
+#########################
+# server side
 
 # start grinformation
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum gri; bash"
-sleep 0.3
+java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/serverSide/"\
+     -Djava.rmi.server.useCodebaseOnly=false\
+     -Djava.security.policy=java.policy ServerSide.GRInformationServer
+	
+	
 # start museum
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum museum; bash"
-sleep 0.3
+java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/serverSide/"\
+     -Djava.rmi.server.useCodebaseOnly=false\
+     -Djava.security.policy=java.policy ServerSide.MuseumServer
+	
 # start control
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum control; bash"
-sleep 0.3
+java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/serverSide/"\
+     -Djava.rmi.server.useCodebaseOnly=false\
+     -Djava.security.policy=java.policy ServerSide.ControlCollectionServer
+
 # start conc
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum conc; bash"
-sleep 0.3
+java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/serverSide/"\
+     -Djava.rmi.server.useCodebaseOnly=false\
+     -Djava.security.policy=java.policy ServerSide.ConcentrationSiteServer
+
 # start assault party 1
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum agr1; bash"
-sleep 0.3
+java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/serverSide/"\
+     -Djava.rmi.server.useCodebaseOnly=false\
+     -Djava.security.policy=java.policy ServerSide.AssaultPartyServer1
+
+
 # start assault party 2
-gnome-terminal -x sh -c "java -classpath binServer/ ServerSide.ServerHeistMuseum agr2; bash"
-sleep 0.3
+java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/serverSide/"\
+     -Djava.rmi.server.useCodebaseOnly=false\
+     -Djava.security.policy=java.policy ServerSide.AssaultPartyServer2
+
+
+
 #########################
-# compile for client side
-mkdir binClient
-javac -d binClient -sourcepath src src/ClientSide/ClientHeistMuseum.java 
-sleep 0.3
-# start thieves
-gnome-terminal -x sh -c "java -classpath binClient/ ClientSide.ClientHeistMuseum thief; bash"
-sleep 0.3
-# start master thief
-gnome-terminal -x sh -c "java -classpath binClient/ ClientSide.ClientHeistMuseum master; bash"
+# client side
+java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/clientSide/"\
+     -Djava.rmi.server.useCodebaseOnly=false\
+     -Djava.security.policy=java.policy ClientSide.ThiefClient
+
+
+java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/clientSide/"\
+     -Djava.rmi.server.useCodebaseOnly=false\
+     -Djava.security.policy=java.policy ClientSide.MasterThiefClient
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

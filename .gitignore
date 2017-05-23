@@ -1,7 +1,7 @@
 /nbproject/private/
 /build/
 /dist/
-/*.txt
+*.txt
 /bin
 /binClient
 /binServer
