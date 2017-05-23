@@ -1,20 +1,24 @@
 package Auxiliary;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  * Assault party interface.
  *
  * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
  * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  */
-public interface InterfaceAssaultParty {
+public interface InterfaceAssaultParty extends Remote {
 
     /**
      * Add a canvas to the thief bag.
      * 
      * @param elemId Element identification
      * @param partyId Assault party identification
+     * @throws java.rmi.RemoteException
      */
-    void addCrookCanvas(int elemId, int partyId);
+    void addCrookCanvas(int elemId, int partyId) throws RemoteException;
 
     /**
      * Add thief to AssaultParty#. Return a flag, so the Thief knows who is last
@@ -25,8 +29,9 @@ public interface InterfaceAssaultParty {
      * @param partyId Assault party identification
      * 
      * @return True if is the last Thief, return false otherwise.
+     * @throws java.rmi.RemoteException
      */
-    boolean addToSquad(int thiefId, int thiefAgility, int partyId);
+    boolean addToSquad(int thiefId, int thiefAgility, int partyId) throws RemoteException;
 
     /**
      * Thief crawls in.
@@ -34,8 +39,9 @@ public interface InterfaceAssaultParty {
      * @param thiefId Thief identification
      * @param partyId Assault party identification
      * @return Thief to the right room of an assault party
+     * @throws java.rmi.RemoteException
      */
-    int[] crawlIn(int thiefId, int partyId);
+    int[] crawlIn(int thiefId, int partyId) throws RemoteException;
 
     /**
      * Thief crawls out.
@@ -43,16 +49,18 @@ public interface InterfaceAssaultParty {
      * @param thiefId Thief identification
      * @param partyId Assault party identification
      * @return Thief to the right room of an assault party
+     * @throws java.rmi.RemoteException
      */
-    int[] crawlOut(int thiefId, int partyId);
+    int[] crawlOut(int thiefId, int partyId) throws RemoteException;
 
     /**
      * Activates Assault Party. Wakes up the first Thief to block on the assault
      * party and changes the state of the Master
      * 
      * @param partyId Assault party identification
+     * @throws java.rmi.RemoteException
      */
-    void sendAssaultParty(int partyId);
+    void sendAssaultParty(int partyId) throws RemoteException;
 
     /**
      * Master provides information of the room to assault: distance and roomId.
@@ -60,8 +68,9 @@ public interface InterfaceAssaultParty {
      * @param distance Room distance
      * @param roomId Room identification
      * @param partyId Assault party identification
+     * @throws java.rmi.RemoteException
      */
-    void setUpRoom(int distance, int roomId, int partyId);
+    void setUpRoom(int distance, int roomId, int partyId) throws RemoteException;
 
     /**
      * Thief blocks waiting to assault. First thief is waken by the Master. The
@@ -69,14 +78,16 @@ public interface InterfaceAssaultParty {
      *
      * @param thiefId Thief identification
      * @param partyId Assault party identification
+     * @throws java.rmi.RemoteException
      */
-    void waitToStartRobbing(int thiefId, int partyId);
+    void waitToStartRobbing(int thiefId, int partyId) throws RemoteException;
 
      /**
      * Shutdown.
      * 
      * @param partyId Assault party identification
      * @return Boolean value. True to shutdown.
+     * @throws java.rmi.RemoteException
      */
-    boolean shutdown(int partyId);
+    boolean shutdown(int partyId) throws RemoteException;
 }

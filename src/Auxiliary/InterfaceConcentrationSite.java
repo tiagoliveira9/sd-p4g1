@@ -1,25 +1,30 @@
 package Auxiliary;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  * Concentration site interface.
  *
  * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
  * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  */
-public interface InterfaceConcentrationSite {
+public interface InterfaceConcentrationSite extends Remote{
 
     /**
      * Adds thief to stack and changes state to Outside.
      * @param thiefId Thief identification
+     * @throws java.rmi.RemoteException
      */
-    void addThief(int thiefId);
+    void addThief(int thiefId) throws RemoteException;
 
     /**
      * This method returns the size of the thieves stack.
      *
      * @return Size of thieves stack
+     * @throws java.rmi.RemoteException
      */
-    int checkThiefNumbers();
+    int checkThiefNumbers() throws RemoteException;
 
     /**
      * The method prepareAssaultPart stage 2. Master Thief wakes one thief to go
@@ -28,20 +33,23 @@ public interface InterfaceConcentrationSite {
      *
      * @param partyId Assault party identification
      * @param roomId Room identification
+     * @throws java.rmi.RemoteException
      */
-    void prepareAssaultParty2(int partyId, int roomId);
+    void prepareAssaultParty2(int partyId, int roomId) throws RemoteException;
 
     /**
      * Change thief state to DEAD.
      * @param thiefId Thief identification
+     * @throws java.rmi.RemoteException
      */
-    void setDeadState(int thiefId);
+    void setDeadState(int thiefId) throws RemoteException;
 
     /**
      * The method prepareExcursion. The last Thief to enter the assault party,
      * wakes up the Master Thief and resets the nAssaultParty variable.
+     * @throws java.rmi.RemoteException
      */
-    void teamReady();
+    void teamReady() throws RemoteException;
 
     /**
      * Waits for Master Thief to wake. On this method the thief can be awaken to
@@ -52,20 +60,23 @@ public interface InterfaceConcentrationSite {
      *
      * @param thiefId Thief identification
      * @return Assault party number
+     * @throws java.rmi.RemoteException
      */
-    int waitForCall(int thiefId);
+    int waitForCall(int thiefId) throws RemoteException;
 
     /**
      * Master Thief uses this method to wake every thief and awaits for the last
      * thief to wake her up.
+     * @throws java.rmi.RemoteException
      */
-    void wakeAll();
+    void wakeAll() throws RemoteException;
 
     /**
      * Shutdown.
      * 
      * @return Boolean value. True to shutdown.
+     * @throws java.rmi.RemoteException
      */
-    boolean shutdown();
+    boolean shutdown() throws RemoteException;
 
 }

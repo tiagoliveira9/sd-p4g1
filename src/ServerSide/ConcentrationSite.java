@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.rmi.RemoteException;
 
 /**
  * This data type implements a Concentration Site of the Ordinary Thieves. (in
@@ -100,17 +101,13 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      *
      * @return ConcentrationSite object to be used.
      */
-    public static ConcentrationSite getInstance()
-    {
+    public static ConcentrationSite getInstance(InterfaceGRInformation repo) {
         l.lock();
-        try
-        {
-            if (instance == null)
-            {
-                instance = new ConcentrationSite();
+        try {
+            if (instance == null) {
+                instance = new ConcentrationSite(repo);
             }
-        } finally
-        {
+        } finally {
             l.unlock();
         }
         return instance;
@@ -119,8 +116,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
     /**
      * Singleton needs private constructor.
      */
-    private ConcentrationSite()
-    {
+    private ConcentrationSite(InterfaceGRInformation repo) {
         prepare = l.newCondition();
         assembling = l.newCondition();
         nAssaultParty = -1;
@@ -129,15 +125,14 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         counterThief = 0;
         die = false;
         countDie = 0;
-        repo = new GRInformationStub();
+        this.repo = repo;
     }
 
     /**
      * Adds thief to stack and changes state to Outside.
      */
     @Override
-    public void addThief(int thiefId)
-    {
+    public void addThief(int thiefId) {
         l.lock();
         //repo.setStateThief(Constants.OUTSIDE, thiefId);
         queueThieves.add(thiefId);
@@ -150,25 +145,21 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * by the Master Thief is responsible to wake up the next thief. The next
      * thief is responsible to wake the third thief. After is awaken, he removes
      * himself from the stack or dies.
-     * 
+     *
      * @return Assault Party number
      */
     @Override
-    public int waitForCall(int thiefId)
-    {
+    public int waitForCall(int thiefId) throws RemoteException {
         l.lock();
 
-        try
-        {
-            while (thiefId != globalId && !die)
-            {
+        try {
+            while (thiefId != globalId && !die) {
                 prepare.await();
                 thiefId = queueThieves.peek();
             }
             queueThieves.remove();
-            
-            if (die)
-            {
+
+            if (die) {
                 repo.setStateThief(Constants.DEAD, thiefId);
                 countDie++;
                 assembling.signal();
@@ -177,19 +168,16 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
             }
 
             counterThief++;
-            if (counterThief < 3)
-            {
+            if (counterThief < 3) {
                 int id = queueThieves.peek();
                 globalId = id;
                 prepare.signalAll();
-            } else
-            {
+            } else {
                 globalId = -1;
                 counterThief = 0;
             }
 
-        } catch (InterruptedException ex)
-        {
+        } catch (InterruptedException ex) {
         }
 
         l.unlock();
@@ -206,26 +194,23 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * @param roomId Room identification
      */
     @Override
-    public void prepareAssaultParty2(int partyId, int roomId)
-    {
+    public void prepareAssaultParty2(int partyId, int roomId) throws RemoteException{
         l.lock();
         nAssaultParty = partyId;
+
         repo.setRoomId(partyId, roomId);
-        
+
         int tid = queueThieves.peek();
 
         globalId = tid;
         // signal all but only one thief moves
         prepare.signalAll();
-        try
-        {
+        try {
             // Master blocks, wakes up when team is ready
-            while (nAssaultParty != -1)
-            {
+            while (nAssaultParty != -1) {
                 assembling.await();
             }
-        } catch (InterruptedException ex)
-        {
+        } catch (InterruptedException ex) {
         }
         l.unlock();
     }
@@ -235,15 +220,12 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * wakes up the Master Thief and resets the nAssaultParty variable.
      */
     @Override
-    public void teamReady()
-    {
+    public void teamReady() {
         l.lock();
-        try
-        {
+        try {
             nAssaultParty = -1;
             assembling.signal();
-        } finally
-        {
+        } finally {
             l.unlock();
         }
     }
@@ -254,8 +236,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * @return size of thieves stack
      */
     @Override
-    public int checkThiefNumbers()
-    {
+    public int checkThiefNumbers() {
         //return this.stThief.size();
         return queueThieves.size();
     }
@@ -265,20 +246,16 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * thief to wake her up.
      */
     @Override
-    public void wakeAll()
-    {
+    public void wakeAll() {
         l.lock();
         this.die = true;
         prepare.signalAll();
 
-        try
-        {
-            while (countDie < 6)
-            {
+        try {
+            while (countDie < 6) {
                 assembling.await();
             }
-        } catch (InterruptedException ex)
-        {
+        } catch (InterruptedException ex) {
         }
         l.unlock();
     }
@@ -287,16 +264,14 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * Change thief state to DEAD.
      */
     @Override
-    public void setDeadState(int thiefId)
-    {
+    public void setDeadState(int thiefId) throws RemoteException {
         l.lock();
         repo.setStateThief(Constants.DEAD, thiefId);
         l.unlock();
     }
 
     @Override
-    public boolean shutdown()
-    {
+    public boolean shutdown() {
         return true;
     }
 }

@@ -33,6 +33,13 @@ public class ThiefClient {
         int rmiRegPortNumb = ServerConfig.RMI_REGISTER_PORT;
         Registry registry = null;
 
+        /* instanciação e instalação do gestor de segurança */
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
+
+        System.out.println("Security manager was installed!");
+
         // RMI lookup
         InterfaceMuseum mus = null;
         InterfaceControlCollectionSite cont = null;
@@ -68,9 +75,15 @@ public class ThiefClient {
         // Instantiation of the Thieves 
         for (int i = 0; i < Constants.N_THIEVES; i++) {
             agility = ThreadLocalRandom.current().nextInt(2, 6 + 1);
-           // (thiefId, agility, mus, cont, conc, agr1, agr2)
+            // (thiefId, agility, mus, cont, conc, agr1, agr2)
             thieves[i] = new Thief(i, agility, mus, cont, conc, agr1, agr2);
-            repo.setStateAgility(thieves[i].getAgility(), thieves[i].getThiefId());
+            
+            try {
+                repo.setStateAgility(thieves[i].getAgility(), thieves[i].getThiefId());
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+                System.exit(1);
+            }
             thieves[i].start();
             System.out.println("Thief " + i + " started.");
         }

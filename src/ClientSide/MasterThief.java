@@ -7,7 +7,7 @@ import Auxiliary.InterfaceMasterThief;
 import Auxiliary.InterfaceMuseum;
 
 import Auxiliary.Constants;
-//import ServerSide.AssaultParty;
+import java.rmi.RemoteException;
 
 /**
  * This data type implements a Master Thief thread.
@@ -61,52 +61,58 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
         int[] pick;    // pick[0]=assaultPartyId, pick[1]=RoomId
         int dist;
 
-        startOperations();
-        while ((opt = appraiseSit()) != 1) {
-            switch (opt) {
-                case 2:
-                    // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
-                    // {AssaultPartyId, tSala}
-                    pick = cont.prepareAssaultParty1();
-                    if (pick[1] == -1) {
-                        // no rooms available, go deciding what to do
+        try {
+            startOperations();
+            while ((opt = appraiseSit()) != 1) {
+                switch (opt) {
+                    case 2:
+                        // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
+                        // {AssaultPartyId, tSala}
+                        pick = cont.prepareAssaultParty1();
+                        if (pick[1] == -1) {
+                            // no rooms available, go deciding what to do
+                            break;
+                        }
+                        // check this fix later
+                        InterfaceAssaultParty agr = null;
+                        if (pick[0] == 0) {
+                            agr = agr1;
+                        } else {
+                            agr = agr2;
+                        }
+                        // check distance to room to setUp AssaultParty
+                        dist = mus.getRoomDistance(pick[1]);
+                        //agrStub.setConnectionAssaultParty(pick[0]);
+                        agr.setUpRoom(dist, pick[1], pick[0]);
+                        // passes partyId to thief, wakes 3 thieves and master goes to sleep
+
+                        conc.prepareAssaultParty2(pick[0], pick[1]);
+
+                        //agrStub.setConnectionAssaultParty(pick[0]);
+                        agr.sendAssaultParty(pick[0]);
+
                         break;
-                    }
-                    // check this fix later
-                    InterfaceAssaultParty agr = null;
-                    if (pick[0] == 0) {
-                        agr = agr1;
-                    } else {
-                        agr = agr2;
-                    }
-                    // check distance to room to setUp AssaultParty
-                    dist = mus.getRoomDistance(pick[1]);
-                    //agrStub.setConnectionAssaultParty(pick[0]);
-                    agr.setUpRoom(dist, pick[1], pick[0]);
-                    // passes partyId to thief, wakes 3 thieves and master goes to sleep
-
-                    conc.prepareAssaultParty2(pick[0], pick[1]);
-
-                    //agrStub.setConnectionAssaultParty(pick[0]);
-                    agr.sendAssaultParty(pick[0]);
-
-                    break;
-                case 3:
-                    cont.takeARest();
-                    break;
-                default:
-                    break;
+                    case 3:
+                        cont.takeARest();
+                        break;
+                    default:
+                        break;
+                }
             }
+            conc.wakeAll();
+            cont.printResult();
+            
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+            System.exit(1);
         }
-        conc.wakeAll();
-        // verificar se todos já morreram e pambas
-        cont.printResult();
     }
 
     /**
      * Change Master state to "Deciding what to do".
+     * @throws java.rmi.RemoteException
      */
-    public void startOperations() {
+    public void startOperations() throws RemoteException {
         cont.setDeciding();
     }
 
@@ -117,8 +123,9 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      * move is to take a rest, returns 3.
      *
      * @return Option for next step to take.
+     * @throws java.rmi.RemoteException
      */
-    public int appraiseSit() {
+    public int appraiseSit() throws RemoteException{
 
         cont.setDeciding();
         int nThieves = conc.checkThiefNumbers();
@@ -137,8 +144,9 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      * This method verifies if every room is empty.
      *
      * @return True if exists a room to sack, False if every room is empty.
+     * @throws java.rmi.RemoteException
      */
-    public boolean anyRoomLeft() {
+    public boolean anyRoomLeft() throws RemoteException {
 
         return cont.anyRoomLeft();
     }

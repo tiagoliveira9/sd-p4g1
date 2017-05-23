@@ -6,6 +6,7 @@ import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceMuseum;
 import Auxiliary.InterfaceThief;
 import Auxiliary.Constants;
+import java.rmi.RemoteException;
 
 /**
  * This data type implements a Thief thread. (in the future explain more)
@@ -53,7 +54,7 @@ public class Thief extends Thread implements InterfaceThief {
      * @param agility Thief agility
      * @param mus Museum Interface
      * @param cont Control & Collection Interface
-     * @param conc Concentration Interface 
+     * @param conc Concentration Interface
      * @param agr1 Assault Party 1 Interface
      * @param agr2 Assault Party 2 Interface
      */
@@ -80,41 +81,49 @@ public class Thief extends Thread implements InterfaceThief {
     public void run() {
         int partyId;
 
-        while ((partyId = amINeeded()) != -1) {
-            // goes to team ordered by master
-            //boolean last = AssaultParty.getInstance(partyId).addToSquad(thiefId, agility);
-            InterfaceAssaultParty agr = null;
-            
-            // check this fix later
-            if (partyId == 0)
-                agr = agr1;
-            else
-                agr = agr2;
-            
-            boolean last = agr.addToSquad(thiefId, agility, partyId);
+        try {
+            while ((partyId = amINeeded()) != -1) {
+                // goes to team ordered by master
+                //boolean last = AssaultParty.getInstance(partyId).addToSquad(thiefId, agility);
+                InterfaceAssaultParty agr = null;
 
-            if (last) {
-                // wakes master, team is ready for sendAssaultParty
-                conc.teamReady();
+                // check this fix later
+                if (partyId == 0) {
+                    agr = agr1;
+                } else {
+                    agr = agr2;
+                }
+
+                boolean last = agr.addToSquad(thiefId, agility, partyId);
+
+                if (last) {
+                    // wakes master, team is ready for sendAssaultParty
+                    conc.teamReady();
+                }
+
+                // back to assault party to block and Get in line
+                agr.waitToStartRobbing(thiefId, partyId);
+                // roll[0] = roomId, roll[1] = elemId 
+                int[] roll = agr.crawlIn(thiefId, partyId);
+
+                //boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
+                boolean painting = mus.rollACanvas(roll[0], roll[1], partyId, thiefId);
+
+                int canvas = 0;
+                if (painting) {
+                    agr.addCrookCanvas(roll[1], partyId);
+                    canvas = 1;
+                }
+                agr.crawlOut(thiefId, partyId);
+
+                cont.handACanvas(canvas, roll[0], partyId);
+                justHanded = true; // to avoid wrong, first time signal
+
             }
 
-            // back to assault party to block and Get in line
-            agr.waitToStartRobbing(thiefId, partyId);
-            // roll[0] = roomId, roll[1] = elemId 
-            int[] roll = agr.crawlIn(thiefId, partyId);
-
-            //boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
-            boolean painting = mus.rollACanvas(roll[0], roll[1], partyId, thiefId);
-
-            int canvas = 0;
-            if (painting) {
-                agr.addCrookCanvas(roll[1], partyId);
-                canvas = 1;
-            }
-            agr.crawlOut(thiefId, partyId);
-
-            cont.handACanvas(canvas, roll[0], partyId);
-            justHanded = true; // to avoid wrong, first time signal
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -125,12 +134,16 @@ public class Thief extends Thread implements InterfaceThief {
      * @return Returns partyId that the Thief should go or -1 if is supposed to
      * die.
      */
-    private int amINeeded() {
+    private int amINeeded() throws RemoteException {
+        int assaultId = -1;
+
         conc.addThief(thiefId);
         if (justHanded) {
             cont.goCollectMaster();
         }
-        return conc.waitForCall(thiefId);
+        assaultId = conc.waitForCall(thiefId);
+
+        return assaultId;
     }
 
     /**
