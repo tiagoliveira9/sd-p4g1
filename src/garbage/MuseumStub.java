@@ -1,8 +1,9 @@
-package ClientSide;
+package garbage;
 
 import Comm.Message;
 import Auxiliary.InterfaceMuseum;
 import Auxiliary.Constants;
+import ClientSide.Thief;
 
 /**
  * Museum stub.

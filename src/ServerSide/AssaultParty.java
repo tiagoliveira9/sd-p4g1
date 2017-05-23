@@ -1,5 +1,6 @@
 package ServerSide;
 
+import garbage.GRInformationStub;
 import Auxiliary.InterfaceAssaultParty;
 import Auxiliary.InterfaceGRInformation;
 import Auxiliary.Constants;
@@ -8,6 +9,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.rmi.RemoteException;
 
 /**
  * This data type implements Assault party.
@@ -18,7 +20,7 @@ import java.util.logging.Logger;
 public class AssaultParty implements InterfaceAssaultParty {
 
     private static final AssaultParty[] instances = new AssaultParty[Constants.N_ASSAULT_PARTY];
-    private final  int partyId;
+    private final int partyId;
     private final static Lock l = new ReentrantLock();
     private final Condition moveThief;
     private int[] line; // order that thieves blocks for the first time awaiting orders
@@ -41,8 +43,7 @@ public class AssaultParty implements InterfaceAssaultParty {
         private int pos;
         private boolean canvas;
 
-        public Crook(int id, int agility)
-        {
+        public Crook(int id, int agility) {
             this.id = id;
             this.agility = agility;
             pos = 0;
@@ -57,17 +58,13 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @param i Assault party counter
      * @return Instance of assault party
      */
-    public static AssaultParty getInstance(int i)
-    {
+    public static AssaultParty getInstance(int i, InterfaceGRInformation repo) {
         l.lock();
-        try
-        {
-            if (instances[i] == null)
-            {
-                instances[i] = new AssaultParty(i);
+        try {
+            if (instances[i] == null) {
+                instances[i] = new AssaultParty(i, repo);
             }
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
         }
         l.unlock();
@@ -79,8 +76,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      *
      * @param partyId Assault party identification
      */
-    private AssaultParty(int partyId)
-    {
+    private AssaultParty(int partyId, InterfaceGRInformation repo) {
         this.partyId = partyId;
         roomId = -1;
         distance = -1;
@@ -90,13 +86,12 @@ public class AssaultParty implements InterfaceAssaultParty {
 
         line = new int[Constants.N_SQUAD];
         squad = new Crook[Constants.N_SQUAD];
-        for (int i = 0; i < Constants.N_SQUAD; i++)
-        {
+        for (int i = 0; i < Constants.N_SQUAD; i++) {
             line[i] = -1;
         }
         moveThief = l.newCondition();
         idGlobal = -1;
-        repo = new GRInformationStub();
+        this.repo = repo;
     }
 
     /**
@@ -107,37 +102,30 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return True if is the last Thief, false otherwise.
      */
     @Override
-    public boolean addToSquad(int thiefId, int thiefAgility, int partyIdMsg)
-    {
+    public boolean addToSquad(int thiefId, int thiefAgility, int partyIdMsg) throws RemoteException {
         l.lock();
         //Thief t = (Thief) Thread.currentThread();
         boolean flag = false;
 
-        try
-        {
-            if (nCrook < Constants.N_SQUAD)
-            {
+        try {
+            if (nCrook < Constants.N_SQUAD) {
                 squad[nCrook] = new Crook(thiefId, thiefAgility);
                 nCrook++;
                 int i;
-                for (i = 0; i < Constants.N_SQUAD; i++)
-                {
-                    if (line[i] == -1)
-                    {
+                for (i = 0; i < Constants.N_SQUAD; i++) {
+                    if (line[i] == -1) {
                         line[i] = thiefId;
                         int id = thiefId + 1;
                         repo.setIdPartyElem(partyIdMsg, i, id);
                         break;
                     }
                 }
-                if (nCrook == Constants.N_SQUAD)
-                {
+                if (nCrook == Constants.N_SQUAD) {
                     // last thief
                     flag = true;
                 }
             }
-        } finally
-        {
+        } finally {
             l.unlock();
         }
 
@@ -150,22 +138,18 @@ public class AssaultParty implements InterfaceAssaultParty {
      *
      */
     @Override
-    public void waitToStartRobbing(int thiefId, int partyId)
-    {
+    public void waitToStartRobbing(int thiefId, int partyId) throws RemoteException {
         l.lock();
         repo.setStateThief(Constants.CRAWLING_INWARDS, thiefId);
 
         Crook c = getCrook(thiefId);
-        try
-        {
+        try {
             // it's like they stop one after each other, a team line
-            while (c.id != idGlobal)
-            {
+            while (c.id != idGlobal) {
                 moveThief.await();
             }
 
-        } catch (InterruptedException ex)
-        {
+        } catch (InterruptedException ex) {
         }
 
         l.unlock();
@@ -178,22 +162,18 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return Thief to the right room of an assault party
      */
     @Override
-    public int[] crawlIn(int thiefId, int partyIdMsg)
-    {
+    public int[] crawlIn(int thiefId, int partyIdMsg) throws RemoteException {
         l.lock();
 
         Crook cr = getCrook(thiefId);
         int next = selectNext(thiefId);
 
-        try
-        {
-            while (!crawlGo(true, cr, partyIdMsg))
-            {
+        try {
+            while (!crawlGo(true, cr, partyIdMsg)) {
                 idGlobal = squad[next].id;
                 moveThief.signalAll();
 
-                while (cr.id != idGlobal)
-                {
+                while (cr.id != idGlobal) {
                     moveThief.await();
                 }
             }
@@ -202,8 +182,7 @@ public class AssaultParty implements InterfaceAssaultParty {
             l.unlock();
             return getRoomIdToAssault(cr.id);
 
-        } catch (InterruptedException ex)
-        {
+        } catch (InterruptedException ex) {
             Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
 
@@ -221,31 +200,26 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return Thief to the right room of an assault party
      */
     @Override
-    public int[] crawlOut(int thiefId, int partyIdMsg)
-    {
+    public int[] crawlOut(int thiefId, int partyIdMsg) throws RemoteException {
         l.lock();
         Crook cr = getCrook(thiefId);
         int myElemId = myPositionTeam(thiefId);
         int next = selectNext(thiefId);
 
-        try
-        {
+        try {
 
             repo.setStateThief(Constants.CRAWLING_OUTWARDS, cr.id);
 
-            while (cr.id != idGlobal)
-            {
+            while (cr.id != idGlobal) {
                 moveThief.await();
             }
             cr.pos = 0;
-            while (!crawlGo(false, cr, partyIdMsg))
-            {
+            while (!crawlGo(false, cr, partyIdMsg)) {
 
                 idGlobal = squad[next].id;
                 moveThief.signalAll();
 
-                while (cr.id != idGlobal)
-                {
+                while (cr.id != idGlobal) {
                     moveThief.await();
                 }
             }
@@ -260,8 +234,7 @@ public class AssaultParty implements InterfaceAssaultParty {
             l.unlock();
             return getRoomIdToAssault(cr.id);
 
-        } catch (InterruptedException ex)
-        {
+        } catch (InterruptedException ex) {
             Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
@@ -271,8 +244,7 @@ public class AssaultParty implements InterfaceAssaultParty {
 
     }
 
-    private boolean crawlGo(boolean way, Crook cr, int partyIdMsg)
-    {
+    private boolean crawlGo(boolean way, Crook cr, int partyIdMsg) throws RemoteException {
         l.lock();
 
         //Thief t = (Thief) Thread.currentThread();
@@ -281,26 +253,19 @@ public class AssaultParty implements InterfaceAssaultParty {
         int elemId = myPositionTeam(cr.id);
         int teamHead;
 
-        if (way)
-        {
+        if (way) {
             teamHead = teamHeadIn;
-        } else
-        {
+        } else {
             teamHead = teamHeadOut;
         }
-        do
-        {
+        do {
             int pos = cr.pos + cr.agility;
 
-            if (pos <= teamHead)
-            {
-                while (true)
-                {
-                    if (teamLineup[pos] != -1)
-                    {
+            if (pos <= teamHead) {
+                while (true) {
+                    if (teamLineup[pos] != -1) {
                         pos--;
-                    } else
-                    {
+                    } else {
                         // update elem position and registers
                         teamLineup[cr.pos] = -1;
                         cr.pos = pos;
@@ -308,39 +273,30 @@ public class AssaultParty implements InterfaceAssaultParty {
                         break;
                     }
                 }
-            } else
-            {
-                if (pos - teamHead > 3)
-                {
+            } else {
+                if (pos - teamHead > 3) {
                     teamLineup[cr.pos] = -1;
                     cr.pos = teamHead + 3;
 
-                    if (cr.pos >= distance)
-                    {
+                    if (cr.pos >= distance) {
                         cr.pos = distance;
-                        if (way)
-                        {
+                        if (way) {
                             repo.setPosElem(partyIdMsg, elemId, cr.pos);
-                        } else
-                        {
+                        } else {
                             repo.setPosElem(partyIdMsg, elemId, translatePos[cr.pos]);
                         }
                         flagI = true;
                         break;
                     }
                     teamLineup[cr.pos] = elemId;
-                } else
-                {
+                } else {
                     teamLineup[cr.pos] = -1;
                     cr.pos = pos;
-                    if (pos >= distance)
-                    {
+                    if (pos >= distance) {
                         cr.pos = distance;
-                        if (way)
-                        {
+                        if (way) {
                             repo.setPosElem(partyIdMsg, elemId, cr.pos);
-                        } else
-                        {
+                        } else {
                             repo.setPosElem(partyIdMsg, elemId, translatePos[cr.pos]);
                         }
                         flagI = true;
@@ -349,21 +305,17 @@ public class AssaultParty implements InterfaceAssaultParty {
                     teamLineup[cr.pos] = elemId;
                 }
             }
-            if (way)
-            {
+            if (way) {
                 repo.setPosElem(partyIdMsg, elemId, cr.pos);
-            } else
-            {
+            } else {
                 repo.setPosElem(partyIdMsg, elemId, translatePos[cr.pos]);
             }
         } while (cr.pos - teamHead != 3);
 
         // register the new yellow shirt
-        if (way)
-        {
+        if (way) {
             teamHeadIn = cr.pos;
-        } else
-        {
+        } else {
             teamHeadOut = cr.pos;
         }
         // here he will be always 3 positions ahead or at room
@@ -377,15 +329,12 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @param thiefId Thief identification
      * @return Squad number
      */
-    public Crook getCrook(int thiefId)
-    {
+    public Crook getCrook(int thiefId) {
         l.lock();
         int i;
 
-        for (i = 0; i < Constants.N_SQUAD; i++)
-        {
-            if (squad[i].id == thiefId)
-            {
+        for (i = 0; i < Constants.N_SQUAD; i++) {
+            if (squad[i].id == thiefId) {
                 break;
             }
         }
@@ -401,18 +350,15 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @param myThiefId Thief identification for each thief
      * @return Next Thief to crawl
      */
-    public int selectNext(int myThiefId)
-    {
+    public int selectNext(int myThiefId) {
         l.lock();
         int nextThiefLine = -1;
         int myPositionLine = myPositionTeam(myThiefId);
 
         // if I am the last, the next to awake is the first
-        if (myPositionLine + 1 > 2)
-        {
+        if (myPositionLine + 1 > 2) {
             nextThiefLine = 0;
-        } else
-        {
+        } else {
             nextThiefLine = myPositionLine + 1;
         }
         l.unlock();
@@ -421,19 +367,16 @@ public class AssaultParty implements InterfaceAssaultParty {
 
     /**
      * Gives the position of the thief.
-     * 
+     *
      * @param myThiefId Thief identification for each thief
      * @return Position of thief
      */
-    public int myPositionTeam(int myThiefId)
-    {
+    public int myPositionTeam(int myThiefId) {
         l.lock();
         int myPosition = -1;
 
-        for (int i = 0; i < Constants.N_SQUAD; i++)
-        {
-            if (line[i] == myThiefId)
-            {
+        for (int i = 0; i < Constants.N_SQUAD; i++) {
+            if (line[i] == myThiefId) {
                 myPosition = i;
             }
         }
@@ -446,16 +389,13 @@ public class AssaultParty implements InterfaceAssaultParty {
      * party and changes the state of the Master
      */
     @Override
-    public void sendAssaultParty(int partyId)
-    {
+    public void sendAssaultParty(int partyId) {
 
         l.lock();
         // Master wakes up the first Thief to block on the team
         int i;
-        for (i = 0; i < 3; i++)
-        {
-            if (squad[i].id == line[0])
-            {
+        for (i = 0; i < 3; i++) {
+            if (squad[i].id == line[0]) {
                 break;
             }
         }
@@ -471,11 +411,9 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @param roomId Room identification
      */
     @Override
-    public void setUpRoom(int distance, int roomId, int partyId)
-    {
+    public void setUpRoom(int distance, int roomId, int partyId) {
         l.lock();
-        try
-        {
+        try {
             this.distance = distance;
             this.roomId = roomId;
             teamHeadIn = 0;
@@ -484,25 +422,23 @@ public class AssaultParty implements InterfaceAssaultParty {
             // thief are in position zero that doesn't count, so +1
             teamLineup = new int[distance + 1];
             translatePos = new int[distance + 1];
-            for (int i = 0; i < distance + 1; i++)
-            {
+            for (int i = 0; i < distance + 1; i++) {
                 teamLineup[i] = -1;
                 translatePos[i] = distance - i;
             }
 
-        } finally
-        {
+        } finally {
             l.unlock();
         }
     }
 
     /**
      * Add a canvas to the thief.
+     *
      * @param elemId Element identification
      */
     @Override
-    public void addCrookCanvas(int elemId, int partyId)
-    {
+    public void addCrookCanvas(int elemId, int partyId) {
         l.lock();
         Crook c = squad[elemId];
         c.canvas = true;
@@ -516,10 +452,8 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @param thiefId Thief identification
      * @return Room and element identification
      */
-    public int[] getRoomIdToAssault(int thiefId)
-    {
-        return new int[]
-        {
+    public int[] getRoomIdToAssault(int thiefId) {
+        return new int[]{
             roomId, myPositionTeam(thiefId)
         };
     }
@@ -529,8 +463,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      *
      * @return Room identification
      */
-    public int getRoomId()
-    {
+    public int getRoomId() {
         return roomId;
     }
 
@@ -539,8 +472,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      *
      * @return Room distance
      */
-    public int getDistance()
-    {
+    public int getDistance() {
         return distance;
     }
 
@@ -549,14 +481,12 @@ public class AssaultParty implements InterfaceAssaultParty {
      *
      * @return Assault party identification
      */
-    public int getPartyId()
-    {
+    public int getPartyId() {
         return partyId;
     }
 
     @Override
-    public boolean shutdown(int partyId)
-    {
+    public boolean shutdown(int partyId) {
         return true;
     }
 

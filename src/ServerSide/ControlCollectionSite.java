@@ -3,7 +3,7 @@ package ServerSide;
 import Auxiliary.InterfaceControlCollectionSite;
 import Auxiliary.InterfaceGRInformation;
 import Auxiliary.Constants;
-
+import java.rmi.RemoteException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -68,14 +68,14 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      *
      * @return ConcentrationSite object to be used.
      */
-    public static ControlCollectionSite getInstance()
+    public static ControlCollectionSite getInstance(InterfaceGRInformation repo)
     {
         l.lock();
         try
         {
             if (instance == null)
             {
-                instance = new ControlCollectionSite();
+                instance = new ControlCollectionSite(repo);
             }
         } finally
         {
@@ -87,7 +87,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     /**
      * Singleton needs private constructor.
      */
-    private ControlCollectionSite()
+    private ControlCollectionSite(InterfaceGRInformation repo)
     {
         // bind lock with a condition
         rest = l.newCondition();
@@ -105,14 +105,14 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
             salas[i] = new Sala(i);
         }
 
-        repo = new GRInformationStub();
+        this.repo = repo;
     }
 
     /**
      * This method changes the Thief state to Deciding what to do.
      */
     @Override
-    public void setDeciding()
+    public void setDeciding() throws RemoteException
     {
         l.lock();
         stateMaster = Constants.DECIDING_WHAT_TO_DO;
@@ -127,7 +127,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @return Assault party and room identification
      */
     @Override
-    public int[] prepareAssaultParty1()
+    public int[] prepareAssaultParty1() throws RemoteException
     {
         l.lock();
 
@@ -171,7 +171,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      *
      */
     @Override
-    public void takeARest()
+    public void takeARest() throws RemoteException
     {
         l.lock();
 
@@ -202,7 +202,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @param roomId Room identification
      */
     @Override
-    public void handACanvas(int canvas, int roomId, int partyId)
+    public void handACanvas(int canvas, int roomId, int partyId) throws RemoteException
     {
 
         l.lock();
@@ -307,7 +307,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * Master Thief uses this method to print the summary results.
      */
     @Override
-    public void printResult()
+    public void printResult() throws RemoteException
     {
         l.lock();
         repo.setStateMasterThief(Constants.PRESENTING_THE_REPORT);

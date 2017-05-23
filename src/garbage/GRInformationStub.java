@@ -1,4 +1,4 @@
-package ServerSide;
+package garbage;
 
 import Auxiliary.InterfaceGRInformation;
 import ClientSide.ClientCom;

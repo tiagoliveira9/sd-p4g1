@@ -27,8 +27,8 @@ public class MasterThiefClient {
     public static void main(String[] args) {
 
         // Initialise RMI configurations
-        String rmiRegHostName = ServerConfig.RMI_REGISTER_HOSTNAME;
-        int rmiRegPortNumb = ServerConfig.RMI_REGISTER_PORT;
+        String rmiRegHostName = ServerConfig.RMI_REGISTRY_HOSTNAME;
+        int rmiRegPortNumb = ServerConfig.RMI_REGISTRY_PORT;
         Registry registry = null;
 
 

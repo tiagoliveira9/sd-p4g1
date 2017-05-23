@@ -29,8 +29,8 @@ public class ThiefClient {
     public static void main(String[] args) {
 
         // RMI configurations
-        String rmiRegHostName = ServerConfig.RMI_REGISTER_HOSTNAME;
-        int rmiRegPortNumb = ServerConfig.RMI_REGISTER_PORT;
+        String rmiRegHostName = ServerConfig.RMI_REGISTRY_HOSTNAME;
+        int rmiRegPortNumb = ServerConfig.RMI_REGISTRY_PORT;
         Registry registry = null;
 
         /* instanciação e instalação do gestor de segurança */

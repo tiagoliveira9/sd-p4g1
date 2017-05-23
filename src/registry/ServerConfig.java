@@ -11,12 +11,12 @@ package registry;
  */
 public class ServerConfig {
 
-    //public static final String RMI_REGISTRY_HOSTNAME = "localhost";
-    //public static final int RMI_REGISTRY_PORT = 22407;
+    public static final String RMI_REGISTRY_HOSTNAME = "localhost";
+    public static final int RMI_REGISTRY_PORT = 22407;
 
+    /* the register handler must do the registry as well */
     public static final String RMI_REGISTER_NAME = "RegisterHandler";
-    public static final String RMI_REGISTER_HOSTNAME = "localhost";
-    public static final int RMI_REGISTER_PORT = 22407;
+    public static final int RMI_REGISTER_PORT = 22408;
 
     // gri museum control concentration assp1 assp2 
     

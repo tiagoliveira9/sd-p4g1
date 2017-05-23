@@ -1,8 +1,9 @@
-package ClientSide;
+package garbage;
 
 import Auxiliary.InterfaceAssaultParty;
 import Comm.Message;
 import Auxiliary.Constants;
+import ClientSide.Thief;
 
 /**
  * Assault party stub.

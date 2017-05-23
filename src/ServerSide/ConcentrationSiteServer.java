@@ -21,27 +21,24 @@ public class ConcentrationSiteServer {
 
     public static void main(String args[]) {
 
-        /* obtenção da localização do serviço de registo RMI */
+        /* get location of the registry service */
         String rmiRegHostName;
         int rmiRegPortNumb;
+        
+        /* set the rmiregistry hostname and port */
+        rmiRegHostName = ServerConfig.RMI_REGISTRY_HOSTNAME;
+        rmiRegPortNumb = ServerConfig.RMI_REGISTRY_PORT;
 
-        rmiRegHostName = ServerConfig.RMI_REGISTER_HOSTNAME;
-        rmiRegPortNumb = ServerConfig.RMI_REGISTER_PORT;
-
-        /* instanciação e instalação do gestor de segurança */
+        /* create and install the security manager */
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
 
         System.out.println("Security manager was installed!");
 
-        /*InterfaceMuseum mus = null;
-        InterfaceControlCollectionSite cont = null;
-        InterfaceAssaultParty agr1 = null;
-        InterfaceAssaultParty agr2 = null; */
         InterfaceGRInformation repo = null;
-        /* localização por nome do objecto remoto no serviço de registos RMI */
 
+        /* locates by name the remote object on the RMI registry */
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
             repo = (InterfaceGRInformation) registry.lookup(ServerConfig.REGISTRY_GRI_NAME);
@@ -52,9 +49,8 @@ public class ConcentrationSiteServer {
             System.out.println("General Repository of Information is not registered: " + e.getMessage() + "!");
             System.exit(1);
         }
-        
-        
-        // Concentration Site instantiation 
+
+        /* Concentration Site instantiation */
         ConcentrationSite conc = ConcentrationSite.getInstance(repo);
         InterfaceConcentrationSite concInterface = null;
 
@@ -67,7 +63,7 @@ public class ConcentrationSiteServer {
         }
         System.out.println("The Concentration Site stub was generated!");
 
-        /* seu registo no serviço de registo RMI */
+        /* register it with the general registry service */
         String nameEntryBase = ServerConfig.RMI_REGISTER_NAME;
         String nameEntryObject = ServerConfig.REGISTRY_CONC_NAME;
         Registry registry = null;
@@ -76,7 +72,7 @@ public class ConcentrationSiteServer {
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
         } catch (RemoteException e) {
-            System.out.println(" Exception on the RMI registing: " + e.getMessage());
+            System.out.println(" Exception on the RMI registering: " + e.getMessage());
             System.exit(1);
         }
         System.out.println(" RMI registry created!");

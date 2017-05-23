@@ -1,84 +1,42 @@
-package ClientSide;
+package garbage;
 
-import Auxiliary.InterfaceControlCollectionSite;
+import Auxiliary.InterfaceConcentrationSite;
 import Comm.Message;
 import Auxiliary.Constants;
+import ClientSide.Thief;
 
 /**
- * Control and collection stub.
- *
+ * Concentration site stub.
+ * 
  * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
  * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  */
-public class ControlCollectionSiteStub implements InterfaceControlCollectionSite {
+public class ConcentrationSiteStub implements InterfaceConcentrationSite {
 
     private ClientCom initiateConnection()
     {
-        ClientCom con = new ClientCom("l040101-ws03.ua.pt", 22402);
+        ClientCom con = new ClientCom("l040101-ws04.ua.pt", 22403);
 
         if (!con.open())
         {
             System.out.println("Couldn't initiate connection to "
-                    + "l040101-ws03.ua.pt" + ":" + 22402);
+                    + "l040101-ws04.ua.pt" + ":" + 22403);
         }
 
         return con;
     }
 
     @Override
-    public boolean anyRoomLeft()
+    public void addThief(int thiefId)
     {
+        Thief t = (Thief) Thread.currentThread();
+        t.setStateThief(Constants.OUTSIDE);
+
         ClientCom con = initiateConnection();
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.GET_ANY_ROOM_LEFT);
-
-        con.writeObject(outMessage);
-
-        inMessage = (Message) con.readObject();
-
-        if (inMessage.getType() != Message.ANY_ROOM_LEFT)
-        {
-            System.out.println("Returned message with wrong type");
-            System.exit(1);
-        }
-
-        con.close();
-        return inMessage.isRoomLeft();
-    }
-
-    @Override
-    public boolean anyTeamAvailable()
-    {
-        ClientCom con = initiateConnection();
-
-        Message inMessage, outMessage;
-
-        outMessage = new Message(Message.GET_ANY_TEAM_AVAIL);
-
-        con.writeObject(outMessage);
-
-        inMessage = (Message) con.readObject();
-
-        if (inMessage.getType() != Message.ANY_TEAM_AVAIL)
-        {
-            System.out.println("Returned message with wrong type");
-            System.exit(1);
-        }
-
-        con.close();
-        return inMessage.isAnyTeam();
-    }
-
-    @Override
-    public void goCollectMaster()
-    {
-        ClientCom con = initiateConnection();
-
-        Message inMessage, outMessage;
-
-        outMessage = new Message(Message.GO_COLLECTM);
+        outMessage = new Message(Message.ADD_THIEF, thiefId);
 
         con.writeObject(outMessage);
 
@@ -94,13 +52,36 @@ public class ControlCollectionSiteStub implements InterfaceControlCollectionSite
     }
 
     @Override
-    public void handACanvas(int canvas, int roomId, int partyId)
+    public int checkThiefNumbers()
     {
         ClientCom con = initiateConnection();
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.HAND_CANVAS, canvas, roomId, partyId);
+        outMessage = new Message(Message.GET_THIEF_NUMBERS);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.THIEF_NUMBERS)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
+        return inMessage.getnThievesQueue();
+    }
+
+    @Override
+    public void prepareAssaultParty2(int partyId, int roomId)
+    {
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.PREP_ASG2, partyId, roomId);
 
         con.writeObject(outMessage);
 
@@ -116,67 +97,16 @@ public class ControlCollectionSiteStub implements InterfaceControlCollectionSite
     }
 
     @Override
-    public int[] prepareAssaultParty1()
+    public void setDeadState(int thiefId)
     {
-        MasterThief master = (MasterThief) Thread.currentThread();
-        master.setStateMaster(Constants.ASSEMBLING_A_GROUP);
+        Thief t = (Thief) Thread.currentThread();
+        t.setStateThief(Constants.DEAD);
 
         ClientCom con = initiateConnection();
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.GET_PREP_ASG1);
-
-        con.writeObject(outMessage);
-
-        inMessage = (Message) con.readObject();
-
-        if (inMessage.getType() != Message.PREP_ASG1)
-        {
-            System.out.println("Returned message with wrong type");
-            System.exit(1);
-        }
-
-        con.close();
-        return inMessage.getPick();
-    }
-
-    @Override
-    public void printResult()
-    {
-        MasterThief m = (MasterThief) Thread.currentThread();
-        m.setStateMaster(Constants.PRESENTING_THE_REPORT);
-
-        ClientCom con = initiateConnection();
-
-        Message inMessage, outMessage;
-
-        outMessage = new Message(Message.PRINT_RESULT);
-
-        con.writeObject(outMessage);
-
-        inMessage = (Message) con.readObject();
-
-        if (inMessage.getType() != Message.OK)
-        {
-            System.out.println("Returned message with wrong type");
-            System.exit(1);
-        }
-        con.close();
-    }
-
-    @Override
-    public void setDeciding()
-    {
-        // duvida se coloco antes ou depois de enviar a mensagem
-        MasterThief master = (MasterThief) Thread.currentThread();
-        master.setStateMaster(Constants.DECIDING_WHAT_TO_DO);
-
-        ClientCom con = initiateConnection();
-
-        Message inMessage, outMessage;
-
-        outMessage = new Message(Message.SETDECIDING);
+        outMessage = new Message(Message.SETDEAD_STATE, thiefId);
 
         con.writeObject(outMessage);
 
@@ -192,16 +122,57 @@ public class ControlCollectionSiteStub implements InterfaceControlCollectionSite
     }
 
     @Override
-    public void takeARest()
+    public void teamReady()
     {
-        MasterThief master = (MasterThief) Thread.currentThread();
-        master.setStateMaster(Constants.WAITING_FOR_ARRIVAL);
-
         ClientCom con = initiateConnection();
 
         Message inMessage, outMessage;
 
-        outMessage = new Message(Message.TAKE_REST);
+        outMessage = new Message(Message.TEAM_READY);
+
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.OK)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
+    }
+
+    @Override
+    public int waitForCall(int thiefId)
+    {
+        Thief t = (Thief) Thread.currentThread();
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.GET_WAIT_FOR_CALL, thiefId);
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+
+        if (inMessage.getType() != Message.WAIT_FOR_CALL)
+        {
+            System.out.println("Returned message with wrong type");
+            System.exit(1);
+        }
+
+        con.close();
+        return inMessage.getnAssaultParty();
+    }
+
+    @Override
+    public void wakeAll()
+    {
+        ClientCom con = initiateConnection();
+
+        Message inMessage, outMessage;
+
+        outMessage = new Message(Message.WAKE_ALL);
 
         con.writeObject(outMessage);
 

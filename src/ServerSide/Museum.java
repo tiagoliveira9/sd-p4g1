@@ -3,13 +3,14 @@ package ServerSide;
 import Auxiliary.InterfaceGRInformation;
 import Auxiliary.InterfaceMuseum;
 import Auxiliary.Constants;
+import java.rmi.RemoteException;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- *  This data type implements Museum.
- * 
+ * This data type implements Museum.
+ *
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
  */
@@ -26,8 +27,7 @@ public class Museum implements InterfaceMuseum {
         private int distance;
         private int canvas;
 
-        public Room(int roomId)
-        {
+        public Room(int roomId) {
             this.roomId = roomId;
             distance = -1;
             canvas = -1;
@@ -39,12 +39,10 @@ public class Museum implements InterfaceMuseum {
      *
      * @return ConcentrationSite object to be used.
      */
-    public static Museum getInstance()
-    {
+    public static Museum getInstance(InterfaceGRInformation repo) {
         l.lock();
-        if (instance == null)
-        {
-            instance = new Museum();
+        if (instance == null) {
+            instance = new Museum(repo);
         }
         l.unlock();
         return instance;
@@ -53,14 +51,12 @@ public class Museum implements InterfaceMuseum {
     /**
      * Singleton needs private constructor.
      */
-    private Museum()
-    {
+    private Museum(InterfaceGRInformation repo) {
         rooms = new Room[Constants.N_ROOMS];
-        for (int i = 0; i < Constants.N_ROOMS; i++)
-        {
+        for (int i = 0; i < Constants.N_ROOMS; i++) {
             rooms[i] = new Room(i);
         }
-        repo = new GRInformationStub();
+        this.repo = repo;
     }
 
     /**
@@ -70,11 +66,9 @@ public class Museum implements InterfaceMuseum {
      * @param distance Room distance from outside
      * @param canvas How much paintings exists on this room
      */
-    public void setUpRoom(int roomId, int distance, int canvas)
-    {
+    public void setUpRoom(int roomId, int distance, int canvas) throws RemoteException {
         l.lock();
-        if (roomId < Constants.N_ROOMS)
-        {
+        if (roomId < Constants.N_ROOMS) {
             rooms[roomId].distance = distance;
             rooms[roomId].canvas = canvas;
             repo.setUpMuseumRoom(roomId, distance, canvas);
@@ -91,14 +85,12 @@ public class Museum implements InterfaceMuseum {
      * @return Flag value
      */
     @Override
-    public boolean rollACanvas(int roomId, int elemPos, int partyId, int thiefId)
-    {
+    public boolean rollACanvas(int roomId, int elemPos, int partyId, int thiefId) throws RemoteException {
         l.lock();
 
         boolean flag = false;
         int number = rooms[roomId].canvas;
-        if (number >= 1)
-        {
+        if (number >= 1) {
             // change in museum
             rooms[roomId].canvas--;
             flag = true;
@@ -107,8 +99,7 @@ public class Museum implements InterfaceMuseum {
             repo.setCanvasElem(partyId, elemPos, 1, roomId, thiefId);
             //repo.setStateThief(Constants.CRAWLING_OUTWARDS, thiefId);
 
-        } else
-        {
+        } else {
             repo.setStateThief(Constants.AT_A_ROOM, thiefId);
             //repo.setStateThief(Constants.CRAWLING_OUTWARDS, thiefId); implicito
 
@@ -124,10 +115,8 @@ public class Museum implements InterfaceMuseum {
      * @return Default value
      */
     @Override
-    public int getRoomDistance(int roomId)
-    {
-        if (roomId < Constants.N_ROOMS)
-        {
+    public int getRoomDistance(int roomId) {
+        if (roomId < Constants.N_ROOMS) {
             return rooms[roomId].distance;
         }
         return -1;
@@ -140,18 +129,15 @@ public class Museum implements InterfaceMuseum {
      * @param roomId Room identification
      * @return Default value
      */
-    public int getRoomCanvas(int roomId)
-    {
-        if (roomId < Constants.N_ROOMS)
-        {
+    public int getRoomCanvas(int roomId) {
+        if (roomId < Constants.N_ROOMS) {
             return rooms[roomId].canvas;
         }
         return -1;
     }
 
     @Override
-    public boolean shutdown()
-    {
+    public boolean shutdown() {
         return true;
     }
 }
