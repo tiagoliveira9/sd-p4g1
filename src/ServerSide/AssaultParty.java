@@ -104,7 +104,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     @Override
     public boolean addToSquad(int thiefId, int thiefAgility, int partyIdMsg) throws RemoteException {
         l.lock();
-        //Thief t = (Thief) Thread.currentThread();
+
         boolean flag = false;
 
         try {
@@ -140,7 +140,6 @@ public class AssaultParty implements InterfaceAssaultParty {
     @Override
     public void waitToStartRobbing(int thiefId, int partyId) throws RemoteException {
         l.lock();
-        repo.setStateThief(Constants.CRAWLING_INWARDS, thiefId);
 
         Crook c = getCrook(thiefId);
         try {

@@ -199,6 +199,7 @@ public class GRInformation implements InterfaceGRInformation {
         party[partyId].elements[elemId].id = Integer.toString(id);
         party[partyId].elements[elemId].pos = "0";
         party[partyId].elements[elemId].cv = "0";
+        ladrao[(id-1)].stat = Constants.CRAWLING_INWARDS;
         printDoubleLine();
         lock.unlock();
     }

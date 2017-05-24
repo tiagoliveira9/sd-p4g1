@@ -102,18 +102,21 @@ public class Thief extends Thread implements InterfaceThief {
                 }
 
                 // back to assault party to block and Get in line
+                stateThief = Constants.CRAWLING_INWARDS;
                 agr.waitToStartRobbing(thiefId, partyId);
                 // roll[0] = roomId, roll[1] = elemId 
                 int[] roll = agr.crawlIn(thiefId, partyId);
 
                 //boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
+                stateThief = Constants.AT_A_ROOM;
                 boolean painting = mus.rollACanvas(roll[0], roll[1], partyId, thiefId);
-
+                stateThief = Constants.CRAWLING_OUTWARDS;
                 int canvas = 0;
                 if (painting) {
                     agr.addCrookCanvas(roll[1], partyId);
                     canvas = 1;
                 }
+                
                 agr.crawlOut(thiefId, partyId);
 
                 cont.handACanvas(canvas, roll[0], partyId);
@@ -125,6 +128,7 @@ public class Thief extends Thread implements InterfaceThief {
             ex.printStackTrace();
             System.exit(1);
         }
+        stateThief = Constants.DEAD;
     }
 
     /**
@@ -135,8 +139,9 @@ public class Thief extends Thread implements InterfaceThief {
      * die.
      */
     private int amINeeded() throws RemoteException {
-        int assaultId = -1;
+        int assaultId;
 
+        stateThief = Constants.OUTSIDE;
         conc.addThief(thiefId);
         if (justHanded) {
             cont.goCollectMaster();

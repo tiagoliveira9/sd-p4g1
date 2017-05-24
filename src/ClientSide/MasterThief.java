@@ -68,6 +68,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
                     case 2:
                         // Se chegamos aqui é porque existe uma sala e ladroes para criar uma assault 
                         // {AssaultPartyId, tSala}
+                        stateMaster = Constants.ASSEMBLING_A_GROUP;
                         pick = cont.prepareAssaultParty1();
                         if (pick[1] == -1) {
                             // no rooms available, go deciding what to do
@@ -93,6 +94,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
 
                         break;
                     case 3:
+                        stateMaster = Constants.WAITING_FOR_ARRIVAL;
                         cont.takeARest();
                         break;
                     default:
@@ -100,8 +102,9 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
                 }
             }
             conc.wakeAll();
+            stateMaster = Constants.PRESENTING_THE_REPORT;
             cont.printResult();
-            
+
         } catch (RemoteException ex) {
             ex.printStackTrace();
             System.exit(1);
@@ -110,9 +113,11 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
 
     /**
      * Change Master state to "Deciding what to do".
+     *
      * @throws java.rmi.RemoteException
      */
     public void startOperations() throws RemoteException {
+        stateMaster = Constants.DECIDING_WHAT_TO_DO;
         cont.setDeciding();
     }
 
@@ -125,8 +130,8 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      * @return Option for next step to take.
      * @throws java.rmi.RemoteException
      */
-    public int appraiseSit() throws RemoteException{
-
+    public int appraiseSit() throws RemoteException {
+        stateMaster = Constants.DECIDING_WHAT_TO_DO;
         cont.setDeciding();
         int nThieves = conc.checkThiefNumbers();
 
