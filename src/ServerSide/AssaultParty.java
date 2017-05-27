@@ -125,7 +125,7 @@ public class AssaultParty implements InterfaceAssaultParty {
                     if (line[i] == -1) {
                         line[i] = thiefId;
                         int id = thiefId + 1;
-                        repo.setIdPartyElem(partyIdMsg, i, id);
+                        repo.setIdPartyElem(partyIdMsg, i, id, localClk.getCopyClk());
                         break;
                     }
                 }
@@ -218,8 +218,8 @@ public class AssaultParty implements InterfaceAssaultParty {
         int next = selectNext(thiefId);
 
         try {
-
-            repo.setStateThief(Constants.CRAWLING_OUTWARDS, cr.id);
+            // duvidas, nao sei se mexa no clock ou nao..
+            repo.setStateThief(Constants.CRAWLING_OUTWARDS, cr.id, localClk.getCopyClk());
 
             while (cr.id != idGlobal) {
                 moveThief.await();
@@ -237,12 +237,12 @@ public class AssaultParty implements InterfaceAssaultParty {
             // Remove myself from team
             line[myElemId] = -1;
             nCrook--;
-            repo.resetIdPartyElem(partyIdMsg, myElemId);
-            
+            repo.resetIdPartyElem(partyIdMsg, myElemId, localClk.getCopyClk());
+
             idGlobal = squad[next].id;
             moveThief.signalAll();
             l.unlock();
-            
+
             return localClk;
 
         } catch (InterruptedException ex) {
@@ -291,9 +291,11 @@ public class AssaultParty implements InterfaceAssaultParty {
                     if (cr.pos >= distance) {
                         cr.pos = distance;
                         if (way) {
-                            repo.setPosElem(partyIdMsg, elemId, cr.pos);
+                            repo.setPosElem(partyIdMsg, elemId,
+                                    cr.pos, localClk.getCopyClk());
                         } else {
-                            repo.setPosElem(partyIdMsg, elemId, translatePos[cr.pos]);
+                            repo.setPosElem(partyIdMsg, elemId,
+                                    translatePos[cr.pos], localClk.getCopyClk());
                         }
                         flagI = true;
                         break;
@@ -305,9 +307,11 @@ public class AssaultParty implements InterfaceAssaultParty {
                     if (pos >= distance) {
                         cr.pos = distance;
                         if (way) {
-                            repo.setPosElem(partyIdMsg, elemId, cr.pos);
+                            repo.setPosElem(partyIdMsg, elemId, cr.pos,
+                                    localClk.getCopyClk());
                         } else {
-                            repo.setPosElem(partyIdMsg, elemId, translatePos[cr.pos]);
+                            repo.setPosElem(partyIdMsg, elemId,
+                                    translatePos[cr.pos], localClk.getCopyClk());
                         }
                         flagI = true;
                         break;
@@ -316,9 +320,9 @@ public class AssaultParty implements InterfaceAssaultParty {
                 }
             }
             if (way) {
-                repo.setPosElem(partyIdMsg, elemId, cr.pos);
+                repo.setPosElem(partyIdMsg, elemId, cr.pos, localClk.getCopyClk());
             } else {
-                repo.setPosElem(partyIdMsg, elemId, translatePos[cr.pos]);
+                repo.setPosElem(partyIdMsg, elemId, translatePos[cr.pos], localClk.getCopyClk());
             }
         } while (cr.pos - teamHead != 3);
 

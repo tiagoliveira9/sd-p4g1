@@ -166,7 +166,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
             queueThieves.remove();
 
             if (die) {
-                repo.setStateThief(Constants.DEAD, thiefId);
+                repo.setStateThief(Constants.DEAD, thiefId, localClk.getCopyClk());
                 countDie++;
                 assembling.signal();
                 l.unlock();
@@ -204,10 +204,10 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
 
         l.lock();
         localClk.updateClk(ts);
-        
+
         nAssaultParty = partyId;
 
-        repo.setRoomId(partyId, roomId);
+        repo.setRoomId(partyId, roomId, localClk.getCopyClk());
 
         int tid = queueThieves.peek();
 
@@ -222,7 +222,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         } catch (InterruptedException ex) {
         }
         l.unlock();
-        
+
         return localClk;
     }
 
@@ -277,7 +277,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
     @Override
     public void setDeadState(int thiefId) throws RemoteException {
         l.lock();
-        repo.setStateThief(Constants.DEAD, thiefId);
+        repo.setStateThief(Constants.DEAD, thiefId, localClk.getCopyClk());
         l.unlock();
     }
 

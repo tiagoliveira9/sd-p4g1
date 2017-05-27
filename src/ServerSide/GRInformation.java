@@ -2,6 +2,7 @@ package ServerSide;
 
 import Interfaces.InterfaceGRInformation;
 import Auxiliary.Constants;
+import Auxiliary.VectorClk;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Formatter;
@@ -68,20 +69,18 @@ public class GRInformation implements InterfaceGRInformation {
      *
      * @serialField party
      */
-    private AssParty[] party;
+    private AspParty[] party;
 
     /**
      * Set thief state.
      *
      */
     @Override
-    public void setStateThief(int thiefState, int thiefId)
-    {
+    public void setStateThief(int thiefState, int thiefId, VectorClk ts) {
         lock.lock();
         ladrao[thiefId].stat = thiefState;
         printDoubleLine();
-        if (thiefState == Constants.AT_A_ROOM)
-        {
+        if (thiefState == Constants.AT_A_ROOM) {
             ladrao[thiefId].stat = Constants.CRAWLING_OUTWARDS;
             printDoubleLine();
         }
@@ -95,8 +94,7 @@ public class GRInformation implements InterfaceGRInformation {
      * @param thiefId Thief identification
      */
     @Override
-    public void setStateAgility(int thiefAgility, int thiefId)
-    {
+    public void setStateAgility(int thiefAgility, int thiefId) {
         lock.lock();
         ladrao[thiefId].md = Integer.toString(thiefAgility);
         lock.unlock();
@@ -108,8 +106,7 @@ public class GRInformation implements InterfaceGRInformation {
      * @param masterThief Master thief
      */
     @Override
-    public void setStateMasterThief(int masterThief)
-    {
+    public void setStateMasterThief(int masterThief, VectorClk ts) {
         lock.lock();
         masterThiefState = masterThief;
         printDoubleLine();
@@ -124,8 +121,7 @@ public class GRInformation implements InterfaceGRInformation {
      * @param pos Element position
      */
     @Override
-    public void setPosElem(int partyId, int elemId, int pos)
-    {
+    public void setPosElem(int partyId, int elemId, int pos, VectorClk ts) {
         lock.lock();
         party[partyId].elements[elemId].pos = Integer.toString(pos);
         printDoubleLine();
@@ -137,8 +133,7 @@ public class GRInformation implements InterfaceGRInformation {
      *
      * @param roomId Room identification
      */
-    public void updateMuseumRoom(int roomId)
-    {
+    public void updateMuseumRoom(int roomId) {
         lock.lock();
         int n = Integer.parseInt(sala[roomId].canvas);
         n--;
@@ -155,8 +150,8 @@ public class GRInformation implements InterfaceGRInformation {
      * @param cv Canvas of thief
      */
     @Override
-    public void setCanvasElem(int partyId, int elemId, int cv, int roomId, int thiefId)
-    {
+    public void setCanvasElem(int partyId, int elemId, int cv, int roomId,
+            int thiefId, VectorClk ts) {
         lock.lock();
         party[partyId].elements[elemId].cv = Integer.toString(cv);
         // update museum room
@@ -178,8 +173,7 @@ public class GRInformation implements InterfaceGRInformation {
      * @param roomId Room identification
      */
     @Override
-    public void setRoomId(int partyId, int roomId)
-    {
+    public void setRoomId(int partyId, int roomId, VectorClk ts) {
         lock.lock();
         party[partyId].roomId = Integer.toString(roomId + 1);
         lock.unlock();
@@ -193,13 +187,12 @@ public class GRInformation implements InterfaceGRInformation {
      * @param id Thief identification
      */
     @Override
-    public void setIdPartyElem(int partyId, int elemId, int id)
-    {
+    public void setIdPartyElem(int partyId, int elemId, int id, VectorClk ts) {
         lock.lock();
         party[partyId].elements[elemId].id = Integer.toString(id);
         party[partyId].elements[elemId].pos = "0";
         party[partyId].elements[elemId].cv = "0";
-        ladrao[(id-1)].stat = Constants.CRAWLING_INWARDS;
+        ladrao[(id - 1)].stat = Constants.CRAWLING_INWARDS;
         printDoubleLine();
         lock.unlock();
     }
@@ -211,10 +204,9 @@ public class GRInformation implements InterfaceGRInformation {
      * @param elemId Element identification
      */
     @Override
-    public void resetIdPartyElem(int partyId, int elemId)
-    {
+    public void resetIdPartyElem(int partyId, int elemId, VectorClk ts) {
         lock.lock();
-        ladrao[(Integer.parseInt(party[partyId].elements[elemId].id)-1)].stat = Constants.OUTSIDE;
+        ladrao[(Integer.parseInt(party[partyId].elements[elemId].id) - 1)].stat = Constants.OUTSIDE;
         party[partyId].elements[elemId].id = "-";
         party[partyId].elements[elemId].pos = "-";
         party[partyId].elements[elemId].cv = "-";
@@ -228,8 +220,7 @@ public class GRInformation implements InterfaceGRInformation {
      * @param partyId Assault party identification
      */
     @Override
-    public void resetIdPartyRoom(int partyId)
-    {
+    public void resetIdPartyRoom(int partyId, VectorClk ts) {
         lock.lock();
         party[partyId].roomId = "-";
         lock.unlock();
@@ -244,8 +235,7 @@ public class GRInformation implements InterfaceGRInformation {
      *
      */
     @Override
-    public void setUpMuseumRoom(int roomId, int distance, int canvas)
-    {
+    public void setUpMuseumRoom(int roomId, int distance, int canvas, VectorClk ts) {
         lock.lock();
         sala[roomId].distance = Integer.toString(distance);
         sala[roomId].canvas = Integer.toString(canvas);
@@ -259,8 +249,7 @@ public class GRInformation implements InterfaceGRInformation {
         private char s;
         private String md;
 
-        public nThief(int thiefId)
-        {
+        public nThief(int thiefId) {
             this.thiefId = thiefId;
             stat = Constants.OUTSIDE;
             s = '-';
@@ -268,20 +257,18 @@ public class GRInformation implements InterfaceGRInformation {
         }
     }
 
-    private class AssParty {
+    private class AspParty {
 
         private final int partyId;
         private String roomId;
         private Elem[] elements;
 
-        public AssParty(int partyId)
-        {
+        public AspParty(int partyId) {
             this.partyId = partyId;
             roomId = "-";
             elements = new Elem[Constants.N_SQUAD];
 
-            for (int i = 0; i < Constants.N_SQUAD; i++)
-            {
+            for (int i = 0; i < Constants.N_SQUAD; i++) {
                 elements[i] = new Elem();
             }
         }
@@ -292,8 +279,7 @@ public class GRInformation implements InterfaceGRInformation {
             private String pos;
             private String cv;
 
-            public Elem()
-            {
+            public Elem() {
                 id = "-";
                 pos = "--";
                 cv = "-";
@@ -309,8 +295,7 @@ public class GRInformation implements InterfaceGRInformation {
         private String distance;
         private String canvas;
 
-        public Room(int roomId)
-        {
+        public Room(int roomId) {
             this.roomId = roomId;
             distance = "--";
             canvas = "-";
@@ -322,53 +307,43 @@ public class GRInformation implements InterfaceGRInformation {
      *
      * @return Instance of GRI
      */
-    public static GRInformation getInstance()
-    {
+    public static GRInformation getInstance() {
         lock.lock();
-        try
-        {
-            if (instance == null)
-            {
+        try {
+            if (instance == null) {
                 instance = new GRInformation();
                 instance.printHeader();
             }
-        } finally
-        {
+        } finally {
             lock.unlock();
         }
 
         return instance;
     }
 
-    private GRInformation()
-    {
+    private GRInformation() {
         date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssSS");
         dateString = (date.format(new Date()));
         masterThiefState = Constants.PLANNING_THE_HEIST;
 
-        try
-        {
+        try {
             log = new PrintWriter("LOG-" + dateString + ".txt");
-        } catch (FileNotFoundException ex)
-        {
+        } catch (FileNotFoundException ex) {
             log = null;
         }
 
         ladrao = new nThief[Constants.N_THIEVES];
-        for (int i = 0; i < Constants.N_THIEVES; i++)
-        {
+        for (int i = 0; i < Constants.N_THIEVES; i++) {
             ladrao[i] = new nThief(i);
         }
 
-        party = new AssParty[Constants.N_ASSAULT_PARTY];
-        for (int i = 0; i < Constants.N_ASSAULT_PARTY; i++)
-        {
-            party[i] = new AssParty(i);
+        party = new AspParty[Constants.N_ASSAULT_PARTY];
+        for (int i = 0; i < Constants.N_ASSAULT_PARTY; i++) {
+            party[i] = new AspParty(i);
         }
 
         sala = new Room[Constants.N_ROOMS];
-        for (int i = 0; i < Constants.N_ROOMS; i++)
-        {
+        for (int i = 0; i < Constants.N_ROOMS; i++) {
             sala[i] = new Room(i);
         }
     }
@@ -377,8 +352,7 @@ public class GRInformation implements InterfaceGRInformation {
      * This method print the header of the log.
      *
      */
-    public void printHeader()
-    {
+    public void printHeader() {
 
         lock.lock();
         StringBuilder strb = new StringBuilder();
@@ -397,8 +371,7 @@ public class GRInformation implements InterfaceGRInformation {
      * Prints game column header.
      *
      */
-    public void printColumnHeader()
-    {
+    public void printColumnHeader() {
         lock.lock();
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
@@ -425,8 +398,7 @@ public class GRInformation implements InterfaceGRInformation {
     /**
      * Prints both lines.
      */
-    public void printDoubleLine()
-    {
+    public void printDoubleLine() {
         lock.lock();
         printEntityStates();
         printAssaultDescription();
@@ -437,15 +409,13 @@ public class GRInformation implements InterfaceGRInformation {
      * Print the states of the entities. The first line.
      *
      */
-    public void printEntityStates()
-    {
+    public void printEntityStates() {
         lock.lock();
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
         formatter.format("%1$4s %2$1s", translateMasterThiefState(masterThiefState), "");
 
-        for (int i = 0; i < ladrao.length; i++)
-        {
+        for (int i = 0; i < ladrao.length; i++) {
             formatter.format("%1$4s %2$1s %3$2s %4$2s ", translateThiefState(ladrao[i].stat),
                     translateThiefSituation(ladrao[i].stat), ladrao[i].md, " ");
 
@@ -462,8 +432,7 @@ public class GRInformation implements InterfaceGRInformation {
      * Print the assault party description. The second line.
      *
      */
-    public void printAssaultDescription()
-    {
+    public void printAssaultDescription() {
         lock.lock();
         StringBuilder strb = new StringBuilder();
         Formatter formatter = new Formatter(strb);
@@ -499,10 +468,8 @@ public class GRInformation implements InterfaceGRInformation {
      * @param thiefState Thief state
      * @return string with abbreviation
      */
-    public String translateThiefState(int thiefState)
-    {
-        switch (thiefState)
-        {
+    public String translateThiefState(int thiefState) {
+        switch (thiefState) {
             case Constants.OUTSIDE:
                 return "OUTS";
             case Constants.CRAWLING_INWARDS:
@@ -524,10 +491,8 @@ public class GRInformation implements InterfaceGRInformation {
      * @param masterThiefState Master thief state
      * @return string with abbreviation
      */
-    public String translateMasterThiefState(int masterThiefState)
-    {
-        switch (masterThiefState)
-        {
+    public String translateMasterThiefState(int masterThiefState) {
+        switch (masterThiefState) {
             case Constants.PLANNING_THE_HEIST:
                 return "PLAN";
             case Constants.DECIDING_WHAT_TO_DO:
@@ -549,10 +514,8 @@ public class GRInformation implements InterfaceGRInformation {
      * @param thiefSit Thief situation
      * @return string with abbreviation
      */
-    public String translateThiefSituation(int thiefSit)
-    {
-        switch (thiefSit)
-        {
+    public String translateThiefSituation(int thiefSit) {
+        switch (thiefSit) {
             case Constants.OUTSIDE:
                 return "W";
             case Constants.CRAWLING_INWARDS:
@@ -574,8 +537,7 @@ public class GRInformation implements InterfaceGRInformation {
      *
      */
     @Override
-    public void printLegend()
-    {
+    public void printLegend() {
 
         lock.lock();
         log.printf("Legend:%n");
@@ -599,8 +561,7 @@ public class GRInformation implements InterfaceGRInformation {
      * @param totalPaints Total number of paints
      */
     @Override
-    public void printResume(int totalPaints)
-    {
+    public void printResume(int totalPaints) {
         lock.lock();
         printEntityStates();
         log.printf("My friends, tonight's effort producced " + totalPaints + " priceless paintings!%n");
@@ -613,8 +574,7 @@ public class GRInformation implements InterfaceGRInformation {
      *
      * @param s Some string to print
      */
-    public void printSomething(String s)
-    {
+    public void printSomething(String s) {
         lock.lock();
         System.out.println(s);
         log.printf(s + "%n");
@@ -627,8 +587,7 @@ public class GRInformation implements InterfaceGRInformation {
      *
      */
     @Override
-    public void close()
-    {
+    public void close() {
         lock.lock();
         log.flush();
         log.close();
@@ -636,8 +595,7 @@ public class GRInformation implements InterfaceGRInformation {
     }
 
     @Override
-    public boolean shutdown()
-    {
+    public boolean shutdown() {
         return true;
     }
 }

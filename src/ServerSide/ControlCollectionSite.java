@@ -117,7 +117,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         l.lock();
         localClk.updateClk(ts);
         stateMaster = Constants.DECIDING_WHAT_TO_DO;
-        repo.setStateMasterThief(stateMaster);
+        repo.setStateMasterThief(stateMaster, localClk.getCopyClk());
         l.unlock();
         return localClk;
     }
@@ -132,13 +132,13 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     @Override
     public Triple<VectorClk, Integer, Integer> prepareAssaultParty1(VectorClk ts) throws RemoteException {
         l.lock();
-        
+
         localClk.updateClk(ts);
         int tempAssault = -1;
         int tempSala = -1;
 
         stateMaster = Constants.ASSEMBLING_A_GROUP;
-        repo.setStateMasterThief(stateMaster);
+        repo.setStateMasterThief(stateMaster, localClk.getCopyClk());
 
         if (!assaultP1) {
             tempAssault = 0;
@@ -172,7 +172,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
         localClk.updateClk(ts);
         stateMaster = Constants.WAITING_FOR_ARRIVAL;
-        repo.setStateMasterThief(stateMaster);
+        repo.setStateMasterThief(stateMaster, localClk.getCopyClk());
 
         try {
             while (!restBool) {
@@ -183,7 +183,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         restBool = false;
 
         l.unlock();
-        
+
         return localClk;
     }
 
@@ -203,7 +203,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
         l.lock();
         localClk.updateClk(ts);
-        
+
         boolean lastArriving = false;
         if (canvas == 1) {
             nCanvas++;
@@ -218,7 +218,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
         }
         if (lastArriving) {
-            repo.resetIdPartyRoom(partyId);
+            repo.resetIdPartyRoom(partyId, localClk.getCopyClk());
             salas[roomId].inUse = false;
             if (partyId == 0) {
                 assaultP1 = false;
@@ -227,7 +227,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
             }
         }
         l.unlock();
-        
+
         return localClk;
     }
 
@@ -301,10 +301,10 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     public VectorClk printResult(VectorClk ts) throws RemoteException {
         l.lock();
         localClk.updateClk(ts);
-        repo.setStateMasterThief(Constants.PRESENTING_THE_REPORT);
+        repo.setStateMasterThief(Constants.PRESENTING_THE_REPORT, localClk.getCopyClk());
         repo.printResume(nCanvas);
         l.unlock();
-        
+
         return localClk;
     }
 

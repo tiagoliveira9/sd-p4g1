@@ -77,7 +77,7 @@ public class Museum implements InterfaceMuseum {
         if (roomId < Constants.N_ROOMS) {
             rooms[roomId].distance = distance;
             rooms[roomId].canvas = canvas;
-            repo.setUpMuseumRoom(roomId, distance, canvas);
+            repo.setUpMuseumRoom(roomId, distance, canvas, localClk.getCopyClk());
         }
         l.unlock();
     }
@@ -97,7 +97,7 @@ public class Museum implements InterfaceMuseum {
 
         l.lock();
         localClk.updateClk(ts);
-        
+
         boolean flag = false;
         int number = rooms[roomId].canvas;
         if (number >= 1) {
@@ -105,10 +105,10 @@ public class Museum implements InterfaceMuseum {
             rooms[roomId].canvas--;
             flag = true;
 
-            repo.setCanvasElem(partyId, elemPos, 1, roomId, thiefId);
+            repo.setCanvasElem(partyId, elemPos, 1, roomId, thiefId, localClk.getCopyClk());
 
         } else {
-            repo.setStateThief(Constants.AT_A_ROOM, thiefId);
+            repo.setStateThief(Constants.AT_A_ROOM, thiefId, localClk.getCopyClk());
 
         }
         l.unlock();
@@ -127,7 +127,6 @@ public class Museum implements InterfaceMuseum {
             return rooms[roomId].distance;
         }
         return -1;
-
     }
 
     /**
