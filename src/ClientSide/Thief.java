@@ -1,11 +1,13 @@
 package ClientSide;
 
-import Auxiliary.InterfaceAssaultParty;
-import Auxiliary.InterfaceConcentrationSite;
-import Auxiliary.InterfaceControlCollectionSite;
-import Auxiliary.InterfaceMuseum;
-import Auxiliary.InterfaceThief;
+import Interfaces.InterfaceAssaultParty;
+import Interfaces.InterfaceConcentrationSite;
+import Interfaces.InterfaceControlCollectionSite;
+import Interfaces.InterfaceMuseum;
+import Interfaces.InterfaceThief;
 import Auxiliary.Constants;
+import Auxiliary.Tuple;
+import Auxiliary.VectorClk;
 import java.rmi.RemoteException;
 
 /**
@@ -44,8 +46,10 @@ public class Thief extends Thread implements InterfaceThief {
     private final InterfaceMuseum mus;
     private final InterfaceControlCollectionSite cont;
     private final InterfaceConcentrationSite conc;
-    private final InterfaceAssaultParty agr1;
-    private final InterfaceAssaultParty agr2;
+    private final InterfaceAssaultParty asg1;
+    private final InterfaceAssaultParty asg2;
+
+    private VectorClk vcThief;
 
     /**
      * Thief instantiation.
@@ -70,8 +74,9 @@ public class Thief extends Thread implements InterfaceThief {
         this.mus = mus;
         this.cont = cont;
         this.conc = conc;
-        this.agr1 = agr1;
-        this.agr2 = agr2;
+        this.asg1 = agr1;
+        this.asg2 = agr2;
+        vcThief = new VectorClk(thiefId, Constants.VECTOR_CLOCK_SIZE);
     }
 
     /**
@@ -84,44 +89,50 @@ public class Thief extends Thread implements InterfaceThief {
         try {
             while ((partyId = amINeeded()) != -1) {
                 // goes to team ordered by master
-                //boolean last = AssaultParty.getInstance(partyId).addToSquad(thiefId, agility);
-                InterfaceAssaultParty agr = null;
 
-                // check this fix later
+                InterfaceAssaultParty asg = null;
+
                 if (partyId == 0) {
-                    agr = agr1;
+                    asg = asg1;
                 } else {
-                    agr = agr2;
+                    asg = asg2;
                 }
+                
+                vcThief.incrementClk();
+                Tuple<VectorClk, Boolean> last = asg.addToSquad(thiefId, agility,
+                        partyId, vcThief.getCopyClk());
+                vcThief.updateClk(last.getLeft());
 
-                boolean last = agr.addToSquad(thiefId, agility, partyId);
-
-                if (last) {
+                if (last.getRight()) {
                     // wakes master, team is ready for sendAssaultParty
                     conc.teamReady();
                 }
 
                 // back to assault party to block and Get in line
                 stateThief = Constants.CRAWLING_INWARDS;
-                agr.waitToStartRobbing(thiefId, partyId);
+                asg.waitToStartRobbing(thiefId, partyId);
                 // roll[0] = roomId, roll[1] = elemId 
-                int[] roll = agr.crawlIn(thiefId, partyId);
+                int[] roll = asg.crawlIn(thiefId, partyId);
 
-                //boolean painting = Museum.getInstance().rollACanvas(roll[0], roll[1], partyId);
                 stateThief = Constants.AT_A_ROOM;
-                boolean painting = mus.rollACanvas(roll[0], roll[1], partyId, thiefId);
-                stateThief = Constants.CRAWLING_OUTWARDS;
+
+                vcThief.incrementClk();
+                Tuple<VectorClk, Boolean> painting = mus.rollACanvas(roll[0],
+                        roll[1], partyId, thiefId, vcThief.getCopyClk());
+                vcThief.updateClk(painting.getLeft());
+
                 int canvas = 0;
-                if (painting) {
-                    agr.addCrookCanvas(roll[1], partyId);
+                if (painting.getRight()) {
+                    asg.addCrookCanvas(roll[1], partyId);
                     canvas = 1;
                 }
-                
-                agr.crawlOut(thiefId, partyId);
+                stateThief = Constants.CRAWLING_OUTWARDS;
+                vcThief.incrementClk();
+                vcThief.updateClk(asg.crawlOut(thiefId, partyId, vcThief.getCopyClk()));
 
-                cont.handACanvas(canvas, roll[0], partyId);
+                vcThief.incrementClk();
+                vcThief.updateClk(cont.handACanvas(canvas, roll[0], partyId, vcThief.getCopyClk()));
                 justHanded = true; // to avoid wrong, first time signal
-
             }
 
         } catch (RemoteException ex) {
@@ -139,16 +150,18 @@ public class Thief extends Thread implements InterfaceThief {
      * die.
      */
     private int amINeeded() throws RemoteException {
-        int assaultId;
 
         stateThief = Constants.OUTSIDE;
         conc.addThief(thiefId);
         if (justHanded) {
-            cont.goCollectMaster();
+            vcThief.incrementClk();
+            vcThief.updateClk(cont.goCollectMaster(vcThief.getCopyClk())); // enviamos sempre copia
         }
-        assaultId = conc.waitForCall(thiefId);
+        vcThief.incrementClk();
+        Tuple<VectorClk, Integer> assaultId = conc.waitForCall(thiefId, vcThief.getCopyClk());
+        vcThief.updateClk(assaultId.getLeft());
 
-        return assaultId;
+        return assaultId.getRight();
     }
 
     /**

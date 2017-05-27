@@ -1,8 +1,10 @@
 package ServerSide;
 
-import Auxiliary.InterfaceGRInformation;
-import Auxiliary.InterfaceMuseum;
+import Interfaces.InterfaceGRInformation;
+import Interfaces.InterfaceMuseum;
 import Auxiliary.Constants;
+import Auxiliary.Tuple;
+import Auxiliary.VectorClk;
 import java.rmi.RemoteException;
 
 import java.util.concurrent.locks.Lock;
@@ -20,6 +22,7 @@ public class Museum implements InterfaceMuseum {
     private final static Lock l = new ReentrantLock();
     private Room[] rooms;
     private final InterfaceGRInformation repo;
+    private VectorClk localClk;
 
     private class Room {
 
@@ -58,6 +61,7 @@ public class Museum implements InterfaceMuseum {
             rooms[i] = new Room(i);
         }
         this.repo = repo;
+        localClk = new VectorClk(0, Constants.VECTOR_CLOCK_SIZE);
     }
 
     /**
@@ -88,9 +92,12 @@ public class Museum implements InterfaceMuseum {
      * @throws java.rmi.RemoteException
      */
     @Override
-    public boolean rollACanvas(int roomId, int elemPos, int partyId, int thiefId) throws RemoteException {
-        l.lock();
+    public Tuple<VectorClk, Boolean> rollACanvas(int roomId, int elemPos, int partyId, int thiefId,
+            VectorClk ts) throws RemoteException {
 
+        l.lock();
+        localClk.updateClk(ts);
+        
         boolean flag = false;
         int number = rooms[roomId].canvas;
         if (number >= 1) {
@@ -98,17 +105,14 @@ public class Museum implements InterfaceMuseum {
             rooms[roomId].canvas--;
             flag = true;
 
-            //    public void setCanvasElem(int partyId, int elemId, int cv, int roomId, int thiefId)
             repo.setCanvasElem(partyId, elemPos, 1, roomId, thiefId);
-            //repo.setStateThief(Constants.CRAWLING_OUTWARDS, thiefId);
 
         } else {
             repo.setStateThief(Constants.AT_A_ROOM, thiefId);
-            //repo.setStateThief(Constants.CRAWLING_OUTWARDS, thiefId); implicito
 
         }
         l.unlock();
-        return flag;
+        return new Tuple<>(localClk, flag);
     }
 
     /**

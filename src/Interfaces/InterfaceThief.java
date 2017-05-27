@@ -1,4 +1,4 @@
-package Auxiliary;
+package Interfaces;
 
 /**
  * Thief interface.

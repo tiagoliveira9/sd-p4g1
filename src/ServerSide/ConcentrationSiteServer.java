@@ -1,8 +1,8 @@
 package ServerSide;
 
-import Auxiliary.InterfaceConcentrationSite;
-import Auxiliary.InterfaceGRInformation;
-import Auxiliary.Register;
+import Interfaces.InterfaceConcentrationSite;
+import Interfaces.InterfaceGRInformation;
+import Interfaces.Register;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;

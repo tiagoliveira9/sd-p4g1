@@ -1,4 +1,4 @@
-package Auxiliary;
+package Interfaces;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;

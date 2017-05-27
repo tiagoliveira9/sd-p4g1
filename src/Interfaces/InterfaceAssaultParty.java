@@ -1,5 +1,8 @@
-package Auxiliary;
+package Interfaces;
 
+import Auxiliary.Triple;
+import Auxiliary.Tuple;
+import Auxiliary.VectorClk;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -13,7 +16,7 @@ public interface InterfaceAssaultParty extends Remote {
 
     /**
      * Add a canvas to the thief bag.
-     * 
+     *
      * @param elemId Element identification
      * @param partyId Assault party identification
      * @throws java.rmi.RemoteException
@@ -25,17 +28,18 @@ public interface InterfaceAssaultParty extends Remote {
      * to wake the Master
      *
      * @param thiefId Thief identification
-     * @param thiefAgility Thief agility 
+     * @param thiefAgility Thief agility
      * @param partyId Assault party identification
-     * 
+     *
      * @return True if is the last Thief, return false otherwise.
      * @throws java.rmi.RemoteException
      */
-    boolean addToSquad(int thiefId, int thiefAgility, int partyId) throws RemoteException;
+    Tuple<VectorClk, Boolean> addToSquad(int thiefId, int thiefAgility,
+            int partyId, VectorClk ts) throws RemoteException;
 
     /**
      * Thief crawls in.
-     * 
+     *
      * @param thiefId Thief identification
      * @param partyId Assault party identification
      * @return Thief to the right room of an assault party
@@ -45,18 +49,18 @@ public interface InterfaceAssaultParty extends Remote {
 
     /**
      * Thief crawls out.
-     * 
+     *
      * @param thiefId Thief identification
      * @param partyId Assault party identification
      * @return Thief to the right room of an assault party
      * @throws java.rmi.RemoteException
      */
-    int[] crawlOut(int thiefId, int partyId) throws RemoteException;
+    VectorClk crawlOut(int thiefId, int partyId, VectorClk ts) throws RemoteException;
 
     /**
      * Activates Assault Party. Wakes up the first Thief to block on the assault
      * party and changes the state of the Master
-     * 
+     *
      * @param partyId Assault party identification
      * @throws java.rmi.RemoteException
      */
@@ -82,9 +86,9 @@ public interface InterfaceAssaultParty extends Remote {
      */
     void waitToStartRobbing(int thiefId, int partyId) throws RemoteException;
 
-     /**
+    /**
      * Shutdown.
-     * 
+     *
      * @param partyId Assault party identification
      * @return Boolean value. True to shutdown.
      * @throws java.rmi.RemoteException

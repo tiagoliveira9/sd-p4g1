@@ -1,10 +1,10 @@
 package ClientSide;
 
-import Auxiliary.InterfaceAssaultParty;
-import Auxiliary.InterfaceConcentrationSite;
-import Auxiliary.InterfaceControlCollectionSite;
-import Auxiliary.InterfaceGRInformation;
-import Auxiliary.InterfaceMuseum;
+import Interfaces.InterfaceAssaultParty;
+import Interfaces.InterfaceConcentrationSite;
+import Interfaces.InterfaceControlCollectionSite;
+import Interfaces.InterfaceGRInformation;
+import Interfaces.InterfaceMuseum;
 import Auxiliary.Constants;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;

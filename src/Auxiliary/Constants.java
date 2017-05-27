@@ -109,4 +109,10 @@ public class Constants {
      * number of assault parties
      */
     public static final int N_ASSAULT_PARTY = 2;
+    
+    /**
+     * number of assault parties
+     */
+    public static final int VECTOR_CLOCK_SIZE = 7;
+    
 }

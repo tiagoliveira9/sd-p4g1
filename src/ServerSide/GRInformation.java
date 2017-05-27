@@ -1,6 +1,6 @@
 package ServerSide;
 
-import Auxiliary.InterfaceGRInformation;
+import Interfaces.InterfaceGRInformation;
 import Auxiliary.Constants;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

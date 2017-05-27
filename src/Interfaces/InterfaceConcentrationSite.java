@@ -1,5 +1,7 @@
-package Auxiliary;
+package Interfaces;
 
+import Auxiliary.Tuple;
+import Auxiliary.VectorClk;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -9,10 +11,11 @@ import java.rmi.RemoteException;
  * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
  * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  */
-public interface InterfaceConcentrationSite extends Remote{
+public interface InterfaceConcentrationSite extends Remote {
 
     /**
      * Adds thief to stack and changes state to Outside.
+     *
      * @param thiefId Thief identification
      * @throws java.rmi.RemoteException
      */
@@ -35,10 +38,11 @@ public interface InterfaceConcentrationSite extends Remote{
      * @param roomId Room identification
      * @throws java.rmi.RemoteException
      */
-    void prepareAssaultParty2(int partyId, int roomId) throws RemoteException;
+    VectorClk prepareAssaultParty2(int partyId, int roomId, VectorClk ts) throws RemoteException;
 
     /**
      * Change thief state to DEAD.
+     *
      * @param thiefId Thief identification
      * @throws java.rmi.RemoteException
      */
@@ -47,6 +51,7 @@ public interface InterfaceConcentrationSite extends Remote{
     /**
      * The method prepareExcursion. The last Thief to enter the assault party,
      * wakes up the Master Thief and resets the nAssaultParty variable.
+     *
      * @throws java.rmi.RemoteException
      */
     void teamReady() throws RemoteException;
@@ -62,18 +67,19 @@ public interface InterfaceConcentrationSite extends Remote{
      * @return Assault party number
      * @throws java.rmi.RemoteException
      */
-    int waitForCall(int thiefId) throws RemoteException;
+    Tuple<VectorClk, Integer> waitForCall(int thiefId, VectorClk ts) throws RemoteException;
 
     /**
      * Master Thief uses this method to wake every thief and awaits for the last
      * thief to wake her up.
+     *
      * @throws java.rmi.RemoteException
      */
     void wakeAll() throws RemoteException;
 
     /**
      * Shutdown.
-     * 
+     *
      * @return Boolean value. True to shutdown.
      * @throws java.rmi.RemoteException
      */

@@ -1,15 +1,17 @@
-package Auxiliary;
+package Interfaces;
 
+import Auxiliary.Triple;
+import Auxiliary.VectorClk;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
  * Control and collection site interface.
- * 
+ *
  * @author Tiago Oliveira, tiago9@ua.pt, no.: 51687
  * @author João Cravo, joao.cravo@ua.pt, no.: 63784
  */
-public interface InterfaceControlCollectionSite extends Remote{
+public interface InterfaceControlCollectionSite extends Remote {
 
     /**
      * The method anyRoomLeft verifies if there are any room left to sack.
@@ -31,9 +33,10 @@ public interface InterfaceControlCollectionSite extends Remote{
     /**
      * This method is used by the Thief to signal the Master Thief to wake up
      * from the waiting for arrival and collect canvas.
+     *
      * @throws java.rmi.RemoteException
      */
-    void goCollectMaster() throws RemoteException;
+    VectorClk goCollectMaster(VectorClk ts) throws RemoteException;
 
     /**
      * Wake up master and give her a canvas. Also, marks the room NOT in use
@@ -42,10 +45,11 @@ public interface InterfaceControlCollectionSite extends Remote{
      *
      * @param canvas Canvas of thief
      * @param partyId Assault party identification
-     * @param roomId Room identification 
-     * @throws java.rmi.RemoteException 
+     * @param roomId Room identification
+     * @throws java.rmi.RemoteException
      */
-    void handACanvas(int canvas, int roomId, int partyId) throws RemoteException;
+    VectorClk handACanvas(int canvas, int roomId, int partyId,
+            VectorClk ts) throws RemoteException;
 
     /**
      * The method prepareAssaultPart stage 1. Selects Assault Party and Room to
@@ -54,19 +58,21 @@ public interface InterfaceControlCollectionSite extends Remote{
      * @return Assault party and room identification
      * @throws java.rmi.RemoteException
      */
-    int[] prepareAssaultParty1() throws RemoteException;
+    Triple<VectorClk, Integer, Integer> prepareAssaultParty1(VectorClk ts) throws RemoteException;
 
     /**
      * Master Thief uses this method to print the summary results.
+     *
      * @throws java.rmi.RemoteException
      */
-    void printResult() throws RemoteException;
+    VectorClk printResult(VectorClk ts) throws RemoteException;
 
     /**
      * This method changes the Thief state to Deciding what to do.
+     *
      * @throws java.rmi.RemoteException
      */
-    void setDeciding() throws RemoteException;
+    VectorClk setDeciding(VectorClk ts) throws RemoteException;
 
     /**
      * Master thief blocks and wait the signal of a thief to wake up and get the
@@ -74,14 +80,14 @@ public interface InterfaceControlCollectionSite extends Remote{
      *
      * @throws java.rmi.RemoteException
      */
-    void takeARest() throws RemoteException;
-    
+    VectorClk takeARest(VectorClk ts) throws RemoteException;
+
     /**
      * Shutdown.
-     * 
+     *
      * @return Boolean value. True to shutdown.
      * @throws java.rmi.RemoteException
      */
     boolean shutdown() throws RemoteException;
-    
+
 }

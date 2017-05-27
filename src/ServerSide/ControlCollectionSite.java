@@ -1,8 +1,10 @@
 package ServerSide;
 
-import Auxiliary.InterfaceControlCollectionSite;
-import Auxiliary.InterfaceGRInformation;
+import Interfaces.InterfaceControlCollectionSite;
+import Interfaces.InterfaceGRInformation;
 import Auxiliary.Constants;
+import Auxiliary.Triple;
+import Auxiliary.VectorClk;
 import java.rmi.RemoteException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -48,6 +50,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     private Sala[] salas;
 
     private final InterfaceGRInformation repo;
+    private VectorClk localClk;
 
     private class Sala {
 
@@ -55,8 +58,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         private boolean empty;
         private boolean inUse;
 
-        public Sala(int salaId)
-        {
+        public Sala(int salaId) {
             this.salaId = salaId;
             empty = false;
             inUse = false;
@@ -69,17 +71,13 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @param repo
      * @return ConcentrationSite object to be used.
      */
-    public static ControlCollectionSite getInstance(InterfaceGRInformation repo)
-    {
+    public static ControlCollectionSite getInstance(InterfaceGRInformation repo) {
         l.lock();
-        try
-        {
-            if (instance == null)
-            {
+        try {
+            if (instance == null) {
                 instance = new ControlCollectionSite(repo);
             }
-        } finally
-        {
+        } finally {
             l.unlock();
         }
         return instance;
@@ -88,8 +86,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     /**
      * Singleton needs private constructor.
      */
-    private ControlCollectionSite(InterfaceGRInformation repo)
-    {
+    private ControlCollectionSite(InterfaceGRInformation repo) {
         // bind lock with a condition
         rest = l.newCondition();
         restBool = false;
@@ -101,25 +98,28 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         partyIdCounter[0] = partyIdCounter[1] = 0;
         stateMaster = -1;
         salas = new Sala[Constants.N_ROOMS];
-        for (int i = 0; i < Constants.N_ROOMS; i++)
-        {
+        for (int i = 0; i < Constants.N_ROOMS; i++) {
             salas[i] = new Sala(i);
         }
 
         this.repo = repo;
+        // colocar o index do master n altera nada penso eu
+        localClk = new VectorClk(0, Constants.VECTOR_CLOCK_SIZE);
     }
 
     /**
      * This method changes the Thief state to Deciding what to do.
+     *
      * @throws java.rmi.RemoteException
      */
     @Override
-    public void setDeciding() throws RemoteException
-    {
+    public VectorClk setDeciding(VectorClk ts) throws RemoteException {
         l.lock();
+        localClk.updateClk(ts);
         stateMaster = Constants.DECIDING_WHAT_TO_DO;
         repo.setStateMasterThief(stateMaster);
         l.unlock();
+        return localClk;
     }
 
     /**
@@ -130,42 +130,34 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @throws java.rmi.RemoteException
      */
     @Override
-    public int[] prepareAssaultParty1() throws RemoteException
-    {
+    public Triple<VectorClk, Integer, Integer> prepareAssaultParty1(VectorClk ts) throws RemoteException {
         l.lock();
-
-
+        
+        localClk.updateClk(ts);
         int tempAssault = -1;
         int tempSala = -1;
 
         stateMaster = Constants.ASSEMBLING_A_GROUP;
         repo.setStateMasterThief(stateMaster);
 
-        if (!assaultP1)
-        {
+        if (!assaultP1) {
             tempAssault = 0;
             assaultP1 = true;
-        } else if (!assaultP2)
-        {
+        } else if (!assaultP2) {
             tempAssault = 1;
             assaultP2 = true;
         }
 
-        for (int i = 0; i < Constants.N_ROOMS; i++)
-        {
+        for (int i = 0; i < Constants.N_ROOMS; i++) {
             // if is empty, choose
-            if (salas[i].empty == false && salas[i].inUse == false)
-            {
+            if (salas[i].empty == false && salas[i].inUse == false) {
                 tempSala = i;
                 salas[i].inUse = true;
                 break;
             }
         }
         l.unlock();
-        return new int[]
-        {
-            tempAssault, tempSala
-        };
+        return new Triple<>(localClk, tempAssault, tempSala);
     }
 
     /**
@@ -175,25 +167,24 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @throws java.rmi.RemoteException
      */
     @Override
-    public void takeARest() throws RemoteException
-    {
+    public VectorClk takeARest(VectorClk ts) throws RemoteException {
         l.lock();
 
+        localClk.updateClk(ts);
         stateMaster = Constants.WAITING_FOR_ARRIVAL;
         repo.setStateMasterThief(stateMaster);
 
-        try
-        {
-            while (!restBool)
-            {
+        try {
+            while (!restBool) {
                 rest.await();
             }
-        } catch (InterruptedException ex)
-        {
+        } catch (InterruptedException ex) {
         }
         restBool = false;
 
         l.unlock();
+        
+        return localClk;
     }
 
     /**
@@ -207,39 +198,37 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @throws java.rmi.RemoteException
      */
     @Override
-    public void handACanvas(int canvas, int roomId, int partyId) throws RemoteException
-    {
+    public VectorClk handACanvas(int canvas, int roomId, int partyId,
+            VectorClk ts) throws RemoteException {
 
         l.lock();
+        localClk.updateClk(ts);
+        
         boolean lastArriving = false;
-        if (canvas == 1)
-        {
+        if (canvas == 1) {
             nCanvas++;
-        } else
-        {
+        } else {
             salas[roomId].empty = true;
         }
         partyIdCounter[partyId]++;
 
-        if (partyIdCounter[partyId] == 3)
-        {
+        if (partyIdCounter[partyId] == 3) {
             lastArriving = true;
             partyIdCounter[partyId] = 0;
 
         }
-        if (lastArriving)
-        {
+        if (lastArriving) {
             repo.resetIdPartyRoom(partyId);
             salas[roomId].inUse = false;
-            if (partyId == 0)
-            {
+            if (partyId == 0) {
                 assaultP1 = false;
-            } else if (partyId == 1)
-            {
+            } else if (partyId == 1) {
                 assaultP2 = false;
             }
         }
         l.unlock();
+        
+        return localClk;
     }
 
     /**
@@ -247,17 +236,19 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * from the waiting for arrival and collect canvas.
      */
     @Override
-    public void goCollectMaster()
-    {
+    public VectorClk goCollectMaster(VectorClk ts) {
         l.lock();
-        try
-        {
+
+        localClk.updateClk(ts);
+
+        try {
             restBool = true;
             rest.signal();
-        } finally
-        {
+        } finally {
             l.unlock();
         }
+
+        return localClk;
     }
 
     /**
@@ -266,21 +257,17 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @return True if exists a Room to sack, False if every room is empty
      */
     @Override
-    public boolean anyRoomLeft()
-    {
-       
+    public boolean anyRoomLeft() {
+
         l.lock();
         // trying to find if every thief can die.
         boolean temp = true;
-        for (int i = 0; i < Constants.N_ROOMS; i++)
-        {
+        for (int i = 0; i < Constants.N_ROOMS; i++) {
             // if is empty, choose (empty = false on creation)
-            if (!salas[i].empty)
-            {
+            if (!salas[i].empty) {
                 l.unlock();
                 return true;
-            } else
-            {
+            } else {
                 temp = false;
             }
         }
@@ -296,13 +283,10 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @return Availability of teams
      */
     @Override
-    public boolean anyTeamAvailable()
-    {
-        if (!assaultP1)
-        {
+    public boolean anyTeamAvailable() {
+        if (!assaultP1) {
             return true;
-        } else if (!assaultP2)
-        {
+        } else if (!assaultP2) {
             return true;
         }
         return false;
@@ -310,20 +294,22 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
     /**
      * Master Thief uses this method to print the summary results.
+     *
      * @throws java.rmi.RemoteException
      */
     @Override
-    public void printResult() throws RemoteException
-    {
+    public VectorClk printResult(VectorClk ts) throws RemoteException {
         l.lock();
+        localClk.updateClk(ts);
         repo.setStateMasterThief(Constants.PRESENTING_THE_REPORT);
         repo.printResume(nCanvas);
         l.unlock();
+        
+        return localClk;
     }
 
     @Override
-    public boolean shutdown()
-    {
+    public boolean shutdown() {
         return true;
     }
 }

@@ -1,8 +1,8 @@
 package ServerSide;
 
-import Auxiliary.InterfaceGRInformation;
-import Auxiliary.InterfaceMuseum;
-import Auxiliary.Register;
+import Interfaces.InterfaceGRInformation;
+import Interfaces.InterfaceMuseum;
+import Interfaces.Register;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;

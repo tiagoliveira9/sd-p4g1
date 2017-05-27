@@ -1,8 +1,11 @@
 package ServerSide;
 
-import Auxiliary.InterfaceAssaultParty;
-import Auxiliary.InterfaceGRInformation;
+import Interfaces.InterfaceAssaultParty;
+import Interfaces.InterfaceGRInformation;
 import Auxiliary.Constants;
+import Auxiliary.Triple;
+import Auxiliary.Tuple;
+import Auxiliary.VectorClk;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -32,6 +35,8 @@ public class AssaultParty implements InterfaceAssaultParty {
     private int teamHeadIn; // thief that goes on the front crawling IN
     private int teamHeadOut; // thief that goes on the front crawling OUT
     private int idGlobal;
+
+    private VectorClk localClk;
 
     private final InterfaceGRInformation repo;
 
@@ -92,6 +97,7 @@ public class AssaultParty implements InterfaceAssaultParty {
         moveThief = l.newCondition();
         idGlobal = -1;
         this.repo = repo;
+        localClk = new VectorClk(0, Constants.VECTOR_CLOCK_SIZE);
     }
 
     /**
@@ -102,9 +108,12 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return True if is the last Thief, false otherwise.
      */
     @Override
-    public boolean addToSquad(int thiefId, int thiefAgility, int partyIdMsg) throws RemoteException {
+    public Tuple<VectorClk, Boolean> addToSquad(int thiefId, int thiefAgility,
+            int partyIdMsg, VectorClk ts) throws RemoteException {
+
         l.lock();
 
+        localClk.updateClk(ts);
         boolean flag = false;
 
         try {
@@ -129,7 +138,7 @@ public class AssaultParty implements InterfaceAssaultParty {
             l.unlock();
         }
 
-        return flag;
+        return new Tuple<>(localClk, flag);
     }
 
     /**
@@ -199,8 +208,11 @@ public class AssaultParty implements InterfaceAssaultParty {
      * @return Thief to the right room of an assault party
      */
     @Override
-    public int[] crawlOut(int thiefId, int partyIdMsg) throws RemoteException {
+    public VectorClk crawlOut(int thiefId, int partyIdMsg,
+            VectorClk ts) throws RemoteException {
         l.lock();
+
+        localClk.updateClk(ts);
         Crook cr = getCrook(thiefId);
         int myElemId = myPositionTeam(thiefId);
         int next = selectNext(thiefId);
@@ -226,12 +238,12 @@ public class AssaultParty implements InterfaceAssaultParty {
             line[myElemId] = -1;
             nCrook--;
             repo.resetIdPartyElem(partyIdMsg, myElemId);
-            //
+            
             idGlobal = squad[next].id;
             moveThief.signalAll();
-
             l.unlock();
-            return getRoomIdToAssault(cr.id);
+            
+            return localClk;
 
         } catch (InterruptedException ex) {
             Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
@@ -239,8 +251,7 @@ public class AssaultParty implements InterfaceAssaultParty {
         }
 
         l.unlock();
-        return getRoomIdToAssault(cr.id);
-
+        return localClk;
     }
 
     private boolean crawlGo(boolean way, Crook cr, int partyIdMsg) throws RemoteException {

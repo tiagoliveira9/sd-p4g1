@@ -6,7 +6,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import Auxiliary.Register;
+import Interfaces.Register;
 
 /**
  *  This data type defines a generic functionality to register remote objects in the local registry service.

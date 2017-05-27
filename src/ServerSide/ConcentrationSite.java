@@ -1,8 +1,10 @@
 package ServerSide;
 
-import Auxiliary.InterfaceConcentrationSite;
-import Auxiliary.InterfaceGRInformation;
+import Interfaces.InterfaceConcentrationSite;
+import Interfaces.InterfaceGRInformation;
 import Auxiliary.Constants;
+import Auxiliary.Tuple;
+import Auxiliary.VectorClk;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.concurrent.locks.Condition;
@@ -95,6 +97,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
     private int countDie;
 
     private final InterfaceGRInformation repo;
+    private VectorClk localClk;
 
     /**
      * The method returns ConcentrationSite object.
@@ -127,6 +130,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         die = false;
         countDie = 0;
         this.repo = repo;
+        localClk = new VectorClk(0, Constants.VECTOR_CLOCK_SIZE);
     }
 
     /**
@@ -135,7 +139,6 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
     @Override
     public void addThief(int thiefId) {
         l.lock();
-        //repo.setStateThief(Constants.OUTSIDE, thiefId);
         queueThieves.add(thiefId);
         l.unlock();
     }
@@ -147,12 +150,14 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * thief is responsible to wake the third thief. After is awaken, he removes
      * himself from the stack or dies.
      *
+     *
      * @return Assault Party number
      */
     @Override
-    public int waitForCall(int thiefId) throws RemoteException {
+    public Tuple<VectorClk, Integer> waitForCall(int thiefId, VectorClk ts) throws RemoteException {
         l.lock();
 
+        localClk.updateClk(ts);
         try {
             while (thiefId != globalId && !die) {
                 prepare.await();
@@ -165,7 +170,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
                 countDie++;
                 assembling.signal();
                 l.unlock();
-                return -1;
+                return new Tuple<VectorClk, Integer>(localClk, -1);
             }
 
             counterThief++;
@@ -182,8 +187,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         }
 
         l.unlock();
-        return nAssaultParty;
-
+        return new Tuple<>(localClk, nAssaultParty);
     }
 
     /**
@@ -195,8 +199,12 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * @param roomId Room identification
      */
     @Override
-    public void prepareAssaultParty2(int partyId, int roomId) throws RemoteException{
+    public VectorClk prepareAssaultParty2(int partyId, int roomId,
+            VectorClk ts) throws RemoteException {
+
         l.lock();
+        localClk.updateClk(ts);
+        
         nAssaultParty = partyId;
 
         repo.setRoomId(partyId, roomId);
@@ -214,6 +222,8 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         } catch (InterruptedException ex) {
         }
         l.unlock();
+        
+        return localClk;
     }
 
     /**

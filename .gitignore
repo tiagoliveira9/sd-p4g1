@@ -5,3 +5,4 @@
 /bin
 /binClient
 /binServer
+*.class

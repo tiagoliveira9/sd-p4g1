@@ -82,7 +82,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
                         int assaultPartyId = pick.getCenter();
                         int roomId = pick.getRight();
 
-                        if (roomId == -1) {
+                        if (assaultPartyId == -1) {
                             // no rooms available, go deciding what to do
                             break;
                         }
