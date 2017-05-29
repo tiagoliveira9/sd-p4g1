@@ -1,4 +1,8 @@
 
+# folders
+
+
+
 # compile all 
 javac -d engineHeist/serverSide -sourcepath src src/ServerSide/*.java 
 javac -d engineHeist/registry -sourcepath src src/registry/*.java

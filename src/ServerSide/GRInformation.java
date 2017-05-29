@@ -2,6 +2,7 @@ package ServerSide;
 
 import Interfaces.InterfaceGRInformation;
 import Auxiliary.Constants;
+import Auxiliary.SortLines;
 import Auxiliary.VectorClk;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -11,6 +12,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This data type implements the General Repository of Information
@@ -51,6 +54,8 @@ public class GRInformation implements InterfaceGRInformation {
      * @serialField printer
      */
     private PrintWriter log;
+    private PrintWriter log2;
+
     /**
      * Master thief state
      *
@@ -72,6 +77,8 @@ public class GRInformation implements InterfaceGRInformation {
     private AspParty[] party;
 
     private VectorClk griClk;
+
+    private List<SortLines> orderedList;
 
     /**
      * The method returns General Repository Information object.
@@ -99,6 +106,7 @@ public class GRInformation implements InterfaceGRInformation {
 
         try {
             log = new PrintWriter("LOG-" + dateString + ".txt");
+            log2 = new PrintWriter("LOGZ-" + dateString + ".txt");
         } catch (FileNotFoundException ex) {
             log = null;
         }
@@ -118,6 +126,7 @@ public class GRInformation implements InterfaceGRInformation {
             sala[i] = new Room(i);
         }
         griClk = new VectorClk(0, Constants.VECTOR_CLOCK_SIZE);
+        orderedList = new ArrayList<>();
     }
 
     /**
@@ -373,7 +382,7 @@ public class GRInformation implements InterfaceGRInformation {
         Formatter formatter = new Formatter(strb);
         formatter.format("%1$84s%n", "Heist to the museum - Description of the internal state");
         log.print(strb.toString());
-        //System.out.println(strb.toString());
+        orderedList.add(new SortLines(strb.toString(), griClk.getCopyClk()));
         log.flush();
         printColumnHeader();
         printEntityStates();
@@ -404,7 +413,7 @@ public class GRInformation implements InterfaceGRInformation {
                 "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "RId", "Id Pos Cv", "Id Pos Cv", "Id Pos Cv", "NP DT", "NP DT", "NP DT", "ND DP", "ND DP");
 
         log.print(strb.toString());
-        //System.out.println(strb.toString());
+        orderedList.add(new SortLines(strb.toString(), griClk.getCopyClk()));
         log.flush();
         lock.unlock();
     }
@@ -444,7 +453,7 @@ public class GRInformation implements InterfaceGRInformation {
         //formatter.format("--- --- --- --- --- --- ---");
         formatter.format("%n");
         log.print(strb.toString());
-        //System.out.println(strb.toString());
+        orderedList.add(new SortLines(strb.toString(), griClk.getCopyClk()));
         log.flush();
         lock.unlock();
     }
@@ -477,8 +486,7 @@ public class GRInformation implements InterfaceGRInformation {
 
         formatter.format("%n");
         log.print(strb.toString());
-        //System.out.println(strb.toString());
-
+        orderedList.add(new SortLines(strb.toString(), griClk.getCopyClk()));
         log.flush();
         lock.unlock();
     }
@@ -610,6 +618,14 @@ public class GRInformation implements InterfaceGRInformation {
     @Override
     public void close() {
         lock.lock();
+        
+        //
+        for(SortLines up : orderedList)
+            log2.print(up.getLine());
+        
+        log2.flush();
+        log2.close();
+        //
         log.flush();
         log.close();
         lock.unlock();

@@ -38,7 +38,8 @@ public class MasterThiefClient {
         InterfaceConcentrationSite conc = null;
         InterfaceAssaultParty agr1 = null;
         InterfaceAssaultParty agr2 = null;
-
+        InterfaceGRInformation gri = null; // TEMPORARIO
+        
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
         } catch (RemoteException ex) {
@@ -52,6 +53,7 @@ public class MasterThiefClient {
             conc = (InterfaceConcentrationSite) registry.lookup(ServerConfig.REGISTRY_CONC_NAME);
             agr1 = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG1_NAME);
             agr2 = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG2_NAME);
+            gri = (InterfaceGRInformation) registry.lookup(ServerConfig.REGISTRY_GRI_NAME);
 
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(ThiefClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,17 +66,22 @@ public class MasterThiefClient {
         {
             try {   // waiting for end of simulation
                 masterThief.join();
-                // when master dies, sends death signal to all infidels 
-                
-                /*mus.shutdown();
-                control.shutdown();
-                agr.shutdown(0);
-                agr.shutdown(1);
-                conc.shutdown();
-                repo.shutdown();*/
+                try {
+                    // when master dies, sends death signal to all infidels
+                    gri.close();
+                    /*mus.shutdown();
+                    control.shutdown();
+                    agr.shutdown(0);
+                    agr.shutdown(1);
+                    conc.shutdown();
+                    repo.shutdown();*/
+                } catch (RemoteException ex) {
+                    Logger.getLogger(MasterThiefClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } catch (InterruptedException ex) {
                 Logger.getLogger(MasterThiefClient.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
     }
 }

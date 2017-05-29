@@ -24,18 +24,18 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws01.ua.pt 'bash -s' <<'ENDSSH'
 	./set_rmi_registry.sh
 ENDSSH; bash"
 
-sleep 5
+sleep 1
 
 # ServerRegisterRemoteObject WS01
 gnome-terminal -x sh -c "ssh sd0401@l040101-ws01.ua.pt 'bash -s' <<'ENDSSH'
   # commands to run on remote host
 	
 	cd project03/engineHeist/registry/
-	./registry.sh > txt.txt
+	./registry.sh
 	
 ENDSSH; bash"
 
-sleep 5
+sleep 1
 
 # GRI WS03
 
@@ -63,7 +63,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws03.ua.pt 'bash -s' <<'ENDSSH'
 	./serverSide-gri.sh
 ENDSSH; bash"
 
-sleep 5
+sleep 1
 
 # MUSEUM WS04
 
@@ -91,7 +91,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws04.ua.pt 'bash -s' <<'ENDSSH'
 	./serverSide-mus.sh
 ENDSSH; bash"
 
-sleep 5
+sleep 1
 
 # CONTROL WS05
 
@@ -119,7 +119,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws05.ua.pt 'bash -s' <<'ENDSSH'
 	./serverSide-cont.sh
 ENDSSH; bash"
 
-sleep 5
+sleep 1
 
 # CONC WS06
 
@@ -147,7 +147,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws06.ua.pt 'bash -s' <<'ENDSSH'
 	./serverSide-conc.sh
 ENDSSH; bash"
 
-sleep 5
+sleep 1
 # ASG1 WS02
 
 sftp sd0401@l040101-ws07.ua.pt 'bash -s' << 'ENDSFTP'
@@ -174,7 +174,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040107-ws07.ua.pt 'bash -s' <<'ENDSSH'
 	./serverSide-asg1.sh 
 ENDSSH; bash"
 
-sleep 5
+sleep 1
 
 # ASG2 WS08
 
@@ -202,7 +202,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040107-ws08.ua.pt 'bash -s' <<'ENDSSH'
 	./serverSide-asg2.sh 
 ENDSSH; bash"
 
-sleep 5
+sleep 1
 
 # THIEVES WS09
 
@@ -232,7 +232,7 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws09.ua.pt 'bash -s' <<'ENDSSH'
 	
 ENDSSH; bash"
 
-sleep 5
+sleep 1
 
 # MASTER WS10
 
