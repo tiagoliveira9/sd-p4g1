@@ -121,7 +121,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         stateMaster = Constants.DECIDING_WHAT_TO_DO;
         repo.setStateMasterThief(stateMaster, localClk.getCopyClk());
         l.unlock();
-        return localClk;
+        return localClk.getCopyClk();
     }
 
     /**
@@ -189,7 +189,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
 
         l.unlock();
 
-        return localClk;
+        return localClk.getCopyClk();
     }
 
     /**
@@ -235,7 +235,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         }
         l.unlock();
 
-        return localClk;
+        return localClk.getCopyClk();
     }
 
     /**
@@ -257,7 +257,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
             l.unlock();
         }
 
-        return localClk;
+        return localClk.getCopyClk();
     }
 
     /**
@@ -316,7 +316,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         repo.printResume(nCanvas);
         l.unlock();
 
-        return localClk;
+        return localClk.getCopyClk();
     }
 
     @Override

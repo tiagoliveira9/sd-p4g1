@@ -168,12 +168,15 @@ public class AssaultParty implements InterfaceAssaultParty {
      * Thief crawls in.
      *
      * @param partyIdMsg Party identification message
+     * @param ts Vector Clock
      * @return Thief to the right room of an assault party
      */
     @Override
-    public int[] crawlIn(int thiefId, int partyIdMsg) throws RemoteException {
-        l.lock();
+    public Triple<VectorClk, Integer, Integer> crawlIn(int thiefId,
+            int partyIdMsg, VectorClk ts) throws RemoteException {
 
+        l.lock();
+        localClk.updateClk(ts);
         Crook cr = getCrook(thiefId);
         int next = selectNext(thiefId);
 
@@ -181,7 +184,6 @@ public class AssaultParty implements InterfaceAssaultParty {
             while (!crawlGo(true, cr, partyIdMsg)) {
                 idGlobal = squad[next].id;
                 moveThief.signalAll();
-
                 while (cr.id != idGlobal) {
                     moveThief.await();
                 }
@@ -189,7 +191,8 @@ public class AssaultParty implements InterfaceAssaultParty {
             idGlobal = squad[next].id;
             moveThief.signalAll();
             l.unlock();
-            return getRoomIdToAssault(cr.id);
+            int[] roomIdAssault = getRoomIdToAssault(cr.id);
+            return new Triple<>(localClk.getCopyClk(), roomIdAssault[0], roomIdAssault[1]);
 
         } catch (InterruptedException ex) {
             Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
@@ -198,7 +201,8 @@ public class AssaultParty implements InterfaceAssaultParty {
         }
 
         l.unlock();
-        return getRoomIdToAssault(cr.id);
+        int[] roomId = getRoomIdToAssault(cr.id);
+        return new Triple<>(localClk.getCopyClk(), roomId[0], roomId[1]);
 
     }
 
@@ -245,7 +249,7 @@ public class AssaultParty implements InterfaceAssaultParty {
             moveThief.signalAll();
             l.unlock();
 
-            return localClk;
+            return localClk.getCopyClk();
 
         } catch (InterruptedException ex) {
             Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
@@ -253,14 +257,12 @@ public class AssaultParty implements InterfaceAssaultParty {
         }
 
         l.unlock();
-        return localClk;
+        return localClk.getCopyClk();
     }
 
     private boolean crawlGo(boolean way, Crook cr, int partyIdMsg) throws RemoteException {
         l.lock();
 
-        //Thief t = (Thief) Thread.currentThread();
-        //Crook c = getCrook(t.getThiefId());
         boolean flagI = false;
         int elemId = myPositionTeam(cr.id);
         int teamHead;

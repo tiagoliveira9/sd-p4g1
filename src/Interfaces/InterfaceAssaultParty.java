@@ -46,7 +46,8 @@ public interface InterfaceAssaultParty extends Remote {
      * @return Thief to the right room of an assault party
      * @throws java.rmi.RemoteException
      */
-    int[] crawlIn(int thiefId, int partyId) throws RemoteException;
+    Triple<VectorClk, Integer, Integer> crawlIn(int thiefId, int partyId,
+            VectorClk ts) throws RemoteException;
 
     /**
      * Thief crawls out.

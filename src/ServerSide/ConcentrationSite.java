@@ -226,7 +226,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
         }
         l.unlock();
 
-        return localClk;
+        return localClk.getCopyClk();
     }
 
     /**

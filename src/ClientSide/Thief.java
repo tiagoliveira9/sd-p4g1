@@ -6,6 +6,7 @@ import Interfaces.InterfaceControlCollectionSite;
 import Interfaces.InterfaceMuseum;
 import Interfaces.InterfaceThief;
 import Auxiliary.Constants;
+import Auxiliary.Triple;
 import Auxiliary.Tuple;
 import Auxiliary.VectorClk;
 import java.rmi.RemoteException;
@@ -111,19 +112,25 @@ public class Thief extends Thread implements InterfaceThief {
                 // back to assault party to block and Get in line
                 stateThief = Constants.CRAWLING_INWARDS;
                 asg.waitToStartRobbing(thiefId, partyId);
-                // roll[0] = roomId, roll[1] = elemId 
-                int[] roll = asg.crawlIn(thiefId, partyId);
-
+    
+                // int[] roll = asg.crawlIn(thiefId, partyId);
+                Triple<VectorClk, Integer, Integer> rollTriple = asg.crawlIn(thiefId,
+                        partyId,vcThief.getCopyClk());
+                
+                vcThief.updateClk(rollTriple.getLeft());
+                int roomId = rollTriple.getCenter();
+                int elemId = rollTriple.getRight();
+                
                 stateThief = Constants.AT_A_ROOM;
 
                 vcThief.incrementClk();
-                Tuple<VectorClk, Boolean> painting = mus.rollACanvas(roll[0],
-                        roll[1], partyId, thiefId, vcThief.getCopyClk());
+                Tuple<VectorClk, Boolean> painting = mus.rollACanvas(roomId,
+                        elemId, partyId, thiefId, vcThief.getCopyClk());
                 vcThief.updateClk(painting.getLeft());
 
                 int canvas = 0;
                 if (painting.getRight()) {
-                    asg.addCrookCanvas(roll[1], partyId);
+                    asg.addCrookCanvas(elemId, partyId);
                     canvas = 1;
                 }
                 stateThief = Constants.CRAWLING_OUTWARDS;
@@ -131,7 +138,7 @@ public class Thief extends Thread implements InterfaceThief {
                 vcThief.updateClk(asg.crawlOut(thiefId, partyId, vcThief.getCopyClk()));
 
                 vcThief.incrementClk();
-                vcThief.updateClk(cont.handACanvas(canvas, roll[0], partyId, vcThief.getCopyClk()));
+                vcThief.updateClk(cont.handACanvas(canvas, roomId, partyId, vcThief.getCopyClk()));
                 justHanded = true; // to avoid wrong, first time signal
             }
 
