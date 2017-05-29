@@ -73,14 +73,14 @@ sleep 0.5
 gnome-terminal -x sh -c "cd engineHeist/clientSide/;
 	java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/clientSide/"\
      -Djava.rmi.server.useCodebaseOnly=false\
-     -Djava.security.policy=java.policy ClientSide.ThiefClient; bash"
+     -Djava.security.policy=java.policy ClientSide.ThiefClient;"
 
 sleep 0.8
 
 gnome-terminal -x sh -c "cd engineHeist/clientSide/;
 	java -Djava.rmi.server.codebase="file:///home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/clientSide/"\
      -Djava.rmi.server.useCodebaseOnly=false\
-     -Djava.security.policy=java.policy ClientSide.MasterThiefClient; bash"
+     -Djava.security.policy=java.policy ClientSide.MasterThiefClient; "
 
 
 

@@ -40,6 +40,7 @@ public interface InterfaceGRInformation extends Remote {
      *
      * @param partyId Assault party identification
      * @param elemId Element identification
+     * @param ts Vector Clock
      * @throws java.rmi.RemoteException
      */
     void resetIdPartyElem(int partyId, int elemId, VectorClk ts) throws RemoteException;
@@ -48,6 +49,7 @@ public interface InterfaceGRInformation extends Remote {
      * Reset room in a assault party.
      * 
      * @param partyId Assault party identification
+     * @param ts Vector Clock
      * @throws java.rmi.RemoteException
      */
     void resetIdPartyRoom(int partyId, VectorClk ts) throws RemoteException;
@@ -60,6 +62,7 @@ public interface InterfaceGRInformation extends Remote {
      * @param cv Canvas of thief
      * @param roomId Room identification  
      * @param thiefId Thief identification
+     * @param ts Vector Clock
      * @throws java.rmi.RemoteException
      */
     void setCanvasElem(int partyId, int elemId, int cv, int roomId, 
@@ -71,6 +74,7 @@ public interface InterfaceGRInformation extends Remote {
      * @param partyId Assault party identification
      * @param elemId Element identification 
      * @param id Thief identification
+     * @param ts Vector Clock
      * @throws java.rmi.RemoteException
      */
     void setIdPartyElem(int partyId, int elemId, int id, VectorClk ts) throws RemoteException;
@@ -81,6 +85,7 @@ public interface InterfaceGRInformation extends Remote {
      * @param partyId Assault party identification
      * @param elemId Element identification
      * @param pos Element position
+     * @param ts Vector Clock
      * @throws java.rmi.RemoteException
      */
     void setPosElem(int partyId, int elemId, int pos, VectorClk ts) throws RemoteException;
@@ -90,6 +95,7 @@ public interface InterfaceGRInformation extends Remote {
      *
      * @param partyId Assault party identification
      * @param roomId Room identification
+     * @param ts Vector Clock
      * @throws java.rmi.RemoteException
      */
     void setRoomId(int partyId, int roomId, VectorClk ts) throws RemoteException;
@@ -107,6 +113,7 @@ public interface InterfaceGRInformation extends Remote {
      * Set master thief state
      *
      * @param masterThief Master Thief
+     * @param ts Vector Clock
      * @throws java.rmi.RemoteException
      */
     void setStateMasterThief(int masterThief, VectorClk ts) throws RemoteException;
@@ -116,6 +123,7 @@ public interface InterfaceGRInformation extends Remote {
      *
      * @param thiefState Thief state
      * @param thiefId Thief identification
+     * @param ts Vector Clock
      * @throws java.rmi.RemoteException
      */
     void setStateThief(int thiefState, int thiefId, VectorClk ts) throws RemoteException;
@@ -126,6 +134,7 @@ public interface InterfaceGRInformation extends Remote {
      * @param roomId Room identification
      * @param distance Room distance
      * @param canvas Canvas of thief
+     * @param ts Vector Clock
      * @throws java.rmi.RemoteException
      *
      */

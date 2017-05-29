@@ -29,6 +29,7 @@ public interface InterfaceMuseum extends Remote {
      * @param elemPos Element position
      * @param partyId Assault party identification
      * @param thiefId Thief identification
+     * @param ts Vector Clock
      * @return Flag value
      * @throws java.rmi.RemoteException
      */

@@ -36,6 +36,8 @@ public interface InterfaceConcentrationSite extends Remote {
      *
      * @param partyId Assault party identification
      * @param roomId Room identification
+     * @param ts Vector Clock
+     * @return 
      * @throws java.rmi.RemoteException
      */
     VectorClk prepareAssaultParty2(int partyId, int roomId, VectorClk ts) throws RemoteException;
@@ -64,6 +66,7 @@ public interface InterfaceConcentrationSite extends Remote {
      * himself from the stack or dies.
      *
      * @param thiefId Thief identification
+     * @param ts Vector Clock
      * @return Assault party number
      * @throws java.rmi.RemoteException
      */

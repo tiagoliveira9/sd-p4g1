@@ -76,7 +76,7 @@ public class Thief extends Thread implements InterfaceThief {
         this.conc = conc;
         this.asg1 = agr1;
         this.asg2 = agr2;
-        vcThief = new VectorClk(thiefId, Constants.VECTOR_CLOCK_SIZE);
+        vcThief = new VectorClk((thiefId + 1), Constants.VECTOR_CLOCK_SIZE);
     }
 
     /**
@@ -97,7 +97,7 @@ public class Thief extends Thread implements InterfaceThief {
                 } else {
                     asg = asg2;
                 }
-                
+
                 vcThief.incrementClk();
                 Tuple<VectorClk, Boolean> last = asg.addToSquad(thiefId, agility,
                         partyId, vcThief.getCopyClk());

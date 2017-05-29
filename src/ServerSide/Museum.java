@@ -88,6 +88,7 @@ public class Museum implements InterfaceMuseum {
      * @param roomId Room identification
      * @param elemPos Element position
      * @param partyId Assault party identification
+     * @param ts Vector Clock
      * @return Flag value
      * @throws java.rmi.RemoteException
      */

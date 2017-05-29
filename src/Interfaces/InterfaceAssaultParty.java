@@ -30,6 +30,7 @@ public interface InterfaceAssaultParty extends Remote {
      * @param thiefId Thief identification
      * @param thiefAgility Thief agility
      * @param partyId Assault party identification
+     * @param ts Vector Clock
      *
      * @return True if is the last Thief, return false otherwise.
      * @throws java.rmi.RemoteException
@@ -52,6 +53,7 @@ public interface InterfaceAssaultParty extends Remote {
      *
      * @param thiefId Thief identification
      * @param partyId Assault party identification
+     * @param ts Vector Clock
      * @return Thief to the right room of an assault party
      * @throws java.rmi.RemoteException
      */

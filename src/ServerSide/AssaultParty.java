@@ -105,6 +105,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * to wake the Master
      *
      * @param partyIdMsg Party identification message
+     * @param ts Vector Clock
      * @return True if is the last Thief, false otherwise.
      */
     @Override
@@ -205,6 +206,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * Thief crawls out.
      *
      * @param partyIdMsg Party identification message
+     * @param ts Vector Clock
      * @return Thief to the right room of an assault party
      */
     @Override

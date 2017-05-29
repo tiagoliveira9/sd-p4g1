@@ -151,6 +151,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * himself from the stack or dies.
      *
      *
+     * @param ts Vector Clock
      * @return Assault Party number
      */
     @Override
@@ -197,6 +198,8 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      *
      * @param partyId Assault party identification
      * @param roomId Room identification
+     * @param ts Vector Clock
+     * @return 
      */
     @Override
     public VectorClk prepareAssaultParty2(int partyId, int roomId,

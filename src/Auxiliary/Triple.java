@@ -10,6 +10,9 @@ import java.io.Serializable;
 /**
  *
  * @author Tiago Oliveira nºmec.: 51687 <tiago9@ua.pt>
+ * @param <A>
+ * @param <B>
+ * @param <C>
  */
 public class Triple<A, B, C> implements Serializable {
 
@@ -19,6 +22,12 @@ public class Triple<A, B, C> implements Serializable {
     private final B two;
     private final C three;
 
+    /**
+     *
+     * @param one
+     * @param two
+     * @param three
+     */
     public Triple(A one, B two, C three) {
 
         this.one = one;
@@ -26,14 +35,26 @@ public class Triple<A, B, C> implements Serializable {
         this.three = three;
     }
 
+    /**
+     *
+     * @return
+     */
     public A getLeft() {
         return one;
     }
 
+    /**
+     *
+     * @return
+     */
     public B getCenter() {
         return two;
     }
 
+    /**
+     *
+     * @return
+     */
     public C getRight() {
         return three;
     }

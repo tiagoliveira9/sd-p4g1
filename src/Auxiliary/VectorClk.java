@@ -13,6 +13,12 @@ public class VectorClk implements Serializable {
     private final int index;
     private int[] lClk;
 
+
+    /**
+     *
+     * @param index
+     * @param size
+     */
     public VectorClk(int index, int size) {
 
         this.index = index;
@@ -24,11 +30,18 @@ public class VectorClk implements Serializable {
         }
     }
 
+    /**
+     *
+     */
     public void incrementClk() {
 
         lClk[index]++;
     }
 
+    /**
+     *
+     * @param ts Vector Clock
+     */
     public void updateClk(VectorClk ts) {
 
         for (int i = 0; i < lClk.length; i++) {
@@ -40,6 +53,10 @@ public class VectorClk implements Serializable {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public VectorClk getCopyClk() {
 
         VectorClk copyClk = new VectorClk(index, lClk.length);
@@ -49,5 +66,9 @@ public class VectorClk implements Serializable {
         }
 
         return copyClk;
+    }
+    
+    public int[] getlClk() {
+        return lClk;
     }
 }

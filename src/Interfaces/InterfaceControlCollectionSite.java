@@ -34,6 +34,8 @@ public interface InterfaceControlCollectionSite extends Remote {
      * This method is used by the Thief to signal the Master Thief to wake up
      * from the waiting for arrival and collect canvas.
      *
+     * @param ts Vector Clock
+     * @return 
      * @throws java.rmi.RemoteException
      */
     VectorClk goCollectMaster(VectorClk ts) throws RemoteException;
@@ -46,6 +48,8 @@ public interface InterfaceControlCollectionSite extends Remote {
      * @param canvas Canvas of thief
      * @param partyId Assault party identification
      * @param roomId Room identification
+     * @param ts Vector Clock
+     * @return 
      * @throws java.rmi.RemoteException
      */
     VectorClk handACanvas(int canvas, int roomId, int partyId,
@@ -55,6 +59,7 @@ public interface InterfaceControlCollectionSite extends Remote {
      * The method prepareAssaultPart stage 1. Selects Assault Party and Room to
      * sack
      *
+     * @param ts Vector Clock
      * @return Assault party and room identification
      * @throws java.rmi.RemoteException
      */
@@ -63,6 +68,8 @@ public interface InterfaceControlCollectionSite extends Remote {
     /**
      * Master Thief uses this method to print the summary results.
      *
+     * @param ts Vector Clock
+     * @return 
      * @throws java.rmi.RemoteException
      */
     VectorClk printResult(VectorClk ts) throws RemoteException;
@@ -70,6 +77,8 @@ public interface InterfaceControlCollectionSite extends Remote {
     /**
      * This method changes the Thief state to Deciding what to do.
      *
+     * @param ts Vector Clock
+     * @return 
      * @throws java.rmi.RemoteException
      */
     VectorClk setDeciding(VectorClk ts) throws RemoteException;
@@ -78,6 +87,8 @@ public interface InterfaceControlCollectionSite extends Remote {
      * Master thief blocks and wait the signal of a thief to wake up and get the
      * canvas that he will give to her, if he has one.
      *
+     * @param ts Vector Clock
+     * @return 
      * @throws java.rmi.RemoteException
      */
     VectorClk takeARest(VectorClk ts) throws RemoteException;

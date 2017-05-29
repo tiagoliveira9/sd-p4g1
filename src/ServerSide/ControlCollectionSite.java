@@ -110,6 +110,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     /**
      * This method changes the Thief state to Deciding what to do.
      *
+     * @param ts Vector Clock
+     * @return 
      * @throws java.rmi.RemoteException
      */
     @Override
@@ -126,6 +128,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * The method prepareAssaultPart stage 1. Selects Assault Party and Room to
      * sack
      *
+     * @param ts Vector Clock
      * @return Assault party and room identification
      * @throws java.rmi.RemoteException
      */
@@ -164,6 +167,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * Master thief blocks and wait the signal of a thief to wake up and get the
      * canvas that he will give to her, if he has one.
      *
+     * @param ts Vector Clock
+     * @return 
      * @throws java.rmi.RemoteException
      */
     @Override
@@ -195,6 +200,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @param canvas Canvas of thief
      * @param partyId Assault party identification
      * @param roomId Room identification
+     * @param ts Vector Clock
+     * @return 
      * @throws java.rmi.RemoteException
      */
     @Override
@@ -234,6 +241,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     /**
      * This method is used by the Thief to signal the Master Thief to wake up
      * from the waiting for arrival and collect canvas.
+     * @param ts Vector Clock
+     * @return 
      */
     @Override
     public VectorClk goCollectMaster(VectorClk ts) {
@@ -295,6 +304,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     /**
      * Master Thief uses this method to print the summary results.
      *
+     * @param ts Vector Clock
+     * @return 
      * @throws java.rmi.RemoteException
      */
     @Override
