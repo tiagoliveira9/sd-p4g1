@@ -401,7 +401,7 @@ public class GRInformation implements InterfaceGRInformation {
 
         formatter.format("%1$4s %2$9s %3$12s %4$12s %5$12s %6$12s %7$12s %8$18s%n",
                 "MstT", "Thief 1", "Thief 2", "Thief 3", "Thief 4", "Thief 5", "Thief 6", "VCk");
-        formatter.format("%1$4s %2$10s %3$12s %4$12s %5$12s %6$12s %7$12s %8$4s %9$3s %10$3s %11$3s %12$3s %13$3s %14$3s%n",
+        formatter.format("%1$4s %2$10s %3$12s %4$12s %5$12s %6$12s %7$12s %8$5s %9$3s %10$3s %11$3s %12$3s %13$3s %14$3s%n",
                 "Stat", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD", "Stat S MD", "0", "1", "2", "3", "4", "5", "6");
         formatter.format("%1$34s %2$37s %3$28s %n", "Assault party 1",
                 "Assault party 2", "Museum");
@@ -445,9 +445,9 @@ public class GRInformation implements InterfaceGRInformation {
 
         }
 
-        formatter.format("%1$1s %2$1s %3$1s %4$1s %5$1s %6$1s %7$1s",
-                "[" + clock[0], clock[1], clock[2], clock[3], clock[4], clock[5],
-                clock[6] + "]"
+        formatter.format("%1$3s %2$3s %3$3s %4$3s %5$3s %6$3s %7$3s",
+                +clock[0], clock[1], clock[2], clock[3], clock[4], clock[5],
+                clock[6]
         );
 
         //formatter.format("--- --- --- --- --- --- ---");
@@ -592,8 +592,14 @@ public class GRInformation implements InterfaceGRInformation {
     @Override
     public void printResume(int totalPaints) {
         lock.lock();
+        StringBuilder strb = new StringBuilder();
+        Formatter formatter = new Formatter(strb);
         printEntityStates();
-        log.printf("My friends, tonight's effort producced " + totalPaints + " priceless paintings!%n");
+
+        formatter.format("My friends, tonight's effort producced " + totalPaints + " priceless paintings!%n");
+        //log.printf("My friends, tonight's effort producced " + totalPaints + " priceless paintings!%n");
+        log.print(strb.toString());
+        orderedList.add(new SortLines(strb.toString(), griClk.getCopyClk()));
         log.flush();
         lock.unlock();
     }
@@ -618,11 +624,12 @@ public class GRInformation implements InterfaceGRInformation {
     @Override
     public void close() {
         lock.lock();
-        
+
         //
-        for(SortLines up : orderedList)
+        for (SortLines up : orderedList) {
             log2.print(up.getLine());
-        
+        }
+
         log2.flush();
         log2.close();
         //

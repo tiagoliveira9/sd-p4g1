@@ -15,6 +15,7 @@ public class ServerConfig {
      *
      */
     public static final String RMI_REGISTRY_HOSTNAME = "localhost";
+    //public static final String RMI_REGISTRY_HOSTNAME = "l040101-ws01.ua.pt";
 
     /**
      *
