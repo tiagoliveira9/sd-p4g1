@@ -111,6 +111,10 @@ public class ControlCollectionServer {
 
         System.out.println("Control & Collection Site was registered");
     }
-
+    
+    // bloquear
+    // 
 
 }
+
+// metodo estatico shutdown

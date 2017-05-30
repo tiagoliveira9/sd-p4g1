@@ -112,15 +112,16 @@ public class Thief extends Thread implements InterfaceThief {
                 // back to assault party to block and Get in line
                 stateThief = Constants.CRAWLING_INWARDS;
                 asg.waitToStartRobbing(thiefId, partyId);
-    
+
+                vcThief.incrementClk();
                 // int[] roll = asg.crawlIn(thiefId, partyId);
                 Triple<VectorClk, Integer, Integer> rollTriple = asg.crawlIn(thiefId,
-                        partyId,vcThief.getCopyClk());
-                
+                        partyId, vcThief.getCopyClk());
+
                 vcThief.updateClk(rollTriple.getLeft());
                 int roomId = rollTriple.getCenter();
                 int elemId = rollTriple.getRight();
-                
+
                 stateThief = Constants.AT_A_ROOM;
 
                 vcThief.incrementClk();

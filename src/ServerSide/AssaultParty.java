@@ -187,6 +187,7 @@ public class AssaultParty implements InterfaceAssaultParty {
                 while (cr.id != idGlobal) {
                     moveThief.await();
                 }
+                localClk.incrementClkCrawl((thiefId + 1));
             }
             idGlobal = squad[next].id;
             moveThief.signalAll();
@@ -239,6 +240,7 @@ public class AssaultParty implements InterfaceAssaultParty {
                 while (cr.id != idGlobal) {
                     moveThief.await();
                 }
+                localClk.incrementClkCrawl((thiefId + 1));
             }
             // Remove myself from team
             line[myElemId] = -1;

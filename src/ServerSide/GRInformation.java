@@ -446,8 +446,8 @@ public class GRInformation implements InterfaceGRInformation {
         }
 
         formatter.format("%1$3s %2$3s %3$3s %4$3s %5$3s %6$3s %7$3s",
-                +clock[0], clock[1], clock[2], clock[3], clock[4], clock[5],
-                clock[6]
+                "["+clock[0], clock[1], clock[2], clock[3], clock[4], clock[5],
+                clock[6]+"]"
         );
 
         //formatter.format("--- --- --- --- --- --- ---");
