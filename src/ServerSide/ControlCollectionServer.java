@@ -12,7 +12,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import registry.ServerConfig;
 
-
 /**
  * Control and collection interface.
  *
@@ -42,12 +41,8 @@ public class ControlCollectionServer {
 
         System.out.println("Security manager was installed!");
 
-        /*InterfaceMuseum mus = null;
-        InterfaceControlCollectionSite cont = null;
-        InterfaceAssaultParty agr1 = null;
-        InterfaceAssaultParty agr2 = null; */
         InterfaceGRInformation repo = null;
-        
+
         /* locates by name the remote object on the RMI registry */
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
@@ -59,13 +54,11 @@ public class ControlCollectionServer {
             System.out.println("General Repository of Information is not registered: " + e.getMessage() + "!");
             System.exit(1);
         }
-        
-        
-        /* Control & Collection Site instantiation */ 
-       
+
+        /* Control & Collection Site instantiation */
         ControlCollectionSite cont = ControlCollectionSite.getInstance(repo);
         InterfaceControlCollectionSite contInterface = null;
-        
+
         try {
             contInterface = (InterfaceControlCollectionSite) UnicastRemoteObject.exportObject(cont,
                     ServerConfig.REGISTRY_CONTROL_PORT);
@@ -110,11 +103,24 @@ public class ControlCollectionServer {
         }
 
         System.out.println("Control & Collection Site was registered");
+        System.out.println("\n Waiting for shutdown...");
+
+        // blocks awaiting for shutdown
+        cont.waitingForShutdown();
+
+        try {
+            reg.unbind(nameEntryObject);
+        } catch (RemoteException e) {
+            System.out.println(" Exception unbinding Control & Collection Site: " + e.getMessage());
+            System.exit(1);
+        } catch (NotBoundException e) {
+            System.out.println(" Exception object not bounded: Control & Collection Site: " + e.getMessage());
+            System.exit(1);
+        }
+
+        System.out.println("Control & Collection Site was deregistered! ");
+        System.exit(0); // nao tenho certeza, mas o programa nao termina logo
     }
-    
-    // bloquear
-    // 
 
 }
-
-// metodo estatico shutdown
+// metodo estatico shutdown, porque é que o prof falou nisto?

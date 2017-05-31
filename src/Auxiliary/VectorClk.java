@@ -37,6 +37,10 @@ public class VectorClk implements Serializable {
         lClk[index]++;
     }
 
+    /**
+     *
+     * @param in
+     */
     public void incrementClkCrawl(int in) {
 
         lClk[in]++;
@@ -72,6 +76,10 @@ public class VectorClk implements Serializable {
         return copyClk;
     }
 
+    /**
+     *
+     * @return
+     */
     public int[] getlClk() {
         return lClk;
     }

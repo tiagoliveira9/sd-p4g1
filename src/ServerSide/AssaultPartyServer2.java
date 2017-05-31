@@ -11,9 +11,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import registry.ServerConfig;
 
-
 /**
- * Assault party 
+ * Assault party
  *
  * @author João Cravo joao.cravo@ua.pt n.:63784
  * @author Tiago Oliveira tiago9@ua.pt n.:51687
@@ -29,7 +28,7 @@ public class AssaultPartyServer2 {
         /* get location of the registry service */
         String rmiRegHostName;
         int rmiRegPortNumb;
-        
+
         /* set the rmiregistry hostname and port */
         rmiRegHostName = ServerConfig.RMI_REGISTRY_HOSTNAME;
         rmiRegPortNumb = ServerConfig.RMI_REGISTRY_PORT;
@@ -58,7 +57,7 @@ public class AssaultPartyServer2 {
         /* Assault Party 2 instantiation */
         AssaultParty asg2 = AssaultParty.getInstance(0, repo);
         InterfaceAssaultParty asg2Interface = null;
-        
+
         try {
             asg2Interface = (InterfaceAssaultParty) UnicastRemoteObject.exportObject(asg2,
                     ServerConfig.REGISTRY_ASG2_PORT);
@@ -103,8 +102,23 @@ public class AssaultPartyServer2 {
         }
 
         System.out.println("Assault Party 2 was registered");
+        System.out.println("\n Waiting for shutdown...");
+
+        // blocks awaiting for shutdown
+        asg2.waitingForShutdown();
+
+        try {
+            reg.unbind(nameEntryObject);
+        } catch (RemoteException e) {
+            System.out.println(" Exception unbinding Assault Party 2: " + e.getMessage());
+            System.exit(1);
+        } catch (NotBoundException e) {
+            System.out.println(" Exception object not bounded: Assault Party 2: " + e.getMessage());
+            System.exit(1);
+        }
+
+        System.out.println("Assault Party 2 was deregistered! ");
+        System.exit(0); // nao tenho certeza, mas o programa nao termina logo
     }
-  
-   
 
 }

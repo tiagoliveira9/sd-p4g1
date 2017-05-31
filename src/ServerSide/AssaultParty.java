@@ -25,6 +25,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     private final int partyId;
     private final static Lock l = new ReentrantLock();
     private final Condition moveThief;
+    private final Condition shutCondition;
     private int[] line; // order that thieves blocks for the first time awaiting orders
     private Crook[] squad;
     private int distance; // targeted room distance
@@ -35,7 +36,8 @@ public class AssaultParty implements InterfaceAssaultParty {
     private int teamHeadIn; // thief that goes on the front crawling IN
     private int teamHeadOut; // thief that goes on the front crawling OUT
     private int idGlobal;
-
+    private int shutNow;
+    
     private VectorClk localClk;
 
     private final InterfaceGRInformation repo;
@@ -88,13 +90,15 @@ public class AssaultParty implements InterfaceAssaultParty {
         nCrook = 0;
         teamHeadIn = 0;
         teamHeadOut = 0;
-
+        shutNow = -1;
+        
         line = new int[Constants.N_SQUAD];
         squad = new Crook[Constants.N_SQUAD];
         for (int i = 0; i < Constants.N_SQUAD; i++) {
             line[i] = -1;
         }
         moveThief = l.newCondition();
+        shutCondition = l.newCondition();
         idGlobal = -1;
         this.repo = repo;
         localClk = new VectorClk(0, Constants.VECTOR_CLOCK_SIZE);
@@ -506,7 +510,31 @@ public class AssaultParty implements InterfaceAssaultParty {
     }
 
     @Override
-    public boolean shutdown(int partyId) {
+    public void shutdown() {
+
+        l.lock();
+        try {
+            shutNow = Constants.PRESENTING_THE_REPORT;
+            shutCondition.signal();
+        } finally {
+            l.unlock();
+        }
+    }
+
+    @Override
+    public boolean waitingForShutdown() {
+
+        l.lock();
+        try {
+            while (shutNow != Constants.PRESENTING_THE_REPORT) {
+                try {
+                    shutCondition.await();
+                } catch (InterruptedException ex) {
+                }
+            }
+        } finally {
+            l.unlock();
+        }
         return true;
     }
 

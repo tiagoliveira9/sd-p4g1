@@ -6,6 +6,7 @@ import Auxiliary.Constants;
 import Auxiliary.Tuple;
 import Auxiliary.VectorClk;
 import java.rmi.RemoteException;
+import java.util.concurrent.locks.Condition;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,7 +24,9 @@ public class Museum implements InterfaceMuseum {
     private Room[] rooms;
     private final InterfaceGRInformation repo;
     private VectorClk localClk;
-
+    private final Condition shutCondition;
+    private int shutNow;
+    
     private class Room {
 
         private final int roomId;
@@ -62,6 +65,8 @@ public class Museum implements InterfaceMuseum {
         }
         this.repo = repo;
         localClk = new VectorClk(0, Constants.VECTOR_CLOCK_SIZE);
+        shutCondition = l.newCondition();
+        shutNow = -1;
     }
 
     /**
@@ -144,7 +149,31 @@ public class Museum implements InterfaceMuseum {
     }
 
     @Override
-    public boolean shutdown() {
+    public void shutdown() {
+
+        l.lock();
+        try {
+            shutNow = Constants.PRESENTING_THE_REPORT;
+            shutCondition.signal();
+        } finally {
+            l.unlock();
+        }
+    }
+
+    @Override
+    public boolean waitingForShutdown() {
+
+        l.lock();
+        try {
+            while (shutNow != Constants.PRESENTING_THE_REPORT) {
+                try {
+                    shutCondition.await();
+                } catch (InterruptedException ex) {
+                }
+            }
+        } finally {
+            l.unlock();
+        }
         return true;
     }
 }

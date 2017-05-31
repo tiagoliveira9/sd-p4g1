@@ -88,6 +88,23 @@ public class GRInformationServer {
         }
 
         System.out.println("General Repository of Information  was registered");
+        System.out.println("\n Waiting for shutdown...");
+
+        // blocks awaiting for shutdown
+        repo.waitingForShutdown();
+
+        try {
+            reg.unbind(nameEntryObject);
+        } catch (RemoteException e) {
+            System.out.println(" Exception unbinding General Repository of Information: " + e.getMessage());
+            System.exit(1);
+        } catch (NotBoundException e) {
+            System.out.println(" Exception object not bounded: General Repository of Information: " + e.getMessage());
+            System.exit(1);
+        }
+
+        System.out.println("General Repository of Information was deregistered! ");
+        System.exit(0); // nao tenho certeza, mas o programa nao termina logo
     }
 
 }

@@ -19,7 +19,6 @@ public interface InterfaceGRInformation extends Remote {
      */
     void close() throws RemoteException;
 
-
     /**
      * Print the legend of the program.
      *
@@ -47,7 +46,7 @@ public interface InterfaceGRInformation extends Remote {
 
     /**
      * Reset room in a assault party.
-     * 
+     *
      * @param partyId Assault party identification
      * @param ts Vector Clock
      * @throws java.rmi.RemoteException
@@ -60,19 +59,19 @@ public interface InterfaceGRInformation extends Remote {
      * @param partyId Assault party identification
      * @param elemId Element identification
      * @param cv Canvas of thief
-     * @param roomId Room identification  
+     * @param roomId Room identification
      * @param thiefId Thief identification
      * @param ts Vector Clock
      * @throws java.rmi.RemoteException
      */
-    void setCanvasElem(int partyId, int elemId, int cv, int roomId, 
+    void setCanvasElem(int partyId, int elemId, int cv, int roomId,
             int thiefId, VectorClk ts) throws RemoteException;
 
     /**
      * Set Thief ID on Assault Party Element
      *
      * @param partyId Assault party identification
-     * @param elemId Element identification 
+     * @param elemId Element identification
      * @param id Thief identification
      * @param ts Vector Clock
      * @throws java.rmi.RemoteException
@@ -140,12 +139,20 @@ public interface InterfaceGRInformation extends Remote {
      */
     void setUpMuseumRoom(int roomId, int distance, int canvas, VectorClk ts) throws RemoteException;
 
-     /**
+    /**
      * Shutdown.
-     * 
-     * @return Boolean value. True to shutdown.
+     *
      * @throws java.rmi.RemoteException
      */
-    boolean shutdown() throws RemoteException;
-    
+    void shutdown() throws RemoteException;
+
+    /**
+     * Waiting for shutdown. The server blocks at this method awaiting
+     * de-registration and shutdown
+     *
+     * @return
+     * @throws RemoteException
+     */
+    boolean waitingForShutdown() throws RemoteException;
+
 }

@@ -14,15 +14,28 @@ public class SortLines implements Comparable<SortLines> {
     private String line;
     private VectorClk localClk;
 
+    /**
+     *
+     * @param line
+     * @param localClk
+     */
     public SortLines(String line, VectorClk localClk) {
         this.line = line;
         this.localClk = localClk;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLine() {
         return line;
     }
 
+    /**
+     *
+     * @return
+     */
     public VectorClk getLocalClk() {
         return localClk;
     }

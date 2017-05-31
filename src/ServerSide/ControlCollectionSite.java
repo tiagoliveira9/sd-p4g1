@@ -9,6 +9,8 @@ import java.rmi.RemoteException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This data type implements a Master Thief Control and Collection Site. (in the
@@ -40,6 +42,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @serialField rest
      */
     private final Condition rest;
+    private final Condition shutCondition;
     private boolean restBool;
     private boolean sumUp;
     private boolean assaultP1;
@@ -89,6 +92,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     private ControlCollectionSite(InterfaceGRInformation repo) {
         // bind lock with a condition
         rest = l.newCondition();
+        shutCondition = l.newCondition();
+
         restBool = false;
         sumUp = false;
         assaultP1 = false;
@@ -105,13 +110,14 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
         this.repo = repo;
         // colocar o index do master n altera nada penso eu
         localClk = new VectorClk(0, Constants.VECTOR_CLOCK_SIZE);
+
     }
 
     /**
      * This method changes the Thief state to Deciding what to do.
      *
      * @param ts Vector Clock
-     * @return 
+     * @return
      * @throws java.rmi.RemoteException
      */
     @Override
@@ -168,7 +174,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * canvas that he will give to her, if he has one.
      *
      * @param ts Vector Clock
-     * @return 
+     * @return
      * @throws java.rmi.RemoteException
      */
     @Override
@@ -201,7 +207,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @param partyId Assault party identification
      * @param roomId Room identification
      * @param ts Vector Clock
-     * @return 
+     * @return
      * @throws java.rmi.RemoteException
      */
     @Override
@@ -241,8 +247,9 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     /**
      * This method is used by the Thief to signal the Master Thief to wake up
      * from the waiting for arrival and collect canvas.
+     *
      * @param ts Vector Clock
-     * @return 
+     * @return
      */
     @Override
     public VectorClk goCollectMaster(VectorClk ts) {
@@ -305,7 +312,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * Master Thief uses this method to print the summary results.
      *
      * @param ts Vector Clock
-     * @return 
+     * @return
      * @throws java.rmi.RemoteException
      */
     @Override
@@ -320,7 +327,32 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     }
 
     @Override
-    public boolean shutdown() {
+    public void shutdown() {
+
+        l.lock();
+        try {
+            stateMaster = Constants.PRESENTING_THE_REPORT;
+            shutCondition.signal();
+        } finally {
+            l.unlock();
+        }
+    }
+
+    @Override
+    public boolean waitingForShutdown() {
+
+        l.lock();
+        try {
+            while (stateMaster != Constants.PRESENTING_THE_REPORT) {
+                try {
+                    shutCondition.await();
+                } catch (InterruptedException ex) {
+                }
+            }
+        } finally {
+            l.unlock();
+        }
         return true;
     }
+
 }

@@ -31,7 +31,6 @@ public class MasterThiefClient {
         int rmiRegPortNumb = ServerConfig.RMI_REGISTRY_PORT;
         Registry registry = null;
 
-
         // Initialise RMI invocations
         InterfaceMuseum mus = null;
         InterfaceControlCollectionSite cont = null;
@@ -39,7 +38,7 @@ public class MasterThiefClient {
         InterfaceAssaultParty agr1 = null;
         InterfaceAssaultParty agr2 = null;
         InterfaceGRInformation gri = null; // TEMPORARIO
-        
+
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
         } catch (RemoteException ex) {
@@ -67,14 +66,14 @@ public class MasterThiefClient {
             try {   // waiting for end of simulation
                 masterThief.join();
                 try {
-                    // when master dies, sends death signal to all infidels
+                    // when master dies, write ordered LOG
                     gri.close();
-                    /*mus.shutdown();
-                    control.shutdown();
-                    agr.shutdown(0);
-                    agr.shutdown(1);
+                    cont.shutdown();
+                    mus.shutdown();
                     conc.shutdown();
-                    repo.shutdown();*/
+                    agr1.shutdown();
+                    agr2.shutdown();
+                    gri.shutdown();
                 } catch (RemoteException ex) {
                     Logger.getLogger(MasterThiefClient.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -82,6 +81,6 @@ public class MasterThiefClient {
                 Logger.getLogger(MasterThiefClient.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }
 }

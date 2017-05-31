@@ -28,7 +28,7 @@ public class ConcentrationSiteServer {
         /* get location of the registry service */
         String rmiRegHostName;
         int rmiRegPortNumb;
-        
+
         /* set the rmiregistry hostname and port */
         rmiRegHostName = ServerConfig.RMI_REGISTRY_HOSTNAME;
         rmiRegPortNumb = ServerConfig.RMI_REGISTRY_PORT;
@@ -102,6 +102,23 @@ public class ConcentrationSiteServer {
         }
 
         System.out.println("Concentration Site was registered");
+        System.out.println("\n Waiting for shutdown...");
+
+        // blocks awaiting for shutdown
+        conc.waitingForShutdown();
+
+        try {
+            reg.unbind(nameEntryObject);
+        } catch (RemoteException e) {
+            System.out.println(" Exception unbinding Concentration Site: " + e.getMessage());
+            System.exit(1);
+        } catch (NotBoundException e) {
+            System.out.println(" Exception object not bounded:Concentration Site: " + e.getMessage());
+            System.exit(1);
+        }
+
+        System.out.println("Concentration Site was deregistered! ");
+        System.exit(0); // nao tenho certeza, mas o programa nao termina logo
     }
 
 }

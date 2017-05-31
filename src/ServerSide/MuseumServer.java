@@ -121,6 +121,23 @@ public class MuseumServer {
         }
 
         System.out.println("Museum was registered");
+        System.out.println("\n Waiting for shutdown...");
+
+        // blocks awaiting for shutdown
+        mus.waitingForShutdown();
+
+        try {
+            reg.unbind(nameEntryObject);
+        } catch (RemoteException e) {
+            System.out.println(" Exception unbinding Museum: " + e.getMessage());
+            System.exit(1);
+        } catch (NotBoundException e) {
+            System.out.println(" Exception object not bounded: Museum: " + e.getMessage());
+            System.exit(1);
+        }
+
+        System.out.println("Museum was deregistered! ");
+        System.exit(0); // nao tenho certeza, mas o programa nao termina logo
     }
 
 }

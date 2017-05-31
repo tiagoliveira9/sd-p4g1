@@ -14,6 +14,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 /**
  * This data type implements the General Repository of Information
@@ -54,7 +55,7 @@ public class GRInformation implements InterfaceGRInformation {
      * @serialField printer
      */
     private PrintWriter log;
-    private PrintWriter log2;
+    private PrintWriter logVector;
 
     /**
      * Master thief state
@@ -79,6 +80,8 @@ public class GRInformation implements InterfaceGRInformation {
     private VectorClk griClk;
 
     private List<SortLines> orderedList;
+    private int shutNow;
+    private final Condition shutCondition;
 
     /**
      * The method returns General Repository Information object.
@@ -103,10 +106,12 @@ public class GRInformation implements InterfaceGRInformation {
         date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssSS");
         dateString = (date.format(new Date()));
         masterThiefState = Constants.PLANNING_THE_HEIST;
+        shutCondition = lock.newCondition();
+        shutNow = -1;
 
         try {
             log = new PrintWriter("LOG-" + dateString + ".txt");
-            log2 = new PrintWriter("LOGZ-" + dateString + ".txt");
+            logVector = new PrintWriter("LOGZ-" + dateString + ".txt");
         } catch (FileNotFoundException ex) {
             log = null;
         }
@@ -446,8 +451,8 @@ public class GRInformation implements InterfaceGRInformation {
         }
 
         formatter.format("%1$3s %2$3s %3$3s %4$3s %5$3s %6$3s %7$3s",
-                "["+clock[0], clock[1], clock[2], clock[3], clock[4], clock[5],
-                clock[6]+"]"
+                "[" + clock[0], clock[1], clock[2], clock[3], clock[4], clock[5],
+                clock[6] + "]"
         );
 
         //formatter.format("--- --- --- --- --- --- ---");
@@ -627,11 +632,11 @@ public class GRInformation implements InterfaceGRInformation {
 
         //
         for (SortLines up : orderedList) {
-            log2.print(up.getLine());
+            logVector.print(up.getLine());
         }
 
-        log2.flush();
-        log2.close();
+        logVector.flush();
+        logVector.close();
         //
         log.flush();
         log.close();
@@ -639,7 +644,31 @@ public class GRInformation implements InterfaceGRInformation {
     }
 
     @Override
-    public boolean shutdown() {
+    public void shutdown() {
+
+        lock.lock();
+        try {
+            shutNow = Constants.PRESENTING_THE_REPORT;
+            shutCondition.signal();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public boolean waitingForShutdown() {
+
+        lock.lock();
+        try {
+            while (shutNow != Constants.PRESENTING_THE_REPORT) {
+                try {
+                    shutCondition.await();
+                } catch (InterruptedException ex) {
+                }
+            }
+        } finally {
+            lock.unlock();
+        }
         return true;
     }
 }

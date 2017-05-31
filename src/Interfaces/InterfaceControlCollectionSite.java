@@ -35,7 +35,7 @@ public interface InterfaceControlCollectionSite extends Remote {
      * from the waiting for arrival and collect canvas.
      *
      * @param ts Vector Clock
-     * @return 
+     * @return
      * @throws java.rmi.RemoteException
      */
     VectorClk goCollectMaster(VectorClk ts) throws RemoteException;
@@ -49,7 +49,7 @@ public interface InterfaceControlCollectionSite extends Remote {
      * @param partyId Assault party identification
      * @param roomId Room identification
      * @param ts Vector Clock
-     * @return 
+     * @return
      * @throws java.rmi.RemoteException
      */
     VectorClk handACanvas(int canvas, int roomId, int partyId,
@@ -69,7 +69,7 @@ public interface InterfaceControlCollectionSite extends Remote {
      * Master Thief uses this method to print the summary results.
      *
      * @param ts Vector Clock
-     * @return 
+     * @return
      * @throws java.rmi.RemoteException
      */
     VectorClk printResult(VectorClk ts) throws RemoteException;
@@ -78,7 +78,7 @@ public interface InterfaceControlCollectionSite extends Remote {
      * This method changes the Thief state to Deciding what to do.
      *
      * @param ts Vector Clock
-     * @return 
+     * @return
      * @throws java.rmi.RemoteException
      */
     VectorClk setDeciding(VectorClk ts) throws RemoteException;
@@ -88,7 +88,7 @@ public interface InterfaceControlCollectionSite extends Remote {
      * canvas that he will give to her, if he has one.
      *
      * @param ts Vector Clock
-     * @return 
+     * @return
      * @throws java.rmi.RemoteException
      */
     VectorClk takeARest(VectorClk ts) throws RemoteException;
@@ -96,9 +96,17 @@ public interface InterfaceControlCollectionSite extends Remote {
     /**
      * Shutdown.
      *
-     * @return Boolean value. True to shutdown.
      * @throws java.rmi.RemoteException
      */
-    boolean shutdown() throws RemoteException;
+    void shutdown() throws RemoteException;
+
+    /**
+     * Waiting for shutdown. The server blocks at this method awaiting
+     * de-registration and shutdown
+     *
+     * @return
+     * @throws RemoteException
+     */
+    boolean waitingForShutdown() throws RemoteException;
 
 }

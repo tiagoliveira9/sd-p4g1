@@ -37,7 +37,7 @@ public interface InterfaceConcentrationSite extends Remote {
      * @param partyId Assault party identification
      * @param roomId Room identification
      * @param ts Vector Clock
-     * @return 
+     * @return
      * @throws java.rmi.RemoteException
      */
     VectorClk prepareAssaultParty2(int partyId, int roomId, VectorClk ts) throws RemoteException;
@@ -83,9 +83,16 @@ public interface InterfaceConcentrationSite extends Remote {
     /**
      * Shutdown.
      *
-     * @return Boolean value. True to shutdown.
      * @throws java.rmi.RemoteException
      */
-    boolean shutdown() throws RemoteException;
+    void shutdown() throws RemoteException;
 
+    /**
+     * Waiting for shutdown. The server blocks at this method awaiting
+     * de-registration and shutdown
+     *
+     * @return
+     * @throws RemoteException
+     */
+    boolean waitingForShutdown() throws RemoteException;
 }

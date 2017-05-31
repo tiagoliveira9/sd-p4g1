@@ -34,14 +34,22 @@ public interface InterfaceMuseum extends Remote {
      * @throws java.rmi.RemoteException
      */
     Tuple<VectorClk, Boolean> rollACanvas(int roomId, int elemPos, int partyId,
-             int thiefId, VectorClk ts) throws RemoteException;
+            int thiefId, VectorClk ts) throws RemoteException;
 
     /**
      * Shutdown.
      *
-     * @return Boolean value. True to shutdown.
      * @throws java.rmi.RemoteException
      */
-    boolean shutdown() throws RemoteException;
+    void shutdown() throws RemoteException;
+
+    /**
+     * Waiting for shutdown. The server blocks at this method awaiting
+     * de-registration and shutdown
+     *
+     * @return
+     * @throws RemoteException
+     */
+    boolean waitingForShutdown() throws RemoteException;
 
 }

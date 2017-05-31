@@ -43,6 +43,7 @@ public interface InterfaceAssaultParty extends Remote {
      *
      * @param thiefId Thief identification
      * @param partyId Assault party identification
+     * @param ts
      * @return Thief to the right room of an assault party
      * @throws java.rmi.RemoteException
      */
@@ -92,9 +93,16 @@ public interface InterfaceAssaultParty extends Remote {
     /**
      * Shutdown.
      *
-     * @param partyId Assault party identification
-     * @return Boolean value. True to shutdown.
      * @throws java.rmi.RemoteException
      */
-    boolean shutdown(int partyId) throws RemoteException;
+    void shutdown() throws RemoteException;
+
+    /**
+     * Waiting for shutdown. The server blocks at this method awaiting
+     * de-registration and shutdown
+     *
+     * @return
+     * @throws RemoteException
+     */
+    boolean waitingForShutdown() throws RemoteException;
 }

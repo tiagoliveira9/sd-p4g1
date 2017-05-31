@@ -98,6 +98,8 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
 
     private final InterfaceGRInformation repo;
     private VectorClk localClk;
+    private int shutNow;
+    private final Condition shutCondition;
 
     /**
      * The method returns ConcentrationSite object.
@@ -123,12 +125,14 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
     private ConcentrationSite(InterfaceGRInformation repo) {
         prepare = l.newCondition();
         assembling = l.newCondition();
+        shutCondition = l.newCondition();
         nAssaultParty = -1;
         globalId = -1;
         queueThieves = new ArrayDeque<>();
         counterThief = 0;
         die = false;
         countDie = 0;
+        shutNow = -1;
         this.repo = repo;
         localClk = new VectorClk(0, Constants.VECTOR_CLOCK_SIZE);
     }
@@ -199,7 +203,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * @param partyId Assault party identification
      * @param roomId Room identification
      * @param ts Vector Clock
-     * @return 
+     * @return
      */
     @Override
     public VectorClk prepareAssaultParty2(int partyId, int roomId,
@@ -285,7 +289,31 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
     }
 
     @Override
-    public boolean shutdown() {
+    public void shutdown() {
+
+        l.lock();
+        try {
+            shutNow = Constants.PRESENTING_THE_REPORT;
+            shutCondition.signal();
+        } finally {
+            l.unlock();
+        }
+    }
+
+    @Override
+    public boolean waitingForShutdown() {
+
+        l.lock();
+        try {
+            while (shutNow != Constants.PRESENTING_THE_REPORT) {
+                try {
+                    shutCondition.await();
+                } catch (InterruptedException ex) {
+                }
+            }
+        } finally {
+            l.unlock();
+        }
         return true;
     }
 }
