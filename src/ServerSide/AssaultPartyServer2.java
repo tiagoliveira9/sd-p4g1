@@ -117,8 +117,12 @@ public class AssaultPartyServer2 {
             System.exit(1);
         }
 
-        System.out.println("Assault Party 2 was deregistered! ");
-        System.exit(0); // nao tenho certeza, mas o programa nao termina logo
+        System.out.println("Assault Party 2 was de-registered! ");
+        try {
+            UnicastRemoteObject.unexportObject(asg2, false);
+        } catch (RemoteException e) {
+            System.out.println("Exception on stub generation for the Assault Party 2: " + e.getMessage());
+        }
     }
 
 }

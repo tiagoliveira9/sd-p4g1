@@ -110,8 +110,8 @@ public class GRInformation implements InterfaceGRInformation {
         shutNow = -1;
 
         try {
-            log = new PrintWriter("LOG-" + dateString + ".txt");
-            logVector = new PrintWriter("LOGZ-" + dateString + ".txt");
+            log = new PrintWriter("LOG-A-" + dateString + ".txt");
+            logVector = new PrintWriter("LOG-B-" + dateString + ".txt");
         } catch (FileNotFoundException ex) {
             log = null;
         }

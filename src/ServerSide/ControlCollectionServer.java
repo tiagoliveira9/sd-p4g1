@@ -118,8 +118,14 @@ public class ControlCollectionServer {
             System.exit(1);
         }
 
-        System.out.println("Control & Collection Site was deregistered! ");
-        System.exit(0); // nao tenho certeza, mas o programa nao termina logo
+        System.out.println("Control & Collection Site was de-registered! ");
+        
+        
+        try {
+            UnicastRemoteObject.unexportObject(cont, false);
+        } catch (RemoteException e) {
+            System.out.println("Exception on stub generation for the Control & Collection Site: " + e.getMessage());
+        }
     }
 
 }

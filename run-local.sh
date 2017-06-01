@@ -1,6 +1,9 @@
 
 #########################
 # server side
+javac -d engineHeist/serverSide -sourcepath src src/ServerSide/*.java 
+javac -d engineHeist/registry -sourcepath src src/registry/*.java
+javac -d engineHeist/clientSide -sourcepath src src/ClientSide/*.java 
 
 # start grinformation
 gnome-terminal -x sh -c "cd engineHeist/serverSide/;

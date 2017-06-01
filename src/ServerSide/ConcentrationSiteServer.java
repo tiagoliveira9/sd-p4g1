@@ -117,8 +117,12 @@ public class ConcentrationSiteServer {
             System.exit(1);
         }
 
-        System.out.println("Concentration Site was deregistered! ");
-        System.exit(0); // nao tenho certeza, mas o programa nao termina logo
+        System.out.println("Concentration Site was de-registered! ");
+        try {
+            UnicastRemoteObject.unexportObject(conc, false);
+        } catch (RemoteException e) {
+            System.out.println("Exception on stub generation for the Concentration Site: " + e.getMessage());
+        }
     }
 
 }

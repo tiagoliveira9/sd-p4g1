@@ -41,9 +41,8 @@ public class MuseumServer {
 
         System.out.println("Security manager was installed!");
 
-
         InterfaceGRInformation repo = null;
-       
+
         /* locates by name the remote object on the RMI registry */
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
@@ -136,8 +135,13 @@ public class MuseumServer {
             System.exit(1);
         }
 
-        System.out.println("Museum was deregistered! ");
-        System.exit(0); // nao tenho certeza, mas o programa nao termina logo
+        System.out.println("Museum was de-registered! ");
+        
+        try {
+            UnicastRemoteObject.unexportObject(mus, false);
+        } catch (RemoteException e) {
+            System.out.println("Exception on stub generation for the Museum: " + e.getMessage());
+        }
     }
 
 }
