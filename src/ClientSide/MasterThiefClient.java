@@ -32,12 +32,12 @@ public class MasterThiefClient {
         Registry registry = null;
 
         // Initialise RMI invocations
-        InterfaceMuseum mus = null;
-        InterfaceControlCollectionSite cont = null;
-        InterfaceConcentrationSite conc = null;
-        InterfaceAssaultParty agr1 = null;
-        InterfaceAssaultParty agr2 = null;
-        InterfaceGRInformation gri = null; // TEMPORARIO
+        InterfaceMuseum musInterface = null;
+        InterfaceControlCollectionSite contInterface = null;
+        InterfaceConcentrationSite concInterface = null;
+        InterfaceAssaultParty agr1Interface = null;
+        InterfaceAssaultParty agrInterface = null;
+        InterfaceGRInformation repoInterface = null; // TEMPORARIO
 
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
@@ -47,19 +47,19 @@ public class MasterThiefClient {
 
         try {
 
-            mus = (InterfaceMuseum) registry.lookup(ServerConfig.REGISTRY_MUS_NAME);
-            cont = (InterfaceControlCollectionSite) registry.lookup(ServerConfig.REGISTRY_CONTROL_NAME);
-            conc = (InterfaceConcentrationSite) registry.lookup(ServerConfig.REGISTRY_CONC_NAME);
-            agr1 = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG1_NAME);
-            agr2 = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG2_NAME);
-            gri = (InterfaceGRInformation) registry.lookup(ServerConfig.REGISTRY_GRI_NAME);
+            musInterface = (InterfaceMuseum) registry.lookup(ServerConfig.REGISTRY_MUS_NAME);
+            contInterface = (InterfaceControlCollectionSite) registry.lookup(ServerConfig.REGISTRY_CONTROL_NAME);
+            concInterface = (InterfaceConcentrationSite) registry.lookup(ServerConfig.REGISTRY_CONC_NAME);
+            agr1Interface = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG1_NAME);
+            agrInterface = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG2_NAME);
+            repoInterface = (InterfaceGRInformation) registry.lookup(ServerConfig.REGISTRY_GRI_NAME);
 
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(ThiefClient.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
         }
 
-        MasterThief masterThief = new MasterThief(mus, cont, conc, agr1, agr2);
+        MasterThief masterThief = new MasterThief(musInterface, contInterface, concInterface, agr1Interface, agrInterface);
         masterThief.start();
         System.out.println("Master Thief started.");
         {
@@ -67,13 +67,13 @@ public class MasterThiefClient {
                 masterThief.join();
                 try {
                     // when master dies, write ordered LOG
-                    gri.close();
-                    mus.shutdown();
-                    cont.shutdown();
-                    conc.shutdown();
-                    agr1.shutdown();
-                    agr2.shutdown();
-                    gri.shutdown();
+                    repoInterface.close();
+                    musInterface.shutdown();
+                    contInterface.shutdown();
+                    concInterface.shutdown();
+                    agr1Interface.shutdown();
+                    agrInterface.shutdown();
+                    repoInterface.shutdown();
                 } catch (RemoteException ex) {
                     Logger.getLogger(MasterThiefClient.class.getName()).log(Level.SEVERE, null, ex);
                 }

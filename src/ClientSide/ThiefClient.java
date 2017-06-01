@@ -41,12 +41,12 @@ public class ThiefClient {
         System.out.println("Security manager was installed!");
 
         // RMI lookup
-        InterfaceMuseum mus = null;
-        InterfaceControlCollectionSite cont = null;
-        InterfaceConcentrationSite conc = null;
-        InterfaceAssaultParty agr1 = null;
-        InterfaceAssaultParty agr2 = null;
-        InterfaceGRInformation repo = null;
+        InterfaceMuseum musInterface = null;
+        InterfaceControlCollectionSite contInterface = null;
+        InterfaceConcentrationSite concInterface = null;
+        InterfaceAssaultParty agr1Interface = null;
+        InterfaceAssaultParty agr2Interface = null;
+        InterfaceGRInformation repoInterface = null;
 
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
@@ -56,12 +56,12 @@ public class ThiefClient {
 
         try {
 
-            mus = (InterfaceMuseum) registry.lookup(ServerConfig.REGISTRY_MUS_NAME);
-            cont = (InterfaceControlCollectionSite) registry.lookup(ServerConfig.REGISTRY_CONTROL_NAME);
-            conc = (InterfaceConcentrationSite) registry.lookup(ServerConfig.REGISTRY_CONC_NAME);
-            agr1 = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG1_NAME);
-            agr2 = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG2_NAME);
-            repo = (InterfaceGRInformation) registry.lookup(ServerConfig.REGISTRY_GRI_NAME);
+            musInterface = (InterfaceMuseum) registry.lookup(ServerConfig.REGISTRY_MUS_NAME);
+            contInterface = (InterfaceControlCollectionSite) registry.lookup(ServerConfig.REGISTRY_CONTROL_NAME);
+            concInterface = (InterfaceConcentrationSite) registry.lookup(ServerConfig.REGISTRY_CONC_NAME);
+            agr1Interface = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG1_NAME);
+            agr2Interface = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG2_NAME);
+            repoInterface = (InterfaceGRInformation) registry.lookup(ServerConfig.REGISTRY_GRI_NAME);
 
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(ThiefClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -76,10 +76,10 @@ public class ThiefClient {
         for (int i = 0; i < Constants.N_THIEVES; i++) {
             agility = ThreadLocalRandom.current().nextInt(2, 6 + 1);
             // (thiefId, agility, mus, cont, conc, agr1, agr2)
-            thieves[i] = new Thief(i, agility, mus, cont, conc, agr1, agr2);
+            thieves[i] = new Thief(i, agility, musInterface, contInterface, concInterface, agr1Interface, agr2Interface);
             
             try {
-                repo.setStateAgility(thieves[i].getAgility(), thieves[i].getThiefId());
+                repoInterface.setStateAgility(thieves[i].getAgility(), thieves[i].getThiefId());
             } catch (RemoteException ex) {
                 ex.printStackTrace();
                 System.exit(1);
