@@ -110,15 +110,16 @@ public class Museum implements InterfaceMuseum {
             // change in museum
             rooms[roomId].canvas--;
             flag = true;
-
+            // setCanvasElem is resposible to change all the thief states necessary
             repo.setCanvasElem(partyId, elemPos, 1, roomId, thiefId, localClk.getCopyClk());
 
         } else {
             repo.setStateThief(Constants.AT_A_ROOM, thiefId, localClk.getCopyClk());
 
         }
+        
         l.unlock();
-        return new Tuple<>(localClk, flag);
+        return new Tuple<>(localClk.getCopyClk(), flag);
     }
 
     /**

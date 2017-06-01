@@ -138,7 +138,7 @@ public class MuseumServer {
         System.out.println("Museum was de-registered! ");
         
         try {
-            UnicastRemoteObject.unexportObject(mus, false);
+            UnicastRemoteObject.unexportObject(mus, true);
         } catch (RemoteException e) {
             System.out.println("Exception on stub generation for the Museum: " + e.getMessage());
         }

@@ -119,7 +119,7 @@ public class AssaultPartyServer1 {
 
         System.out.println("Assault Party 1 was de-registered! ");
         try {
-            UnicastRemoteObject.unexportObject(asg1, false);
+            UnicastRemoteObject.unexportObject(asg1, true);
         } catch (RemoteException e) {
             System.out.println("Exception on stub generation for the Assault Party 1: " + e.getMessage());
         }

@@ -37,7 +37,7 @@ public class AssaultParty implements InterfaceAssaultParty {
     private int teamHeadOut; // thief that goes on the front crawling OUT
     private int idGlobal;
     private int shutNow;
-    
+
     private VectorClk localClk;
 
     private final InterfaceGRInformation repo;
@@ -91,7 +91,7 @@ public class AssaultParty implements InterfaceAssaultParty {
         teamHeadIn = 0;
         teamHeadOut = 0;
         shutNow = -1;
-        
+
         line = new int[Constants.N_SQUAD];
         squad = new Crook[Constants.N_SQUAD];
         for (int i = 0; i < Constants.N_SQUAD; i++) {
@@ -191,7 +191,6 @@ public class AssaultParty implements InterfaceAssaultParty {
                 while (cr.id != idGlobal) {
                     moveThief.await();
                 }
-                localClk.incrementClkCrawl((thiefId + 1));
             }
             idGlobal = squad[next].id;
             moveThief.signalAll();
@@ -229,7 +228,6 @@ public class AssaultParty implements InterfaceAssaultParty {
         int next = selectNext(thiefId);
 
         try {
-            // duvidas, nao sei se mexa no clock ou nao..
             repo.setStateThief(Constants.CRAWLING_OUTWARDS, cr.id, localClk.getCopyClk());
 
             while (cr.id != idGlobal) {
@@ -244,7 +242,6 @@ public class AssaultParty implements InterfaceAssaultParty {
                 while (cr.id != idGlobal) {
                     moveThief.await();
                 }
-                localClk.incrementClkCrawl((thiefId + 1));
             }
             // Remove myself from team
             line[myElemId] = -1;
@@ -279,6 +276,7 @@ public class AssaultParty implements InterfaceAssaultParty {
             teamHead = teamHeadOut;
         }
         do {
+            localClk.incrementClkOut((cr.id + 1));
             int pos = cr.pos + cr.agility;
 
             if (pos <= teamHead) {

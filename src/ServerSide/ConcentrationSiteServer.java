@@ -119,7 +119,7 @@ public class ConcentrationSiteServer {
 
         System.out.println("Concentration Site was de-registered! ");
         try {
-            UnicastRemoteObject.unexportObject(conc, false);
+            UnicastRemoteObject.unexportObject(conc, true);
         } catch (RemoteException e) {
             System.out.println("Exception on stub generation for the Concentration Site: " + e.getMessage());
         }

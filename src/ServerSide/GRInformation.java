@@ -217,7 +217,7 @@ public class GRInformation implements InterfaceGRInformation {
      * @param cv Canvas of thief
      */
     @Override
-    public void setCanvasElem(int partyId, int elemId, int cv, int roomId,
+    public VectorClk setCanvasElem(int partyId, int elemId, int cv, int roomId,
             int thiefId, VectorClk ts) {
 
         lock.lock();
@@ -227,12 +227,16 @@ public class GRInformation implements InterfaceGRInformation {
         int n = Integer.parseInt(sala[roomId].canvas);
         n--;
         sala[roomId].canvas = Integer.toString(n);
+        griClk.incrementClkOut((thiefId+1));
         // update thief state
         ladrao[thiefId].stat = Constants.AT_A_ROOM;
         printDoubleLine();
+        griClk.incrementClkOut((thiefId+1));
         ladrao[thiefId].stat = Constants.CRAWLING_OUTWARDS;
         printDoubleLine();
         lock.unlock();
+        
+        return griClk.getCopyClk();
     }
 
     /**

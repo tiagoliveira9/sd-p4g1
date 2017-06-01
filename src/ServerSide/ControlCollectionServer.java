@@ -121,7 +121,7 @@ public class ControlCollectionServer {
         
         
         try {
-            UnicastRemoteObject.unexportObject(cont, false);
+            UnicastRemoteObject.unexportObject(cont, true);
         } catch (RemoteException e) {
             System.out.println("Exception on stub generation for the Control & Collection Site: " + e.getMessage());
         }

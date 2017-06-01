@@ -68,8 +68,8 @@ public class MasterThiefClient {
                 try {
                     // when master dies, write ordered LOG
                     gri.close();
-                    cont.shutdown();
                     mus.shutdown();
+                    cont.shutdown();
                     conc.shutdown();
                     agr1.shutdown();
                     agr2.shutdown();

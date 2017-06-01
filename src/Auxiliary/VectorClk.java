@@ -41,7 +41,7 @@ public class VectorClk implements Serializable {
      *
      * @param in
      */
-    public void incrementClkCrawl(int in) {
+    public void incrementClkOut(int in) {
 
         lClk[in]++;
     }

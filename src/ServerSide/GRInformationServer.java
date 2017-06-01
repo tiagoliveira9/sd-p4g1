@@ -103,8 +103,12 @@ public class GRInformationServer {
             System.exit(1);
         }
 
-        System.out.println("General Repository of Information was deregistered! ");
-        System.exit(0); // nao tenho certeza, mas o programa nao termina logo
+        System.out.println("General Repository of Information was de-registered! ");
+        try {
+            UnicastRemoteObject.unexportObject(repo, true);
+        } catch (RemoteException e) {
+            System.out.println("Exception on stub generation for the Museum: " + e.getMessage());
+        }
     }
 
 }

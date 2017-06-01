@@ -62,9 +62,10 @@ public interface InterfaceGRInformation extends Remote {
      * @param roomId Room identification
      * @param thiefId Thief identification
      * @param ts Vector Clock
+     * @return Vector Clock copy
      * @throws java.rmi.RemoteException
      */
-    void setCanvasElem(int partyId, int elemId, int cv, int roomId,
+    VectorClk setCanvasElem(int partyId, int elemId, int cv, int roomId,
             int thiefId, VectorClk ts) throws RemoteException;
 
     /**

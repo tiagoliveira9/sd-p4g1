@@ -113,7 +113,7 @@ public class Thief extends Thread implements InterfaceThief {
                 stateThief = Constants.CRAWLING_INWARDS;
                 asg.waitToStartRobbing(thiefId, partyId);
 
-                vcThief.incrementClk();
+                //vcThief.incrementClk(); responsabilidade de incrementar é do crawlIN
                 // int[] roll = asg.crawlIn(thiefId, partyId);
                 Triple<VectorClk, Integer, Integer> rollTriple = asg.crawlIn(thiefId,
                         partyId, vcThief.getCopyClk());
@@ -124,7 +124,7 @@ public class Thief extends Thread implements InterfaceThief {
 
                 stateThief = Constants.AT_A_ROOM;
 
-                vcThief.incrementClk();
+                //vcThief.incrementClk(); o incremento é no repo
                 Tuple<VectorClk, Boolean> painting = mus.rollACanvas(roomId,
                         elemId, partyId, thiefId, vcThief.getCopyClk());
                 vcThief.updateClk(painting.getLeft());
