@@ -91,7 +91,7 @@ public class Thief extends Thread implements InterfaceThief {
             while ((partyId = amINeeded()) != -1) {
                 // goes to team ordered by master
 
-                InterfaceAssaultParty asg = null;
+                InterfaceAssaultParty asg;
 
                 if (partyId == 0) {
                     asg = asg1;

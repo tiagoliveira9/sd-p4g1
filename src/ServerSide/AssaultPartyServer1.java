@@ -1,7 +1,6 @@
 package ServerSide;
 
 import Interfaces.InterfaceAssaultParty;
-import Interfaces.InterfaceConcentrationSite;
 import Interfaces.InterfaceGRInformation;
 import Interfaces.Register;
 import java.rmi.AlreadyBoundException;

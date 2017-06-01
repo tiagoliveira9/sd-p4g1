@@ -1,6 +1,5 @@
 package ServerSide;
 
-import Interfaces.InterfaceConcentrationSite;
 import Interfaces.InterfaceControlCollectionSite;
 import Interfaces.InterfaceGRInformation;
 import Interfaces.Register;
