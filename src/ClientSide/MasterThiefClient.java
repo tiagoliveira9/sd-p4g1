@@ -36,7 +36,7 @@ public class MasterThiefClient {
         InterfaceControlCollectionSite contInterface = null;
         InterfaceConcentrationSite concInterface = null;
         InterfaceAssaultParty agr1Interface = null;
-        InterfaceAssaultParty agrInterface = null;
+        InterfaceAssaultParty agr2Interface = null;
         InterfaceGRInformation repoInterface = null; // TEMPORARIO
 
         try {
@@ -51,7 +51,7 @@ public class MasterThiefClient {
             contInterface = (InterfaceControlCollectionSite) registry.lookup(ServerConfig.REGISTRY_CONTROL_NAME);
             concInterface = (InterfaceConcentrationSite) registry.lookup(ServerConfig.REGISTRY_CONC_NAME);
             agr1Interface = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG1_NAME);
-            agrInterface = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG2_NAME);
+            agr2Interface = (InterfaceAssaultParty) registry.lookup(ServerConfig.REGISTRY_ASG2_NAME);
             repoInterface = (InterfaceGRInformation) registry.lookup(ServerConfig.REGISTRY_GRI_NAME);
 
         } catch (RemoteException | NotBoundException ex) {
@@ -59,7 +59,7 @@ public class MasterThiefClient {
             System.exit(1);
         }
 
-        MasterThief masterThief = new MasterThief(musInterface, contInterface, concInterface, agr1Interface, agrInterface);
+        MasterThief masterThief = new MasterThief(musInterface, contInterface, concInterface, agr1Interface, agr2Interface);
         masterThief.start();
         System.out.println("Master Thief started.");
         {
@@ -72,7 +72,7 @@ public class MasterThiefClient {
                     contInterface.shutdown();
                     concInterface.shutdown();
                     agr1Interface.shutdown();
-                    agrInterface.shutdown();
+                    agr2Interface.shutdown();
                     repoInterface.shutdown();
                 } catch (RemoteException ex) {
                     Logger.getLogger(MasterThiefClient.class.getName()).log(Level.SEVERE, null, ex);
