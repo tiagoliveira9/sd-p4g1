@@ -71,7 +71,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
     /**
      * The method returns ControlCollectionSite object.
      *
-     * @param repo
+     * @param repo Repository
      * @return ConcentrationSite object to be used.
      */
     public static ControlCollectionSite getInstance(InterfaceGRInformation repo) {
@@ -117,8 +117,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * This method changes the Thief state to Deciding what to do.
      *
      * @param ts Vector Clock
-     * @return
-     * @throws java.rmi.RemoteException
+     * @return Local clock copy
+     * @throws java.rmi.RemoteException Remote Exception
      */
     @Override
     public VectorClk setDeciding(VectorClk ts) throws RemoteException {
@@ -136,7 +136,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      *
      * @param ts Vector Clock
      * @return Assault party and room identification
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     @Override
     public Triple<VectorClk, Integer, Integer> prepareAssaultParty1(VectorClk ts) throws RemoteException {
@@ -174,8 +174,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * canvas that he will give to her, if he has one.
      *
      * @param ts Vector Clock
-     * @return
-     * @throws java.rmi.RemoteException
+     * @return Local Clock
+     * @throws java.rmi.RemoteException Remote Exception
      */
     @Override
     public VectorClk takeARest(VectorClk ts) throws RemoteException {
@@ -207,8 +207,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * @param partyId Assault party identification
      * @param roomId Room identification
      * @param ts Vector Clock
-     * @return
-     * @throws java.rmi.RemoteException
+     * @return Local Clock
+     * @throws java.rmi.RemoteException Remote Exception
      */
     @Override
     public VectorClk handACanvas(int canvas, int roomId, int partyId,
@@ -249,7 +249,7 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * from the waiting for arrival and collect canvas.
      *
      * @param ts Vector Clock
-     * @return
+     * @return Local Clock
      */
     @Override
     public VectorClk goCollectMaster(VectorClk ts) {
@@ -312,8 +312,8 @@ public class ControlCollectionSite implements InterfaceControlCollectionSite {
      * Master Thief uses this method to print the summary results.
      *
      * @param ts Vector Clock
-     * @return
-     * @throws java.rmi.RemoteException
+     * @return Local Clock
+     * @throws java.rmi.RemoteException Remote Exception
      */
     @Override
     public VectorClk printResult(VectorClk ts) throws RemoteException {

@@ -19,7 +19,7 @@ public interface InterfaceAssaultParty extends Remote {
      *
      * @param elemId Element identification
      * @param partyId Assault party identification
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote exception
      */
     void addCrookCanvas(int elemId, int partyId) throws RemoteException;
 
@@ -33,7 +33,7 @@ public interface InterfaceAssaultParty extends Remote {
      * @param ts Vector Clock
      *
      * @return True if is the last Thief, return false otherwise.
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote exception
      */
     Tuple<VectorClk, Boolean> addToSquad(int thiefId, int thiefAgility,
             int partyId, VectorClk ts) throws RemoteException;
@@ -43,9 +43,9 @@ public interface InterfaceAssaultParty extends Remote {
      *
      * @param thiefId Thief identification
      * @param partyId Assault party identification
-     * @param ts
+     * @param ts Vector Clock
      * @return Thief to the right room of an assault party
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote exception
      */
     Triple<VectorClk, Integer, Integer> crawlIn(int thiefId, int partyId,
             VectorClk ts) throws RemoteException;
@@ -57,7 +57,7 @@ public interface InterfaceAssaultParty extends Remote {
      * @param partyId Assault party identification
      * @param ts Vector Clock
      * @return Thief to the right room of an assault party
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote exception
      */
     VectorClk crawlOut(int thiefId, int partyId, VectorClk ts) throws RemoteException;
 
@@ -66,7 +66,7 @@ public interface InterfaceAssaultParty extends Remote {
      * party and changes the state of the Master
      *
      * @param partyId Assault party identification
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote exception
      */
     void sendAssaultParty(int partyId) throws RemoteException;
 
@@ -76,7 +76,7 @@ public interface InterfaceAssaultParty extends Remote {
      * @param distance Room distance
      * @param roomId Room identification
      * @param partyId Assault party identification
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote exception
      */
     void setUpRoom(int distance, int roomId, int partyId) throws RemoteException;
 
@@ -86,14 +86,14 @@ public interface InterfaceAssaultParty extends Remote {
      *
      * @param thiefId Thief identification
      * @param partyId Assault party identification
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote exception
      */
     void waitToStartRobbing(int thiefId, int partyId) throws RemoteException;
 
     /**
      * Shutdown.
      *
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote exception
      */
     void shutdown() throws RemoteException;
 
@@ -101,8 +101,8 @@ public interface InterfaceAssaultParty extends Remote {
      * Waiting for shutdown. The server blocks at this method awaiting
      * de-registration and shutdown
      *
-     * @return
-     * @throws RemoteException
+     * @return True to shutdown, false otherwise
+     * @throws RemoteException Remote exception
      */
     boolean waitingForShutdown() throws RemoteException;
 }

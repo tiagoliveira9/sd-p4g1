@@ -58,7 +58,7 @@ public class Thief extends Thread implements InterfaceThief {
      * @param thiefId Thief identification
      * @param agility Thief agility
      * @param mus Museum Interface
-     * @param cont Control & Collection Interface
+     * @param cont Control and Collection Interface
      * @param conc Concentration Interface
      * @param agr1 Assault Party 1 Interface
      * @param agr2 Assault Party 2 Interface

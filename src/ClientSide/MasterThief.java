@@ -37,7 +37,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      * Constructor
      *
      * @param mus Museum Interface
-     * @param cont Control & Collection Interface
+     * @param cont Control and Collection Interface
      * @param conc Concentration Interface
      * @param agr1 Assault Party 1 Interface
      * @param agr2 Assault Party 2 Interface
@@ -130,7 +130,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
     /**
      * Change Master state to "Deciding what to do".
      *
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     public void startOperations() throws RemoteException {
         stateMaster = Constants.DECIDING_WHAT_TO_DO;
@@ -145,7 +145,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      * move is to take a rest, returns 3.
      *
      * @return Option for next step to take.
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     public int appraiseSit() throws RemoteException {
         stateMaster = Constants.DECIDING_WHAT_TO_DO;
@@ -168,7 +168,7 @@ public class MasterThief extends Thread implements InterfaceMasterThief {
      * This method verifies if every room is empty.
      *
      * @return True if exists a room to sack, False if every room is empty.
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     public boolean anyRoomLeft() throws RemoteException {
 

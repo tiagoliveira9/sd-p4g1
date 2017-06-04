@@ -17,7 +17,7 @@ public interface InterfaceControlCollectionSite extends Remote {
      * The method anyRoomLeft verifies if there are any room left to sack.
      *
      * @return True if exists a Room to sack, False if every room is empty
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     boolean anyRoomLeft() throws RemoteException;
 
@@ -26,7 +26,7 @@ public interface InterfaceControlCollectionSite extends Remote {
      * least one, returns false if every team is occupied
      *
      * @return Availability of teams
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     boolean anyTeamAvailable() throws RemoteException;
 
@@ -35,8 +35,8 @@ public interface InterfaceControlCollectionSite extends Remote {
      * from the waiting for arrival and collect canvas.
      *
      * @param ts Vector Clock
-     * @return
-     * @throws java.rmi.RemoteException
+     * @return Local clock
+     * @throws java.rmi.RemoteException Remote Exception
      */
     VectorClk goCollectMaster(VectorClk ts) throws RemoteException;
 
@@ -49,8 +49,8 @@ public interface InterfaceControlCollectionSite extends Remote {
      * @param partyId Assault party identification
      * @param roomId Room identification
      * @param ts Vector Clock
-     * @return
-     * @throws java.rmi.RemoteException
+     * @return Local clock
+     * @throws java.rmi.RemoteException Remote Exception
      */
     VectorClk handACanvas(int canvas, int roomId, int partyId,
             VectorClk ts) throws RemoteException;
@@ -61,7 +61,7 @@ public interface InterfaceControlCollectionSite extends Remote {
      *
      * @param ts Vector Clock
      * @return Assault party and room identification
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     Triple<VectorClk, Integer, Integer> prepareAssaultParty1(VectorClk ts) throws RemoteException;
 
@@ -69,8 +69,8 @@ public interface InterfaceControlCollectionSite extends Remote {
      * Master Thief uses this method to print the summary results.
      *
      * @param ts Vector Clock
-     * @return
-     * @throws java.rmi.RemoteException
+     * @return Local clock
+     * @throws java.rmi.RemoteException Remote Exception
      */
     VectorClk printResult(VectorClk ts) throws RemoteException;
 
@@ -78,8 +78,8 @@ public interface InterfaceControlCollectionSite extends Remote {
      * This method changes the Thief state to Deciding what to do.
      *
      * @param ts Vector Clock
-     * @return
-     * @throws java.rmi.RemoteException
+     * @return Local clock
+     * @throws java.rmi.RemoteException Remote Exception
      */
     VectorClk setDeciding(VectorClk ts) throws RemoteException;
 
@@ -88,15 +88,15 @@ public interface InterfaceControlCollectionSite extends Remote {
      * canvas that he will give to her, if he has one.
      *
      * @param ts Vector Clock
-     * @return
-     * @throws java.rmi.RemoteException
+     * @return Local clock
+     * @throws java.rmi.RemoteException Remote Exception
      */
     VectorClk takeARest(VectorClk ts) throws RemoteException;
 
     /**
      * Shutdown.
      *
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     void shutdown() throws RemoteException;
 
@@ -104,8 +104,8 @@ public interface InterfaceControlCollectionSite extends Remote {
      * Waiting for shutdown. The server blocks at this method awaiting
      * de-registration and shutdown
      *
-     * @return
-     * @throws RemoteException
+     * @return True to shutdown, false otherwise
+     * @throws RemoteException Remote Exception
      */
     boolean waitingForShutdown() throws RemoteException;
 

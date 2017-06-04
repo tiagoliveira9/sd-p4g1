@@ -17,7 +17,7 @@ public interface InterfaceConcentrationSite extends Remote {
      * Adds thief to stack and changes state to Outside.
      *
      * @param thiefId Thief identification
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     void addThief(int thiefId) throws RemoteException;
 
@@ -25,7 +25,7 @@ public interface InterfaceConcentrationSite extends Remote {
      * This method returns the size of the thieves stack.
      *
      * @return Size of thieves stack
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     int checkThiefNumbers() throws RemoteException;
 
@@ -37,8 +37,8 @@ public interface InterfaceConcentrationSite extends Remote {
      * @param partyId Assault party identification
      * @param roomId Room identification
      * @param ts Vector Clock
-     * @return
-     * @throws java.rmi.RemoteException
+     * @return Local clock
+     * @throws java.rmi.RemoteException Remote Exception
      */
     VectorClk prepareAssaultParty2(int partyId, int roomId, VectorClk ts) throws RemoteException;
 
@@ -46,7 +46,7 @@ public interface InterfaceConcentrationSite extends Remote {
      * Change thief state to DEAD.
      *
      * @param thiefId Thief identification
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     void setDeadState(int thiefId) throws RemoteException;
 
@@ -54,7 +54,7 @@ public interface InterfaceConcentrationSite extends Remote {
      * The method prepareExcursion. The last Thief to enter the assault party,
      * wakes up the Master Thief and resets the nAssaultParty variable.
      *
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     void teamReady() throws RemoteException;
 
@@ -68,7 +68,7 @@ public interface InterfaceConcentrationSite extends Remote {
      * @param thiefId Thief identification
      * @param ts Vector Clock
      * @return Assault party number
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     Tuple<VectorClk, Integer> waitForCall(int thiefId, VectorClk ts) throws RemoteException;
 
@@ -76,14 +76,14 @@ public interface InterfaceConcentrationSite extends Remote {
      * Master Thief uses this method to wake every thief and awaits for the last
      * thief to wake her up.
      *
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     void wakeAll() throws RemoteException;
 
     /**
      * Shutdown.
      *
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     void shutdown() throws RemoteException;
 
@@ -91,8 +91,8 @@ public interface InterfaceConcentrationSite extends Remote {
      * Waiting for shutdown. The server blocks at this method awaiting
      * de-registration and shutdown
      *
-     * @return
-     * @throws RemoteException
+     * @return True to shutdown, false otherwise
+     * @throws RemoteException Remote Exception
      */
     boolean waitingForShutdown() throws RemoteException;
 }

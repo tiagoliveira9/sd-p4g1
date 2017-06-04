@@ -20,7 +20,7 @@ public class GRInformationServer {
 
     /**
      *
-     * @param args
+     * @param args Args
      */
     public static void main(String args[]) {
 

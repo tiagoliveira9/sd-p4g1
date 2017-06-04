@@ -9,10 +9,10 @@ import java.io.Serializable;
 
 /**
  *
- * @author Tiago Oliveira nºmec.: 51687 <tiago9@ua.pt>
- * @param <A>
- * @param <B>
- * @param <C>
+ * @author Tiago Oliveira nºmec.: 51687, tiago9@ua.pt
+ * @param <A> A
+ * @param <B> B
+ * @param <C> C
  */
 public class Triple<A, B, C> implements Serializable {
 
@@ -24,9 +24,9 @@ public class Triple<A, B, C> implements Serializable {
 
     /**
      *
-     * @param one
-     * @param two
-     * @param three
+     * @param one one
+     * @param two two 
+     * @param three three
      */
     public Triple(A one, B two, C three) {
 
@@ -37,7 +37,7 @@ public class Triple<A, B, C> implements Serializable {
 
     /**
      *
-     * @return
+     * @return One
      */
     public A getLeft() {
         return one;
@@ -45,7 +45,7 @@ public class Triple<A, B, C> implements Serializable {
 
     /**
      *
-     * @return
+     * @return Two
      */
     public B getCenter() {
         return two;
@@ -53,7 +53,7 @@ public class Triple<A, B, C> implements Serializable {
 
     /**
      *
-     * @return
+     * @return Three
      */
     public C getRight() {
         return three;

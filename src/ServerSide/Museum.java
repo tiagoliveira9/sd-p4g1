@@ -43,7 +43,7 @@ public class Museum implements InterfaceMuseum {
     /**
      * The method returns Museum object.
      *
-     * @param repo
+     * @param repo Repository
      * @return ConcentrationSite object to be used.
      */
     public static Museum getInstance(InterfaceGRInformation repo) {
@@ -75,7 +75,7 @@ public class Museum implements InterfaceMuseum {
      * @param roomId Room identification
      * @param distance Room distance from outside
      * @param canvas How much paintings exists on this room
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     public void setUpRoom(int roomId, int distance, int canvas) throws RemoteException {
         l.lock();
@@ -95,7 +95,7 @@ public class Museum implements InterfaceMuseum {
      * @param partyId Assault party identification
      * @param ts Vector Clock
      * @return Flag value
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     @Override
     public Tuple<VectorClk, Boolean> rollACanvas(int roomId, int elemPos, int partyId, int thiefId,

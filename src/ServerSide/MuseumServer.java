@@ -22,7 +22,7 @@ public class MuseumServer {
 
     /**
      *
-     * @param args
+     * @param args Args
      */
     public static void main(String args[]) {
 

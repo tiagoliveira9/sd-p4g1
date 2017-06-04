@@ -21,7 +21,7 @@ public class AssaultPartyServer1 {
 
     /**
      *
-     * @param args
+     * @param args Args
      */
     public static void main(String args[]) {
 

@@ -62,7 +62,7 @@ public class AssaultParty implements InterfaceAssaultParty {
      * The method returns Assault Party object.
      *
      * @param i Assault party counter
-     * @param repo
+     * @param repo Repository
      * @return Instance of assault party
      */
     public static AssaultParty getInstance(int i, InterfaceGRInformation repo) {

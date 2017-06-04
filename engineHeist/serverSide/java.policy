@@ -2,5 +2,5 @@ grant
 { permission java.util.PropertyPermission "user.dir", "read";
   permission java.net.SocketPermission "*:1024-65535", "listen,resolve,connect,accept";
   permission java.net.SocketPermission "*:80", "connect";
-  permission java.io.FilePermission "/home/endla/Documents/SD/sd2017-p4g1-b/engineHeist/serverSide/-", "read,write";
+  permission java.io.FilePermission "/home/gito/Documents/SD/pratica/sd2017-p4g1-b/engineHeist/serverSide/-", "read,write";
 };

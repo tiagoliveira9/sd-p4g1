@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author Tiago Oliveira nºmec.: 51687 <tiago9@ua.pt>
+ * @author Tiago Oliveira nºmec.: 51687, tiago9@ua.pt
  */
 // to do the marshall and unmarshall it needs to be serializable 
 public class VectorClk implements Serializable {
@@ -15,8 +15,8 @@ public class VectorClk implements Serializable {
 
     /**
      *
-     * @param index
-     * @param size
+     * @param index Index
+     * @param size Size
      */
     public VectorClk(int index, int size) {
 
@@ -39,7 +39,7 @@ public class VectorClk implements Serializable {
 
     /**
      *
-     * @param in
+     * @param in In
      */
     public void incrementClkOut(int in) {
 
@@ -63,7 +63,7 @@ public class VectorClk implements Serializable {
 
     /**
      *
-     * @return
+     * @return Clock copy
      */
     public VectorClk getCopyClk() {
 
@@ -78,7 +78,7 @@ public class VectorClk implements Serializable {
 
     /**
      *
-     * @return
+     * @return Local Clock
      */
     public int[] getlClk() {
         return lClk;

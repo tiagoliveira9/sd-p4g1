@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 /**
  *
- * @author Tiago Oliveira nºmec.: 51687 <tiago9@ua.pt>
- * @param <A>
- * @param <B>
+ * @author Tiago Oliveira nºmec.: 51687, tiago9@ua.pt
+ * @param <A> A
+ * @param <B> B
  */
 public class Tuple<A, B> implements Serializable {
 
@@ -16,8 +16,8 @@ public class Tuple<A, B> implements Serializable {
 
     /**
      *
-     * @param one
-     * @param two
+     * @param one one
+     * @param two Two
      */
     public Tuple(A one, B two) {
 
@@ -27,7 +27,7 @@ public class Tuple<A, B> implements Serializable {
 
     /**
      *
-     * @return
+     * @return One
      */
     public A getLeft() {
         return one;
@@ -35,7 +35,7 @@ public class Tuple<A, B> implements Serializable {
 
     /**
      *
-     * @return
+     * @return Two
      */
     public B getRight() {
         return two;

@@ -104,7 +104,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
     /**
      * The method returns ConcentrationSite object.
      *
-     * @param repo
+     * @param repo Repository
      * @return ConcentrationSite object to be used.
      */
     public static ConcentrationSite getInstance(InterfaceGRInformation repo) {
@@ -203,7 +203,7 @@ public class ConcentrationSite implements InterfaceConcentrationSite {
      * @param partyId Assault party identification
      * @param roomId Room identification
      * @param ts Vector Clock
-     * @return
+     * @return Local clock copy
      */
     @Override
     public VectorClk prepareAssaultParty2(int partyId, int roomId,

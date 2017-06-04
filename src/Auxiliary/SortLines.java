@@ -7,7 +7,7 @@ package Auxiliary;
 
 /**
  *
- * @author Tiago Oliveira nºmec.: 51687 <tiago9@ua.pt>
+ * @author Tiago Oliveira nºmec.: 51687, tiago9@ua.pt
  */
 public class SortLines implements Comparable<SortLines> {
 
@@ -16,8 +16,8 @@ public class SortLines implements Comparable<SortLines> {
 
     /**
      *
-     * @param line
-     * @param localClk
+     * @param line Line
+     * @param localClk Local clock
      */
     public SortLines(String line, VectorClk localClk) {
         this.line = line;
@@ -26,7 +26,7 @@ public class SortLines implements Comparable<SortLines> {
 
     /**
      *
-     * @return
+     * @return Line
      */
     public String getLine() {
         return line;
@@ -34,7 +34,7 @@ public class SortLines implements Comparable<SortLines> {
 
     /**
      *
-     * @return
+     * @return Local clock
      */
     public VectorClk getLocalClk() {
         return localClk;

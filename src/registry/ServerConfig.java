@@ -7,7 +7,7 @@ package registry;
 
 /**
  *
- * @author Tiago Oliveira nºmec.: 51687 <tiago9@ua.pt>
+ * @author Tiago Oliveira nºmec.: 51687, tiago9@ua.pt
  */
 public class ServerConfig {
 

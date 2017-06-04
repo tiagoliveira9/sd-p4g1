@@ -18,7 +18,7 @@ public interface InterfaceMuseum extends Remote {
      *
      * @param roomId Room identification
      * @return Default value
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     int getRoomDistance(int roomId) throws RemoteException;
 
@@ -31,7 +31,7 @@ public interface InterfaceMuseum extends Remote {
      * @param thiefId Thief identification
      * @param ts Vector Clock
      * @return Flag value
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     Tuple<VectorClk, Boolean> rollACanvas(int roomId, int elemPos, int partyId,
             int thiefId, VectorClk ts) throws RemoteException;
@@ -39,7 +39,7 @@ public interface InterfaceMuseum extends Remote {
     /**
      * Shutdown.
      *
-     * @throws java.rmi.RemoteException
+     * @throws java.rmi.RemoteException Remote Exception
      */
     void shutdown() throws RemoteException;
 
@@ -47,8 +47,8 @@ public interface InterfaceMuseum extends Remote {
      * Waiting for shutdown. The server blocks at this method awaiting
      * de-registration and shutdown
      *
-     * @return
-     * @throws RemoteException
+     * @return True to shutdown, false otherwise
+     * @throws RemoteException Remote Exception
      */
     boolean waitingForShutdown() throws RemoteException;
 
