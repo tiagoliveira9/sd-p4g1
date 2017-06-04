@@ -1,4 +1,4 @@
-/**
+ /**
 * Auxiliary classes of implementation of Heist the museum.
 * This package contains the auxiliary classes. 
 * 

@@ -3,7 +3,7 @@ package Auxiliary;
 import java.io.Serializable;
 
 /**
- *
+ * Tuple class.
  * @author Tiago Oliveira nºmec.: 51687, tiago9@ua.pt
  * @param <A> A
  * @param <B> B
@@ -15,7 +15,8 @@ public class Tuple<A, B> implements Serializable {
     private final B two;
 
     /**
-     *
+     * Tuple constructor.
+     * 
      * @param one one
      * @param two Two
      */
@@ -26,7 +27,7 @@ public class Tuple<A, B> implements Serializable {
     }
 
     /**
-     *
+     * Get Left.
      * @return One
      */
     public A getLeft() {
@@ -34,7 +35,7 @@ public class Tuple<A, B> implements Serializable {
     }
 
     /**
-     *
+     * Get Right.
      * @return Two
      */
     public B getRight() {

@@ -3,7 +3,7 @@ package Auxiliary;
 import java.io.Serializable;
 
 /**
- *
+ * Vector Clock class.
  * @author Tiago Oliveira nºmec.: 51687, tiago9@ua.pt
  */
 // to do the marshall and unmarshall it needs to be serializable 

@@ -8,7 +8,8 @@ package Auxiliary;
 import java.io.Serializable;
 
 /**
- *
+ * Triple class.
+ * 
  * @author Tiago Oliveira nºmec.: 51687, tiago9@ua.pt
  * @param <A> A
  * @param <B> B
@@ -36,7 +37,7 @@ public class Triple<A, B, C> implements Serializable {
     }
 
     /**
-     *
+     * Get Left 
      * @return One
      */
     public A getLeft() {
@@ -44,7 +45,7 @@ public class Triple<A, B, C> implements Serializable {
     }
 
     /**
-     *
+     * Get Center
      * @return Two
      */
     public B getCenter() {
@@ -52,7 +53,7 @@ public class Triple<A, B, C> implements Serializable {
     }
 
     /**
-     *
+     * Get Right
      * @return Three
      */
     public C getRight() {

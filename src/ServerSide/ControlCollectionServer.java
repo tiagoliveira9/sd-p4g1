@@ -20,8 +20,8 @@ import registry.ServerConfig;
 public class ControlCollectionServer {
 
     /**
-     *
-     * @param args Args
+     * Main class.
+     * @param args the command line arguments
      */
     public static void main(String args[]) {
 
