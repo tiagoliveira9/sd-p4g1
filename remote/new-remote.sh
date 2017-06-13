@@ -20,11 +20,8 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws03.ua.pt 'bash -s' <<'ENDSSH'
 	fi
 	
 	./build_deploy.sh
-	cd engineHeist/serverSide/
-	./serverSide-gri.sh
-ENDSSH; bash"
 
-sleep 7
+ENDSSH; bash"
 
 # MUSEUM WS04
 
@@ -48,11 +45,9 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws04.ua.pt 'bash -s' <<'ENDSSH'
 	fi
 	
 	./build_deploy.sh
-	cd engineHeist/serverSide/
-	./serverSide-mus.sh
+
 ENDSSH; bash"
 
-sleep 7
 
 # CONTROL WS05
 
@@ -76,11 +71,8 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws05.ua.pt 'bash -s' <<'ENDSSH'
 	fi
 	
 	./build_deploy.sh
-	cd engineHeist/serverSide/
-	./serverSide-cont.sh
-ENDSSH; bash"
 
-sleep 7
+ENDSSH; bash"
 
 # CONC WS06
 
@@ -104,11 +96,9 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws06.ua.pt 'bash -s' <<'ENDSSH'
 	fi
 	
 	./build_deploy.sh
-	cd engineHeist/serverSide/
-	./serverSide-conc.sh
+
 ENDSSH; bash"
 
-sleep 7
 # ASG1 WS07
 
 sftp sd0401@l040101-ws07.ua.pt 'bash -s' << 'ENDSFTP'
@@ -119,7 +109,7 @@ sftp sd0401@l040101-ws07.ua.pt 'bash -s' << 'ENDSFTP'
 ENDSFTP
 
 
-gnome-terminal -x sh -c "ssh sd0401@l040107-ws07.ua.pt 'bash -s' <<'ENDSSH'
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws07.ua.pt 'bash -s' <<'ENDSSH'
   # commands to run on remote host
 	cd project03
 	if [ -d "engineHeist" ]; then
@@ -131,11 +121,9 @@ gnome-terminal -x sh -c "ssh sd0401@l040107-ws07.ua.pt 'bash -s' <<'ENDSSH'
 	fi
 	
 	./build_deploy.sh
-	cd engineHeist/serverSide/
-	./serverSide-asg1.sh 
+
 ENDSSH; bash"
 
-sleep 7
 
 # ASG2 WS08
 
@@ -147,7 +135,7 @@ sftp sd0401@l040101-ws08.ua.pt 'bash -s' << 'ENDSFTP'
 ENDSFTP
 
 
-gnome-terminal -x sh -c "ssh sd0401@l040107-ws08.ua.pt 'bash -s' <<'ENDSSH'
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws08.ua.pt 'bash -s' <<'ENDSSH'
   # commands to run on remote host
 	cd project03
 	if [ -d "engineHeist" ]; then
@@ -159,11 +147,8 @@ gnome-terminal -x sh -c "ssh sd0401@l040107-ws08.ua.pt 'bash -s' <<'ENDSSH'
 	fi
 	
 	./build_deploy.sh
-	cd engineHeist/serverSide/
-	./serverSide-asg2.sh 
-ENDSSH; bash"
 
-sleep 7
+ENDSSH; bash"
 	
 # THIEVES WS09
 
@@ -188,12 +173,8 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws09.ua.pt 'bash -s' <<'ENDSSH'
 	fi
 	
 	./build_deploy.sh
-	cd engineHeist/clientSide/
-	./thieves.sh 
-	
-ENDSSH; bash"
 
-sleep 7
+ENDSSH; bash"
 
 # MASTER WS10
 
@@ -221,5 +202,69 @@ gnome-terminal -x sh -c "ssh sd0401@l040101-ws10.ua.pt 'bash -s' <<'ENDSSH'
 	./master.sh 
 ENDSSH; bash"
 
+sleep 2
 
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws03.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project03/engineHeist/serverSide/
+	./serverSide-gri.sh
+ENDSSH; bash"
+
+sleep 2
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws04.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project03/engineHeist/serverSide/
+	./serverSide-mus.sh
+ENDSSH; bash"
+
+sleep 2
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws05.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project03/engineHeist/serverSide/
+	./serverSide-cont.sh
+ENDSSH; bash"
+
+sleep 2
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws06.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project03/engineHeist/serverSide/
+	./serverSide-conc.sh
+ENDSSH; bash"
+
+sleep 2
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws07.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project03/engineHeist/serverSide/
+	./serverSide-asg1.sh 
+ENDSSH; bash"
+
+sleep 2
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws08.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project03/engineHeist/serverSide/
+	./serverSide-asg2.sh 
+ENDSSH; bash"
+
+sleep 2
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws09.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+  
+	cd project03/engineHeist/clientSide/
+	./thieves.sh 
+	
+ENDSSH; bash"
+
+sleep 2
+
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws10.ua.pt 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+	cd project03/engineHeist/clientSide/
+	./master.sh 
+ENDSSH; bash"
 

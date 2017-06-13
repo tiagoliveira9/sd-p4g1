@@ -62,7 +62,7 @@ ENDSSH; bash"
 
 
 # AGR1 WS09
-gnome-terminal -x sh -c "ssh sd0401@l040101-ws9.ua.pt 'bash -s' <<'ENDSSH'
+gnome-terminal -x sh -c "ssh sd0401@l040101-ws09.ua.pt 'bash -s' <<'ENDSSH'
   # commands to run on remote host
 	rm -r project03
 	rm -r /home/sd0401/Public/projecto3/classes
